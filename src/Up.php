@@ -136,9 +136,7 @@ class Up
 		}
 
 		if( $len = strlen( (string) $level ) <= $this->verbose ) {
-			echo $msg;
-		} elseif( $this->verbose > 0 ) {
-			echo '.';
+			echo $msg . PHP_EOL;
 		}
 
 		return $this;
@@ -171,7 +169,7 @@ class Up
 			$this->runTasks( [$taskname] );
 		}
 
-		return $this->info( PHP_EOL );
+		return $this;
 	}
 
 
@@ -292,7 +290,7 @@ class Up
 
 			if( isset( $this->tasks[$taskname] ) )
 			{
-				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename . ' ', 'vv' );
+				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename, 'vv' );
 				$this->tasks[$taskname]->up();
 			}
 

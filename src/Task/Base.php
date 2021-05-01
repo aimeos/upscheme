@@ -72,7 +72,7 @@ abstract class Base implements Iface
 	 */
 	protected function info( string $msg, int $level = 0 ) : self
 	{
-		$this->up->info( PHP_EOL . str_repeat( ' ', $level * 2 ) . $msg . ' ', 'v' );
+		$this->up->info( str_repeat( ' ', $level * 2 ) . $msg, 'v' );
 		return $this;
 	}
 
