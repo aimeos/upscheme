@@ -37,7 +37,7 @@ abstract class Base implements Iface
 	 */
 	public function __call( string $method, array $args )
 	{
-		return $this->use()->{$method}( ...$args );
+		return $this->db()->{$method}( ...$args );
 	}
 
 
@@ -83,7 +83,7 @@ abstract class Base implements Iface
 	 * @param string|null $name Name of the connection from the configuration or NULL for first one
 	 * @return \Aimeos\Upscheme\Schema\DB DB schema object
 	 */
-	protected function use( string $name = null ) : \Aimeos\Upscheme\Schema\DB
+	protected function db( string $name = null ) : \Aimeos\Upscheme\Schema\DB
 	{
 		return $this->up->db( $name );
 	}
