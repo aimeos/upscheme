@@ -124,7 +124,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -144,7 +144,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -164,7 +164,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -183,7 +183,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -202,7 +202,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -222,7 +222,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -247,7 +247,7 @@ class DB
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
@@ -499,13 +499,11 @@ class DB
 
 		$table = new Table( $this, $dt );
 
-		if( $fcn )
-		{
+		if( $fcn ) {
 			$fcn( $table );
-			$table->up();
 		}
 
-		return $table;
+		return $table->up();
 	}
 
 
