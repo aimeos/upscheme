@@ -10,10 +10,12 @@ namespace Aimeos\Upscheme\Schema;
 
 
 /**
- * Database scheme manager class
+ * Database schema manager class
  */
 class DB
 {
+	static private $methods = [];
+
 	private $conn;
 	private $from;
 	private $to;
@@ -37,7 +39,7 @@ class DB
 
 
 	/**
-	 * Passes unknown method calls to the Doctrine scheme object
+	 * Calls custom methods or passes unknown method calls to the Doctrine schema object
 	 *
 	 * @param string $method Name of the method
 	 * @param array $args Method parameters
@@ -45,7 +47,23 @@ class DB
 	 */
 	public function __call( string $method, array $args )
 	{
+		if( isset( self::$methods[$method] ) ) {
+			return call_user_func_array( static::$methods[$method]->bindTo( $this, static::class ), $args );
+		}
+
 		return $this->to->{$method}( ...$args );
+	}
+
+
+	/**
+	 * Registers or overwrites a custom method
+	 *
+	 * @param string $name Custom method name
+	 * @param \Closure $fcn Anonymous function with custom parameters and return value
+	 */
+	public static function method( string $name, \Closure $fcn )
+	{
+		self::$methods[$name] = $fcn;
 	}
 
 
