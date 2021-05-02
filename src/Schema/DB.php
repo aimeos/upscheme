@@ -112,13 +112,16 @@ class DB
 	 * Drops the column given by its name
 	 *
 	 * @param string $table Name of the table the column belongs to
-	 * @param string $name Name of the column
+	 * @param array|string $name Name of the column or columns
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropColumn( string $table, string $name ) : self
+	public function dropColumn( string $table, $name ) : self
 	{
-		if( $this->hasColumn( $name ) ) {
-			$this->table( $table )->dropColumn( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasColumn( $table, $entry ) ) {
+				$this->table( $table )->dropColumn( $entry );
+			}
 		}
 
 		return $this;
@@ -129,13 +132,16 @@ class DB
 	 * Drops the foreign key constraint given by its name
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
-	 * @param string $name Name of the foreign key constraint
+	 * @param array|string $name Name of the foreign key constraint or constraints
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropForeign( string $table, string $name ) : self
+	public function dropForeign( string $table, $name ) : self
 	{
-		if( $this->hasForeign( $table, $name ) ) {
-			$this->table( $table )->dropForeign( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasForeign( $table, $entry ) ) {
+				$this->table( $table )->dropForeign( $entry );
+			}
 		}
 
 		return $this;
@@ -146,13 +152,16 @@ class DB
 	 * Drops the index given by its name
 	 *
 	 * @param string $table Name of the table the index belongs to
-	 * @param string $name Name of the index
+	 * @param array|string $name Name of the index or indexes
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropIndex( string $table, string $name ) : self
+	public function dropIndex( string $table, $name ) : self
 	{
-		if( $this->hasIndex( $table, $name ) ) {
-			$this->table( $table )->dropIndex( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasIndex( $table, $entry ) ) {
+				$this->table( $table )->dropIndex( $entry );
+			}
 		}
 
 		return $this;
@@ -162,13 +171,16 @@ class DB
 	/**
 	 * Drops the sequence given by its name
 	 *
-	 * @param string $name Name of the sequence
+	 * @param array|string $name Name of the sequence or sequences
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropSequence( string $name ) : self
+	public function dropSequence( $name ) : self
 	{
-		if( $this->hasSequence( $name ) ) {
-			$this->to->dropSequence( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasSequence( $entry ) ) {
+				$this->to->dropSequence( $entry );
+			}
 		}
 
 		return $this;
@@ -178,13 +190,16 @@ class DB
 	/**
 	 * Drops the table given by its name
 	 *
-	 * @param string $name Name of the table
+	 * @param array|string $name Name of the table or tables
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropTable( string $name ) : self
+	public function dropTable( $name ) : self
 	{
-		if( $this->hasTable( $name ) ) {
-			$this->to->dropTable( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasTable( $entry ) ) {
+				$this->to->dropTable( $entry );
+			}
 		}
 
 		return $this;
@@ -195,13 +210,16 @@ class DB
 	 * Drops the unique index given by its name
 	 *
 	 * @param string $table Name of the table the unique index belongs to
-	 * @param string $name Name of the unique index
+	 * @param array|string $name Name of the unique index or indexes
 	 * @return self Same object for fluid method calls
 	 */
-	public function dropUnique( string $table, string $name ) : self
+	public function dropUnique( string $table, $name ) : self
 	{
-		if( $this->hasUnique( $table, $name ) ) {
-			$this->table( $table )->dropUnique( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasUnique( $table, $entry ) ) {
+				$this->table( $table )->dropUnique( $entry );
+			}
 		}
 
 		return $this;
@@ -216,14 +234,17 @@ class DB
 	 * to use has been created before!
 	 *
 	 * @param string $type Database type
-	 * @param string $sql Custom SQL statement
+	 * @param array|string $sql Custom SQL statement or statements
 	 * @return self Same object for fluid method calls
 	 * @see type() method for available types
 	 */
-	public function for( string $type, string $sql ) : self
+	public function for( string $type, $sql ) : self
 	{
-		if( $this->type() === $type ) {
-			$this->conn->executeStatement( $sql );
+		if( $this->type() === $type )
+		{
+			foreach( (array) $sql as $entry ) {
+				$this->conn->executeStatement( $entry );
+			}
 		}
 
 		return $this;
@@ -234,13 +255,23 @@ class DB
 	 * Checks if the column exists
 	 *
 	 * @param string $table Name of the table the column belongs to
-	 * @param string $name Name of the column
-	 * @return TRUE if the column exists, FALSE if not
+	 * @param array|string $name Name of the column or columns
+	 * @return TRUE if the columns exists, FALSE if not
 	 */
-	public function hasColumn( string $table, string $name ) : bool
+	public function hasColumn( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) ) {
-			return $this->table( $name )->hasColumn( $name );
+		if( $this->hasTable( $table ) )
+		{
+			$t = $this->table( $table );
+
+			foreach( (array) $name as $entry )
+			{
+				if( !$t->hasColumn( $entry ) ) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		return false;
@@ -251,13 +282,23 @@ class DB
 	 * Checks if the foreign key constraint exists
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
-	 * @param string $name Name of the foreign key constraint
+	 * @param array|string $name Name of the foreign key constraint or constraints
 	 * @return TRUE if the foreign key constraint exists, FALSE if not
 	 */
-	public function hasForeign( string $table, string $name ) : bool
+	public function hasForeign( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) ) {
-			return $this->table( $name )->hasForeign( $name );
+		if( $this->hasTable( $table ) )
+		{
+			$t = $this->table( $table );
+
+			foreach( (array) $name as $entry )
+			{
+				if( !$t->hasForeign( $entry ) ) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		return false;
@@ -268,13 +309,23 @@ class DB
 	 * Checks if the index exists
 	 *
 	 * @param string $table Name of the table the index belongs to
-	 * @param string $name Name of the index
+	 * @param array|string $name Name of the index or indexes
 	 * @return TRUE if the index exists, FALSE if not
 	 */
-	public function hasIndex( string $table, string $name ) : bool
+	public function hasIndex( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) ) {
-			return $this->table( $name )->hasIndex( $name );
+		if( $this->hasTable( $table ) )
+		{
+			$t = $this->table( $table );
+
+			foreach( (array) $name as $entry )
+			{
+				if( !$t->hasIndex( $entry ) ) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		return false;
@@ -284,24 +335,38 @@ class DB
 	/**
 	 * Checks if the sequence exists
 	 *
-	 * @param string $name Name of the sequence
+	 * @param array|string $name Name of the sequence or sequences
 	 * @return TRUE if the sequence exists, FALSE if not
 	 */
-	public function hasSequence( string $name ) : bool
+	public function hasSequence( $name ) : bool
 	{
-		return $this->to->hasSequence( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( !$this->to->hasSequence( $entry ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
 	/**
 	 * Checks if the table exists
 	 *
-	 * @param string $name Name of the table
+	 * @param array|string $name Name of the table or tables
 	 * @return TRUE if the table exists, FALSE if not
 	 */
-	public function hasTable( string $name ) : bool
+	public function hasTable( $name ) : bool
 	{
-		return $this->to->hasTable( $name );
+		foreach( (array) $name as $entry )
+		{
+			if( !$this->to->hasTable( $entry ) ) {
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 
@@ -309,13 +374,23 @@ class DB
 	 * Checks if the unique index exists
 	 *
 	 * @param string $table Name of the table the unique index belongs to
-	 * @param string $name Name of the unique index
+	 * @param string $name Name of the unique index or indexes
 	 * @return TRUE if the unique index exists, FALSE if not
 	 */
-	public function hasUnique( string $table, string $name ) : bool
+	public function hasUnique( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) ) {
-			return $this->to->getTable( $name )->hasUnique( $name );
+		if( $this->hasTable( $table ) )
+		{
+			$t = $this->table( $table );
+
+			foreach( (array) $name as $entry )
+			{
+				if( !$t->hasUnique( $entry ) ) {
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		return false;
