@@ -111,7 +111,7 @@ class Up
 		{
 			$cfg = $this->config[$name] ?? ( is_array( $first = reset( $this->config ) ) ? $first : $this->config );
 
-			$conn = isset( self::$fcn['conn'] ) ? self::$fcn['conn']( $cfg ) : $this->createConnection( $cfg );
+			$conn = isset( self::$fcn['db'] ) ? self::$fcn['db']( $cfg ) : $this->createConnection( $cfg );
 
 			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $conn );
 		}
