@@ -237,7 +237,7 @@ class Up
 				$task = new $classname( $this );
 
 				if( ( $task instanceof $interface ) === false ) {
-					throw new \RuntimeException( sprintf( 'Class "%1$s" doesn\'t implement "%2$s"', $classname, '\Aimeos\Upscheme\Task\Iface' ) );
+					throw new \RuntimeException( sprintf( 'Class "%1$s" doesn\'t implement "%2$s"', $classname, $interface ) );
 				}
 
 				$task->_filename = $item->getPathName();
@@ -245,6 +245,7 @@ class Up
 			}
 		}
 
+		ksort( $tasks );
 		return $tasks;
 	}
 
