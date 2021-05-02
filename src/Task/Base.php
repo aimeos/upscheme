@@ -81,10 +81,11 @@ abstract class Base implements Iface
 	 * Returns the database schema for the given connection name
 	 *
 	 * @param string|null $name Name of the connection from the configuration or NULL for first one
+	 * @param bool $new If a new connection should be created instead of reusing an existing one
 	 * @return \Aimeos\Upscheme\Schema\DB DB schema object
 	 */
-	protected function db( string $name = null ) : \Aimeos\Upscheme\Schema\DB
+	protected function db( string $name = null, bool $new = false ) : \Aimeos\Upscheme\Schema\DB
 	{
-		return $this->up->db( $name );
+		return $this->up->db( $name, $new );
 	}
 }
