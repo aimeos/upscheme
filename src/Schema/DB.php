@@ -457,7 +457,7 @@ class DB
 	 * @param string $name Name of the sequence
 	 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 	 */
-	public function sequence( string $name ) : Sequence
+	public function sequence( string $name, \Closure $fcn = null ) : Sequence
 	{
 		if( $this->hasSequence( $name ) ) {
 			$seq = $this->to->getSequence( $name );
@@ -465,7 +465,15 @@ class DB
 			$seq = $this->to->createSequence( $name );
 		}
 
-		return new Sequence( $this->to, $seq );
+		$sequence = new Sequence( $this->to, $seq );
+
+		if( $fcn )
+		{
+			$fcn( $sequence );
+			$sequence->up();
+		}
+
+		return $sequence;
 	}
 
 
@@ -499,11 +507,13 @@ class DB
 
 		$table = new Table( $this, $dt );
 
-		if( $fcn ) {
+		if( $fcn )
+		{
 			$fcn( $table );
+			$table->up();
 		}
 
-		return $table->up();
+		return $table;
 	}
 
 
