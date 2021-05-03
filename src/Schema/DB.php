@@ -260,18 +260,8 @@ class DB
 	 */
 	public function hasColumn( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) )
-		{
-			$t = $this->table( $table );
-
-			foreach( (array) $name as $entry )
-			{
-				if( !$t->hasColumn( $entry ) ) {
-					return false;
-				}
-			}
-
-			return true;
+		if( $this->hasTable( $table ) ) {
+			return $this->table( $table )->hasColumn( $name );
 		}
 
 		return false;
@@ -287,18 +277,8 @@ class DB
 	 */
 	public function hasForeign( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) )
-		{
-			$t = $this->table( $table );
-
-			foreach( (array) $name as $entry )
-			{
-				if( !$t->hasForeign( $entry ) ) {
-					return false;
-				}
-			}
-
-			return true;
+		if( $this->hasTable( $table ) ) {
+			return $this->table( $table )->hasForeign( $name );
 		}
 
 		return false;
@@ -314,18 +294,8 @@ class DB
 	 */
 	public function hasIndex( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) )
-		{
-			$t = $this->table( $table );
-
-			foreach( (array) $name as $entry )
-			{
-				if( !$t->hasIndex( $entry ) ) {
-					return false;
-				}
-			}
-
-			return true;
+		if( $this->hasTable( $table ) ) {
+			return $this->table( $table )->hasIndex( $name );
 		}
 
 		return false;
@@ -379,18 +349,8 @@ class DB
 	 */
 	public function hasUnique( string $table, $name ) : bool
 	{
-		if( $this->hasTable( $table ) )
-		{
-			$t = $this->table( $table );
-
-			foreach( (array) $name as $entry )
-			{
-				if( !$t->hasUnique( $entry ) ) {
-					return false;
-				}
-			}
-
-			return true;
+		if( $this->hasTable( $table ) ) {
+			return $this->table( $table )->hasUnique( $name );
 		}
 
 		return false;
