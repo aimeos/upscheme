@@ -109,7 +109,7 @@ class DB
 
 
 	/**
-	 * Drops the column given by its name
+	 * Drops the column given by its name if it exists
 	 *
 	 * @param string $table Name of the table the column belongs to
 	 * @param array|string $name Name of the column or columns
@@ -129,7 +129,7 @@ class DB
 
 
 	/**
-	 * Drops the foreign key constraint given by its name
+	 * Drops the foreign key constraint given by its name if it exists
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
 	 * @param array|string $name Name of the foreign key constraint or constraints
@@ -149,7 +149,7 @@ class DB
 
 
 	/**
-	 * Drops the index given by its name
+	 * Drops the index given by its name if it exists
 	 *
 	 * @param string $table Name of the table the index belongs to
 	 * @param array|string $name Name of the index or indexes
@@ -169,7 +169,7 @@ class DB
 
 
 	/**
-	 * Drops the sequence given by its name
+	 * Drops the sequence given by its name if it exists
 	 *
 	 * @param array|string $name Name of the sequence or sequences
 	 * @return self Same object for fluid method calls
@@ -188,7 +188,7 @@ class DB
 
 
 	/**
-	 * Drops the table given by its name
+	 * Drops the table given by its name if it exists
 	 *
 	 * @param array|string $name Name of the table or tables
 	 * @return self Same object for fluid method calls
@@ -207,7 +207,7 @@ class DB
 
 
 	/**
-	 * Drops the unique index given by its name
+	 * Drops the unique index given by its name if it exists
 	 *
 	 * @param string $table Name of the table the unique index belongs to
 	 * @param array|string $name Name of the unique index or indexes
