@@ -567,10 +567,14 @@ class Table
 	 * Sets a custom schema option or returns the current value
 	 *
 	 * Available custom schema options are:
+	 * - charset (MySQL)
+	 * - collation (MySQL)
 	 * - engine (MySQL)
+	 * - temporary (MySQL)
 	 *
 	 * @param string $name Name of the table-related custom schema option
-	 * @param mixed $value Valu of the custom schema option
+	 * @param mixed $value Value of the custom schema option
+	 * @return self|mixed Same object for setting value, current value without second parameter
 	 */
 	public function opt( string $name, $value = null )
 	{
