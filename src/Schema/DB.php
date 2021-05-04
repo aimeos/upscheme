@@ -425,12 +425,12 @@ class DB
 			$seq = $this->to->createSequence( $name );
 		}
 
-		$sequence = new Sequence( $this->to, $seq );
+		$sequence = new Sequence( $this, $seq );
 
 		if( $fcn )
 		{
 			$fcn( $sequence );
-			$sequence->up();
+			$this->up();
 		}
 
 		return $sequence;
@@ -470,7 +470,7 @@ class DB
 		if( $fcn )
 		{
 			$fcn( $table );
-			$table->up();
+			$this->up();
 		}
 
 		return $table;
@@ -506,7 +506,7 @@ class DB
 		foreach( $this->from->getMigrateToSql( $this->to, $this->conn->getDatabasePlatform() ) as $sql )
 		{
 			$this->up->info( '  ->  ' . $sql, 'vvv' );
-			$this->conn->query( $sql );
+			$this->conn->executeStatement( $sql );
 		}
 
 		unset( $this->from );
