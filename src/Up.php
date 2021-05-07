@@ -14,8 +14,10 @@ namespace Aimeos\Upscheme;
  */
 class Up
 {
+	use Macro;
+
+
 	private static $paths = [];
-	private static $fcn = [];
 
 	private $verbose = 0;
 	private $config;
@@ -55,6 +57,10 @@ class Up
 	 */
 	public static function autoload( string $classname ) : bool
 	{
+		if( $fcn = self::macro( 'autoload' ) ) {
+			return $fcn( $classname );
+		}
+
 		if( !strncmp( $classname, 'Aimeos\Upscheme\Task\\', 21 ) )
 		{
 			$fileName = substr( $classname, 21 ) . '.php';
@@ -70,18 +76,6 @@ class Up
 		}
 
 		return false;
-	}
-
-
-	/**
-	 * Registers a custom method to extend an existing one
-	 *
-	 * @param string $method Name of the method to extend
-	 * @param \Closure $fcn Anonymous function which receives the same parameters as the original method
-	 */
-	public static function method( string $method, \Closure $fcn )
-	{
-		self::$fcn[$name] = $fcn;
 	}
 
 
@@ -111,7 +105,7 @@ class Up
 		{
 			$cfg = $this->config[$name] ?? ( is_array( $first = reset( $this->config ) ) ? $first : $this->config );
 
-			$conn = isset( self::$fcn['db'] ) ? self::$fcn['db']( $cfg ) : $this->createConnection( $cfg );
+			$conn = ( $fcn = self::macro( 'db' ) ) ? $fcn( $cfg ) : $this->createConnection( $cfg );
 
 			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $conn );
 		}
@@ -129,9 +123,9 @@ class Up
 	 */
 	public function info( string $msg, $level = 'v' ) : self
 	{
-		if( isset( self::$fcn['info'] ) )
+		if( $fcn = self::macro( 'info' ) )
 		{
-			self::$fcn['info']( $msg, $level );
+			$fcn( $msg, $level );
 			return $this;
 		}
 
@@ -181,12 +175,7 @@ class Up
 	 */
 	public function verbose( $level = 'v' ) : self
 	{
-		if( isset( self::$fcn['verbose'] ) ) {
-			$this->verbose = self::$fcn['verbose']( $level );
-		} else {
-			$this->verbose = strlen( (string) $level );
-		}
-
+		$this->verbose = ( $fcn = self::macro( 'verbose' ) ) ? $fcn( $level ) : strlen( (string) $level );
 		return $this;
 	}
 
@@ -234,7 +223,7 @@ class Up
 				}
 
 				$interface = \Aimeos\Upscheme\Task\Iface::class;
-				$task = new $classname( $this );
+				$task = ( $fcn = self::macro( 'createTask' ) ) ? $fcn( $classname ) : new $classname( $this );
 
 				if( ( $task instanceof $interface ) === false ) {
 					throw new \RuntimeException( sprintf( 'Class "%1$s" doesn\'t implement "%2$s"', $classname, $interface ) );

@@ -14,6 +14,11 @@ namespace Aimeos\Upscheme\Task;
  */
 abstract class Base implements Iface
 {
+	use \Aimeos\Upscheme\Macro;
+
+
+	private static $methods = [];
+
 	private $up;
 
 
@@ -37,6 +42,10 @@ abstract class Base implements Iface
 	 */
 	public function __call( string $method, array $args )
 	{
+		if( $fcn = self::macro( $method ) ) {
+			return $this->call( $method, $args );
+		}
+
 		return $this->db()->{$method}( ...$args );
 	}
 

@@ -14,7 +14,8 @@ namespace Aimeos\Upscheme\Schema;
  */
 class Column
 {
-	static private $methods = [];
+	use \Aimeos\Upscheme\Macro;
+
 
 	private $table;
 	private $column;
@@ -42,8 +43,8 @@ class Column
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( isset( self::$methods[$method] ) ) {
-			return call_user_func_array( static::$methods[$method]->bindTo( $this, static::class ), $args );
+		if( $fcn = self::macro( $method ) ) {
+			return $this->call( $method, $args );
 		}
 
 		return $this->column->{$method}( ...$args );
@@ -71,18 +72,6 @@ class Column
 	public function __set( string $name, $value )
 	{
 		$this->opt( $name, $value );
-	}
-
-
-	/**
-	 * Registers or overwrites a custom method
-	 *
-	 * @param string $name Custom method name
-	 * @param \Closure $fcn Anonymous function with custom parameters and return value
-	 */
-	public static function method( string $name, \Closure $fcn )
-	{
-		self::$methods[$name] = $fcn;
 	}
 
 

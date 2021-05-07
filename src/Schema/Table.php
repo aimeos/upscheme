@@ -14,7 +14,8 @@ namespace Aimeos\Upscheme\Schema;
  */
 class Table
 {
-	static private $methods = [];
+	use \Aimeos\Upscheme\Macro;
+
 
 	private $db;
 	private $table;
@@ -42,8 +43,8 @@ class Table
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( isset( self::$methods[$method] ) ) {
-			return call_user_func_array( static::$methods[$method]->bindTo( $this, static::class ), $args );
+		if( $fcn = self::macro( $method ) ) {
+			return $this->call( $method, $args );
 		}
 
 		return $this->table->{$method}( ...$args );
@@ -71,18 +72,6 @@ class Table
 	public function __set( string $name, $value )
 	{
 		$this->opt( $name, $value );
-	}
-
-
-	/**
-	 * Registers or overwrites a custom method
-	 *
-	 * @param string $name Custom method name
-	 * @param \Closure $fcn Anonymous function with custom parameters and return value
-	 */
-	public static function method( string $name, \Closure $fcn )
-	{
-		self::$methods[$name] = $fcn;
 	}
 
 
@@ -726,8 +715,8 @@ class Table
 	 */
 	protected function nameIndex( string $table, array $columns, string $type = 'idx' ) : ?string
 	{
-		if( isset( self::$methods['nameIndex'] ) ) {
-			return self::$methods['nameIndex']( $table, $columns, $type );
+		if( $fcn = self::macro( 'nameIndex' ) ) {
+			return $fcn( $table, $columns, $type );
 		}
 
 		return null;

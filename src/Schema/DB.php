@@ -14,7 +14,8 @@ namespace Aimeos\Upscheme\Schema;
  */
 class DB
 {
-	static private $methods = [];
+	use \Aimeos\Upscheme\Macro;
+
 
 	private $conn;
 	private $from;
@@ -47,23 +48,11 @@ class DB
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( isset( self::$methods[$method] ) ) {
-			return call_user_func_array( static::$methods[$method]->bindTo( $this, static::class ), $args );
+		if( $fcn = self::macro( $method ) ) {
+			return $this->call( $method, $args );
 		}
 
 		return $this->to->{$method}( ...$args );
-	}
-
-
-	/**
-	 * Registers or overwrites a custom method
-	 *
-	 * @param string $name Custom method name
-	 * @param \Closure $fcn Anonymous function with custom parameters and return value
-	 */
-	public static function method( string $name, \Closure $fcn )
-	{
-		self::$methods[$name] = $fcn;
 	}
 
 

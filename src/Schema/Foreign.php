@@ -16,7 +16,8 @@ use Doctrine\DBAL\Schema\Table as DbalTable;
  */
 class Foreign
 {
-	static private $methods = [];
+	use \Aimeos\Upscheme\Macro;
+
 
 	private $table;
 	private $dbaltable;
@@ -69,8 +70,8 @@ class Foreign
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( isset( self::$methods[$method] ) ) {
-			return call_user_func_array( static::$methods[$method]->bindTo( $this, static::class ), $args );
+		if( $fcn = self::macro( $method ) ) {
+			return $this->call( $method, $args );
 		}
 
 		return $this->sequence->{$method}( ...$args );
@@ -98,18 +99,6 @@ class Foreign
 	public function __set( string $name, $value )
 	{
 		$this->{$name}( $value );
-	}
-
-
-	/**
-	 * Registers or overwrites a custom method
-	 *
-	 * @param string $name Custom method name
-	 * @param \Closure $fcn Anonymous function with custom parameters and return value
-	 */
-	public static function method( string $name, \Closure $fcn )
-	{
-		self::$methods[$name] = $fcn;
 	}
 
 
