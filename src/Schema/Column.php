@@ -79,10 +79,10 @@ class Column
 	 * Sets the column option value or returns the current value
 	 *
 	 * @param string $option Column option name
-	 * @param string|null $value New column option value or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param mixed $value New column option value or NULL to return current value
+	 * @return self|mixed Same object for setting the value, current value without parameter
 	 */
-	public function opt( string $option, string $value = null )
+	public function opt( string $option, $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getCustomSchemaOption( $option );
@@ -113,8 +113,8 @@ class Column
 	/**
 	 * Sets the column default value or returns the current value
 	 *
-	 * @param string|null $value New column default value or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param mixed $value New column default value or NULL to return current value
+	 * @return self|mixed Same object for setting the value, current value without parameter
 	 */
 	public function default( $value = null )
 	{
