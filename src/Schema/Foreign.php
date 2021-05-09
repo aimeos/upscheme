@@ -73,8 +73,6 @@ class Foreign
 		if( $fcn = self::macro( $method ) ) {
 			return $this->call( $method, $args );
 		}
-
-		return $this->sequence->{$method}( ...$args );
 	}
 
 
@@ -115,7 +113,7 @@ class Foreign
 		}
 
 		if( $this->name !== $value ) {
-			$this->replace( $this->name, $value );
+			$this->replace( $value );
 		}
 
 		return $this;
@@ -141,7 +139,7 @@ class Foreign
 		}
 
 		$this->opts['onDelete'] = $value;
-		return $this->replace( $this->name );
+		return $this->replace();
 	}
 
 
@@ -164,7 +162,7 @@ class Foreign
 		}
 
 		$this->opts['onUpdate'] = (string) $value;
-		return $this->replace( $this->name );
+		return $this->replace();
 	}
 
 
@@ -183,16 +181,17 @@ class Foreign
 	/**
 	 * Deletes the current constraint and creates a new one
 	 *
-	 * @param string $name Name of the existing constraint
 	 * @param string|null $newname Name of the new constraint or same name if NULL
 	 * @return self Same object for fluid method calls
 	 */
-	protected function replace( string $name, string $newname = null ) : self
+	protected function replace( string $newname = null ) : self
 	{
-		$this->dbaltable->removeForeignKey( $name );
-		$this->dbaltable->addForeignKeyConstraint( $this->fktable, $this->localcol, $this->fkcol, $this->opts, $newname ?: $name );
+		$newname = $newname ?: $this->name;
 
-		$this->name = $newname ?: $name;
+		$this->dbaltable->removeForeignKey( $this->name );
+		$this->dbaltable->addForeignKeyConstraint( $this->fktable, $this->localcol, $this->fkcol, $this->opts, $newname );
+
+		$this->name = $newname;
 		return $this;
 	}
 }
