@@ -31,8 +31,8 @@ class DB
 	 */
 	public function __construct( \Aimeos\Upscheme\Up $up, \Doctrine\DBAL\Connection $conn )
 	{
-		$this->from = $conn->getSchemaManager()->createSchema();
-		$this->to = clone $this->from;
+		$this->to = $conn->createSchemaManager()->createSchema();
+		$this->from = clone $this->to;
 
 		$this->conn = $conn;
 		$this->up = $up;
@@ -408,7 +408,7 @@ class DB
 	 */
 	public function sequence( string $name, \Closure $fcn = null ) : Sequence
 	{
-		if( $this->hasSequence( $name ) ) {
+		if( $this->to->hasSequence( $name ) ) {
 			$seq = $this->to->getSequence( $name );
 		} else {
 			$seq = $this->to->createSequence( $name );
@@ -448,7 +448,7 @@ class DB
 	 */
 	public function table( string $name, \Closure $fcn = null ) : Table
 	{
-		if( $this->hasTable( $name ) ) {
+		if( $this->to->hasTable( $name ) ) {
 			$dt = $this->to->getTable( $name );
 		} else {
 			$dt = $this->to->createTable( $name );
