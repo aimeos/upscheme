@@ -525,7 +525,7 @@ class Table
 		$foreigncolumn = (array) $foreigncolumn;
 
 		if( !$this->db->hasTable( $foreigntable ) ) {
-			\RuntimeException( sprintf( 'Table "%1$s" is missing', $foreigntable ) );
+			throw new \RuntimeException( sprintf( 'Table "%1$s" is missing', $foreigntable ) );
 		}
 
 		$table = $this->db->table( $foreigntable );
@@ -533,23 +533,14 @@ class Table
 		foreach( $foreigncolumn as $idx => $col )
 		{
 			if( !$table->hasColumn( $col ) ) {
-				\RuntimeException( sprintf( 'Column "%1$s" in table "%2$s" is missing', $col, $table->name() ) );
+				throw new \RuntimeException( sprintf( 'Column "%1$s" in table "%2$s" is missing', $col, $table->name() ) );
 			}
 
 			if( !isset( $localcolumn[$idx] ) ) {
-				\LogicException( sprintf( 'No matching local column for foreign column "%1$s" in table "%2$s"', $col ) );
+				throw new \LogicException( sprintf( 'No matching local column for foreign column "%1$s" in table "%2$s"', $col, $foreigntable ) );
 			}
 
-			$localcol = $localcolumn[$idx];
-			$dbalcolumn = $table->getColumn( $col );
-			$options = $dbalcolumn->toArray();
-			unset( $options['name'], $options['autoincrement'] );
-
-			if( $this->table->hasColumn( $localcol ) ) {
-				$this->table->changeColumn( $localcol, $options );
-			} else {
-				$this->table->addColumn( $localcol, $dbalcolumn->getType()->getName(), $options );
-			}
+			$this->copyColumn( $table->getColumn( $col ), $localcolumn[$idx] );
 		}
 
 		$name = $name ?: $this->nameIndex( $this->name(), $localcolumn, 'fk' );
@@ -610,7 +601,7 @@ class Table
 	public function opt( string $name, $value = null )
 	{
 		if( $value === null ) {
-			return $this->table->getOption( $option );
+			return $this->table->getOption( $name );
 		}
 
 		$this->table->addOption( $name, $value );
@@ -629,14 +620,16 @@ class Table
 	{
 		$columns = (array) $columns;
 		$index = $this->table->getPrimaryKey();
-		$name = $name ?: $this->nameIndex( $this->name(),  $columns, 'pk' );
 
 		if( $index && $index->spansColumns( $columns ) ) {
 			return $this;
-		} elseif( $index ) {
+		}
+
+		if( $index ) {
 			$this->table->dropPrimaryKey();
 		}
 
+		$name = $name ?: $this->nameIndex( $this->name(),  $columns, 'pk' );
 		$this->table->setPrimaryKey( $columns, $name );
 		return $this;
 	}
@@ -738,6 +731,27 @@ class Table
 	{
 		$this->db->up();
 		return $this;
+	}
+
+
+	/**
+	 * Adds a new column to the table by copying the given column
+	 *
+	 * If the column already exists, the column specification is changed if necessary
+	 *
+	 * @param \Doctrine\DBAL\Schema\Column $column Doctrine column object
+	 * @param string $name New local column name
+	 */
+	protected function copyColumn( \Doctrine\DBAL\Schema\Column $column, $name )
+	{
+		$options = $column->toArray();
+		unset( $options['name'], $options['autoincrement'] );
+
+		if( $this->table->hasColumn( $name ) ) {
+			$this->table->changeColumn( $name, $options );
+		} else {
+			$this->table->addColumn( $name, $column->getType()->getName(), $options );
+		}
 	}
 
 
