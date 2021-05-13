@@ -118,10 +118,24 @@ class Table
 	/**
 	 * Creates a new column of type "boolean" or returns the existing one
 	 *
+	 * This method is an alias for boolean()
+	 *
 	 * @param string $name Name of the column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
 	public function bool( string $name ) : Column
+	{
+		return $this->boolean( $name );
+	}
+
+
+	/**
+	 * Creates a new column of type "boolean" or returns the existing one
+	 *
+	 * @param string $name Name of the column
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function boolean( string $name ) : Column
 	{
 		return $this->col( $name, 'boolean' )->default( false );
 	}
@@ -211,12 +225,38 @@ class Table
 
 
 	/**
+	 * Creates a new column of type "guid" or returns the existing one
+	 *
+	 * @param string $name Name of the column
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function guid( string $name ) : Column
+	{
+		return $this->col( $name, 'guid' );
+	}
+
+
+	/**
 	 * Creates a new column of type "integer" or returns the existing one
+	 *
+	 * This method is an alias for integer()
 	 *
 	 * @param string $name Name of the column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
 	public function int( string $name ) : Column
+	{
+		return $this->integer( $name );
+	}
+
+
+	/**
+	 * Creates a new column of type "integer" or returns the existing one
+	 *
+	 * @param string $name Name of the column
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function integer( string $name ) : Column
 	{
 		return $this->col( $name, 'integer' )->default( 0 );
 	}
@@ -292,12 +332,14 @@ class Table
 	/**
 	 * Creates a new column of type "guid" or returns the existing one
 	 *
+	 * This method is an alias for guid()
+	 *
 	 * @param string $name Name of the column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
 	public function uuid( string $name ) : Column
 	{
-		return $this->col( $name, 'guid' );
+		return $this->guid( $name );
 	}
 
 
