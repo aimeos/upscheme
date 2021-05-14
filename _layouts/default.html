@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="{{ site.lang | default: "en-US" }}">
+	<head>
+		<title>Upscheme - Database migrations and schema updates made easy</title>
+		<meta name="description" content="Easy to use PHP package for updating the database schema of your application and migrate data between versions" />
+		<link rel="canonical" href="https://upscheme.org/" />
+
+		<meta property="og:title" content="Upscheme" />
+		<meta property="og:locale" content="en_US" />
+		<meta property="og:description" content="Easy to use PHP package for updating the database schema of your application and migrate data between versions" />
+		<meta property="og:url" content="https://upscheme.org/" />
+
+		<meta name="twitter:title" content="Upscheme" />
+		<meta name="twitter:description" content="Easy to use PHP package for updating the database schema of your application and migrate data between versions" />
+		<meta name="twitter:card" content="summary_large_image" />
+
+		<meta name="theme-color" content="#157878">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
+		<link rel="preconnect" href="https://fonts.googleapis.com" crossorigin="anonymous">
+
+		<script type="application/ld+json">
+			{"@type":"WebSite","headline":"Upscheme - Manual","url":"https://upscheme.org/","description":"Easy to use PHP package for updating the database schema of your application and migrate data between versions","name":"Upscheme","@context":"https://schema.org"}
+		</script>
+	</head>
+	<body>
+		<header class="page-header" role="banner">
+			<h1 class="project-name"><a href="https://upscheme.org/">Upscheme</a></h1>
+			<h2 class="project-tagline">{{ page.description | default: site.description | default: site.github.project_tagline }}</h2>
+			{% if site.github.is_project_page %}
+				<a href="{{ site.github.repository_url }}" class="btn github">View on GitHub</a>
+				<a href="{{ site.github.repository_url }}" class="icon github">
+					<img class="octocat" src="https://github.githubassets.com/images/modules/logos_page/Octocat.png" alt="View on Github" />
+				</a>
+			{% endif %}
+
+			<svg class="open show" viewBox="0 0 80 60" width="45" height="45" fill="#ffffff">
+				<rect width="80" height="7.5" rx="5"></rect>
+				<rect y="25" width="80" height="7.5" rx="5"></rect>
+				<rect y="50" width="80" height="7.5" rx="5"></rect>
+			</svg>
+			<svg class="close" viewBox="0 0 80 60" width="45" height="45">
+				<line x1="10" y1="60"  x2="70" y2="0" stroke="#ffffff" stroke-width="7.5"/>
+				<line x1="10" y1="0"  x2="70" y2="60" stroke="#ffffff" stroke-width="7.5"/>
+			</svg>
+		</header>
+
+		<div class="container">
+			<nav class="sidebar">
+				<h2><label for="method-search">Methods</label></h2>
+				<input id="method-search" class="search" placeholder="Search" />
+				<div class="methods"></div>
+			</nav>
+			<main id="content" class="main-content" role="main">
+				{{ content }}
+			</main>
+		</div>
+
+		<script src="{{ '/assets/js/script.js?v=' | append: site.github.build_revision | relative_url }}"></script>
+	</body>
+</html>
