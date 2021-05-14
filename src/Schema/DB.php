@@ -196,26 +196,6 @@ class DB
 
 
 	/**
-	 * Drops the unique index given by its name if it exists
-	 *
-	 * @param string $table Name of the table the unique index belongs to
-	 * @param array|string $name Name of the unique index or indexes
-	 * @return self Same object for fluid method calls
-	 */
-	public function dropUnique( string $table, $name ) : self
-	{
-		foreach( (array) $name as $entry )
-		{
-			if( $this->hasUnique( $table, $entry ) ) {
-				$this->table( $table )->dropUnique( $entry );
-			}
-		}
-
-		return $this->up();
-	}
-
-
-	/**
 	 * Executes a custom SQL statement if the database is of the given type
 	 *
 	 * The database changes are not applied immediately so always call up()
@@ -326,23 +306,6 @@ class DB
 		}
 
 		return true;
-	}
-
-
-	/**
-	 * Checks if the unique index exists
-	 *
-	 * @param string $table Name of the table the unique index belongs to
-	 * @param string $name Name of the unique index or indexes
-	 * @return TRUE if the unique index exists, FALSE if not
-	 */
-	public function hasUnique( string $table, $name ) : bool
-	{
-		if( $this->hasTable( $table ) ) {
-			return $this->table( $table )->hasUnique( $name );
-		}
-
-		return false;
 	}
 
 

@@ -263,7 +263,6 @@ class TableTest extends \PHPUnit\Framework\TestCase
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
 		$this->assertEquals( 'unittest', $col->name() );
 		$this->assertEquals( 'json', $col->type() );
-		$this->assertEquals( '{}', $col->default() );
 	}
 
 
@@ -367,15 +366,6 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testDropUnique()
-	{
-		$this->tablemock->expects( $this->once() )->method( 'hasUniqueConstraint' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'removeUniqueConstraint' );
-
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropUnique( 'unittest' ) );
-	}
-
-
 	public function testHasColumn()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
@@ -415,20 +405,6 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasForeignKey' )->will( $this->returnValue( true ) );
 		$this->assertTrue( $this->object->hasForeign( ['unittest', 'testunit'] ) );
-	}
-
-
-	public function testHasUnique()
-	{
-		$this->tablemock->expects( $this->once() )->method( 'hasUniqueConstraint' )->will( $this->returnValue( true ) );
-		$this->assertTrue( $this->object->hasUnique( 'unittest' ) );
-	}
-
-
-	public function testHasUniqueMultiple()
-	{
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasUniqueConstraint' )->will( $this->returnValue( true ) );
-		$this->assertTrue( $this->object->hasUnique( ['unittest', 'testunit'] ) );
 	}
 
 

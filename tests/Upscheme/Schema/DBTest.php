@@ -194,26 +194,6 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testDropUnique()
-	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasUnique' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'dropUnique' );
-
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropUnique( 'unit', 'test' ) );
-	}
-
-
-	public function testDropUniqueMultiple()
-	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasUnique' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'dropUnique' );
-
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropUnique( 'unit', ['test', 'test2'] ) );
-	}
-
-
 	public function testFor()
 	{
 		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mysql' ) );
@@ -314,22 +294,6 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
 		$this->assertFalse( $this->object->hasTable( 'unit', 'test' ) );
-	}
-
-
-	public function testHasUnique()
-	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasUnique' )->will( $this->returnValue( true ) );
-
-		$this->assertTrue( $this->object->hasUnique( 'unit', 'test' ) );
-	}
-
-
-	public function testHasUniqueNot()
-	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->assertFalse( $this->object->hasUnique( 'unit', 'test' ) );
 	}
 
 

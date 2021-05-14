@@ -416,25 +416,6 @@ class Table
 
 
 	/**
-	 * Drops the unique index given by its name if it exists
-	 *
-	 * @param array|string $name Name of the unique index or indexes
-	 * @return self Same object for fluid method calls
-	 */
-	public function dropUnique( $name ) : self
-	{
-		foreach( (array) $name as $entry )
-		{
-			if( $this->table->hasUniqueConstraint( $entry ) ) {
-				$this->table->removeUniqueConstraint( $entry );
-			}
-		}
-
-		return $this;
-	}
-
-
-	/**
 	 * Checks if the column exists
 	 *
 	 * @param array|string $name Name of the column or columns
@@ -483,25 +464,6 @@ class Table
 		foreach( (array) $name as $entry )
 		{
 			if( !$this->table->hasForeignKey( $entry ) ) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
-
-	/**
-	 * Checks if the unique index exists
-	 *
-	 * @param array|string $name Name of the unique index or indexes
-	 * @return TRUE if the unique indexes exists, FALSE if not
-	 */
-	public function hasUnique( $name ) : bool
-	{
-		foreach( (array) $name as $entry )
-		{
-			if( !$this->table->hasUniqueConstraint( $entry ) ) {
 				return false;
 			}
 		}
