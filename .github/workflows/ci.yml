@@ -3,9 +3,11 @@ name: "Continuous Integration"
 on:
   pull_request:
     branches:
+      - master
       - "*.x"
   push:
     branches:
+      - master
       - "*.x"
   schedule:
     - cron: "42 4 * * *"
