@@ -83,7 +83,7 @@ class Table
 	 */
 	public function bigint( string $name ) : Column
 	{
-		return $this->col( $name, 'bigint' )->default( 0 );
+		return $this->col( $name, 'bigint' );
 	}
 
 
@@ -94,9 +94,9 @@ class Table
 	 * @param int $length Length of the column in bytes
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function binary( string $name, int $length = null ) : Column
+	public function binary( string $name, int $length = 255 ) : Column
 	{
-		return $this->col( $name, 'binary' )->length( $length )->default( '' );
+		return $this->col( $name, 'binary' )->default( '' )->length( $length );
 	}
 
 
@@ -109,9 +109,9 @@ class Table
 	 * @param int $length Length of the column in bytes
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function blob( string $name, int $length = null ) : Column
+	public function blob( string $name, int $length = 0x7fff ) : Column
 	{
-		return $this->col( $name, 'blob' )->length( $length )->default( '' );
+		return $this->col( $name, 'blob' )->length( $length );
 	}
 
 
@@ -258,7 +258,7 @@ class Table
 	 */
 	public function integer( string $name ) : Column
 	{
-		return $this->col( $name, 'integer' )->default( 0 );
+		return $this->col( $name, 'integer' );
 	}
 
 
@@ -270,7 +270,7 @@ class Table
 	 */
 	public function json( string $name ) : Column
 	{
-		return $this->col( $name, 'json' )->default( '{}' );
+		return $this->col( $name, 'json' );
 	}
 
 
@@ -298,7 +298,7 @@ class Table
 	 */
 	public function string( string $name, int $length = 255 ) : Column
 	{
-		return $this->col( $name, 'string' )->length( $length )->default( '' );
+		return $this->col( $name, 'string' )->default( '' )->length( $length );
 	}
 
 
@@ -313,7 +313,7 @@ class Table
 	 */
 	public function text( string $name, int $length = 0xffff ) : Column
 	{
-		return $this->col( $name, 'text' )->length( $length )->default( '' );
+		return $this->col( $name, 'text' )->length( $length );
 	}
 
 
