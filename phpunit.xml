@@ -9,5 +9,8 @@
     <testsuite name="unittest">
       <directory>tests/Upscheme</directory>
     </testsuite>
+    <testsuite name="functional">
+      <directory>tests/Tasks</directory>
+    </testsuite>
   </testsuites>
 </phpunit>
