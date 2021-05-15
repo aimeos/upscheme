@@ -33,10 +33,8 @@ class Up
 	 * @param array $config One or more database configuration parameters
 	 * @param array|string One or more paths to the tasks which updates the database
 	 */
-	public function __construct( array $config, $paths = [] )
+	public function __construct( array $config, $paths )
 	{
-		self::$paths = (array) $paths;
-
 		if( spl_autoload_register( 'Aimeos\Upscheme\Up::autoload' ) === false ) {
 			throw new \RuntimeException( 'Unable to register Aimeos\Upscheme\Up::autoload' );
 		}
@@ -45,7 +43,12 @@ class Up
 			throw new \RuntimeException( 'No database configuration passed' );
 		}
 
+		if( empty( $paths ) ) {
+			throw new \RuntimeException( 'No path for the tasks passed' );
+		}
+
 		$this->config = $config;
+		self::$paths = (array) $paths;
 	}
 
 
@@ -86,7 +89,7 @@ class Up
 	 * @param array|string One or more paths to the tasks which updates the database
 	 * @return \Aimeos\Upscheme\Up Upscheme object
 	 */
-	public static function use( array $config, $paths = [] )
+	public static function use( array $config, $paths )
 	{
 		return new self( $config, $paths );
 	}
@@ -95,19 +98,20 @@ class Up
 	/**
 	 * Returns the DB schema for the passed connection name
 	 *
-	 * @param string|null $name Name of the connection from the configuration or NULL for first one
+	 * @param string $name Name of the connection from the configuration or empty string for first one
 	 * @param bool $new If a new connection should be created instead of reusing an existing one
 	 * @return \Aimeos\Upscheme\Schema\DB DB schema object
 	 */
-	public function db( string $name = null, bool $new = false ) : \Aimeos\Upscheme\Schema\DB
+	public function db( string $name = '', bool $new = false ) : \Aimeos\Upscheme\Schema\DB
 	{
-		if( !isset( $this->db[$name] ) )
-		{
-			$cfg = $this->config[$name] ?? ( is_array( $first = reset( $this->config ) ) ? $first : $this->config );
+		if( !isset( $this->config[$name] ) ) {
+			$cfg = is_array( $first = reset( $this->config ) ) ? $first : $this->config; $name = '';
+		} else {
+			$cfg = $this->config[$name];
+		}
 
-			$conn = ( $fcn = self::macro( 'db' ) ) ? $fcn( $cfg ) : $this->createConnection( $cfg );
-
-			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $conn );
+		if( !isset( $this->db[$name] ) ) {
+			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $this->createConnection( $cfg ) );
 		}
 
 		return $new ? clone $this->db[$name] : $this->db[$name];
@@ -123,13 +127,13 @@ class Up
 	 */
 	public function info( string $msg, $level = 'v' ) : self
 	{
-		if( $fcn = self::macro( 'info' ) )
+		if( self::macro( 'info' ) )
 		{
-			$fcn( $msg, $level );
+			$this->call( 'info', [$msg, $level] );
 			return $this;
 		}
 
-		if( $len = strlen( (string) $level ) <= $this->verbose ) {
+		if( strlen( (string) $level ) <= $this->verbose ) {
 			echo $msg . PHP_EOL;
 		}
 
@@ -175,7 +179,7 @@ class Up
 	 */
 	public function verbose( $level = 'v' ) : self
 	{
-		$this->verbose = ( $fcn = self::macro( 'verbose' ) ) ? $fcn( $level ) : strlen( (string) $level );
+		$this->verbose = ( self::macro( 'verbose' ) ) ? $this->call( 'verbose', [$level] ) : strlen( (string) $level );
 		return $this;
 	}
 
@@ -192,6 +196,10 @@ class Up
 		$cfg['driverOptions'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
 		$cfg['driverOptions'][\PDO::ATTR_ORACLE_NULLS] = \PDO::NULL_NATURAL;
 		$cfg['driverOptions'][\PDO::ATTR_STRINGIFY_FETCHES] = false;
+
+		if( self::macro( 'createConnection' ) ) {
+			$cfg = $this->call( 'createConnection', [$cfg] );
+		}
 
 		return \Doctrine\DBAL\DriverManager::getConnection( $cfg );
 	}
