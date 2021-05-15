@@ -12,9 +12,6 @@ on:
   schedule:
     - cron: "42 4 * * *"
 
-env:
-  fail-fast: true
-
 jobs:
   sqlite:
     runs-on: ubuntu-latest
@@ -54,3 +51,8 @@ jobs:
 
     - name: "Run PHPUnit"
       run: "vendor/bin/phpunit --coverage-clover=coverage.xml"
+
+    - name: Publish to coveralls.io
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: ./vendor/bin/php-coveralls -o coveralls.json -x coverage.xml -vvv
