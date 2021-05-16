@@ -37,7 +37,7 @@ class Update extends Base
 			'code' => ['test', 'test '], // MySQL/SQLite, PostgreSQL
 			'config' => ['{}'],
 			'content' => ['some text'],
-			'ctime' => ['2000-01-01 00:00:00'],
+			'ctime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00.000000'], // MySQL5/PostgreSQL/SQLite, SQLServer
 //			'hex' => ['0xff'],
 			'id' => [1],
 //			'image' => ['svg+xml:'],
@@ -48,7 +48,7 @@ class Update extends Base
 			'status' => [1],
 			'time' => ['12:00:00'],
 			'type' => [123],
-			'uuid' => ['7e57d004-2b97-0e7a-b45f-5387367791cd'],
+			'uuid' => ['7e57d004-2b97-0e7a-b45f-5387367791cd', '7E57D004-2B97-0E7A-B45F-5387367791CD'], // MySQL5/PostgreSQL/SQLite, SQLServer
 			'editor' => [null]
 		];
 
