@@ -304,6 +304,13 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testLastId()
+	{
+		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->will( $this->returnValue( '123' ) );
+		$this->assertEquals( '123', $this->object->lastId() );
+	}
+
+
 	public function testSequence()
 	{
 		$seqmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Sequence' )

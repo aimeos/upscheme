@@ -327,6 +327,18 @@ class DB
 
 
 	/**
+	 * Returns the ID of the last inserted row into any database table
+	 *
+	 * @param string|null $seq Name of the sequence generating the ID
+	 * @return string Generated ID from the database
+	 */
+	public function lastId( string $seq = null ) : string
+	{
+		return $this->conn->lastInsertId( $seq );
+	}
+
+
+	/**
 	 * Returns the records from the given table
 	 *
 	 * Warning: The condition values are escaped but the table name and condition
