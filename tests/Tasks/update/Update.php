@@ -14,7 +14,7 @@ class Update extends Base
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
-			$t->dropIndex( 'idx_status_type' )->up(); // workaround for SQL Server
+			$t->dropIndex( 'unq_code' )->dropIndex( 'idx_status_type' )->up(); // workaround for SQL Server
 
 			$t->time( 'time' )->comment( 'some time' );
 			$t->text( 'content' )->length( 255 );
@@ -24,6 +24,9 @@ class Update extends Base
 			$t->int( 'pos' )->type( 'smallint' );
 			$t->smallint( 'type' )->unsigned( true );
 			$t->string( 'code', 5 )->fixed( true );
+
+			$t->unique( 'code', 'unq_code' );
+			$t->index( ['status', 'pos'], 'idx_status_type' );
 
 		} )->dropColumn( 'test' )->up();
 

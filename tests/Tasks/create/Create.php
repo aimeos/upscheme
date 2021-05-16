@@ -37,7 +37,7 @@ class Create extends Base
 			$t->uuid( 'uuid' );
 			$t->default();
 
-			$t->unique( 'code' );
+			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_type' );
 
 		} );
