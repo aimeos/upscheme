@@ -38,7 +38,7 @@ class Create extends Base
 			$t->default();
 
 			$t->unique( 'code' );
-			$t->index( ['status', 'pos'] );
+			$t->index( ['status', 'pos'], 'idx_status_type' );
 
 		} );
 

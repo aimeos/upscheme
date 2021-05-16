@@ -14,6 +14,8 @@ class Update extends Base
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
+			$t->dropIndex( 'idx_status_type' )->up(); // workaround for SQL Server
+
 			$t->time( 'time' )->comment( 'some time' );
 			$t->text( 'content' )->length( 255 );
 			$t->bool( 'status' )->default( true );
