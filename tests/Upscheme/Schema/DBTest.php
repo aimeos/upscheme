@@ -232,7 +232,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasColumnNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
 		$this->assertFalse( $this->object->hasColumn( 'unit', 'test' ) );
 	}
 
@@ -248,7 +248,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasForeignNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
 		$this->assertFalse( $this->object->hasForeign( 'unit', 'test' ) );
 	}
 
@@ -264,7 +264,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasIndexNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
 		$this->assertFalse( $this->object->hasIndex( 'unit', 'test' ) );
 	}
 

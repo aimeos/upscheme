@@ -28,12 +28,14 @@ class Create extends Base
 			$t->decimal( 'price', 10 );
 			$t->float( 'scale' );
 			$t->int( 'pos' );
+			$t->int( 'test' );
 			$t->json( 'config' );
 			$t->smallint( 'type' );
 			$t->string( 'code' );
 			$t->text( 'content' );
 			$t->time( 'time' );
 			$t->uuid( 'uuid' );
+			$t->default();
 
 			$t->unique( 'code' );
 			$t->index( ['status', 'pos'] );
@@ -51,5 +53,13 @@ class Create extends Base
 
 		} );
 
+		$db->insert( 'test', [
+			'hex' => '0xff', 'image' => 'svg+xml:', 'status' => true, 'birthday' => '2000-01-01',
+			'ctime' => '2000-01-01 00:00:00', 'mtime' => '2000-01-01 00:00:00', 'price' => '100.00',
+			'scale' => 0.1, 'pos' => 1, 'test' => 1234, 'config' => '{}', 'type' => 123, 'code' => 'test',
+			'content' => 'some text', 'time' => '12:00:00', 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd'
+		] );
+
+		$db->insert( 'testref', ['parentid' => $db->lastId(), 'label' => 'test ref'] );
 	}
 }

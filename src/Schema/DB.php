@@ -355,9 +355,9 @@ class DB
 	public function select( string $table, array $conditions = null ) : array
 	{
 		$idx = 0;
-		$result = [];
+		$list = [];
 
-		$stmt = $this->conn->createQueryBuilder()->select()->from( $table );
+		$stmt = $this->conn->createQueryBuilder()->select( '*' )->from( $table );
 
 		foreach( $conditions ?? [] as $column => $value ) {
 			$stmt->where( $column . ' = ?' )->setParameter( $idx, $value );
@@ -365,11 +365,11 @@ class DB
 
 		$result = $stmt->executeQuery();
 
-		while( $row = $stmt->fetchAssociative() ) {
-			$result[] = $row;
+		while( $row = $result->fetchAssociative() ) {
+			$list[] = $row;
 		}
 
-		return $result;
+		return $list;
 	}
 
 

@@ -23,7 +23,27 @@ class Update extends Base
 			$t->smallint( 'type' )->unsigned( true );
 			$t->string( 'code' )->fixed( true );
 
-		} )->dropColumn( 'scale' );
+		} )->dropColumn( 'test' )->up();
 
+		$rows = $this->db( 'test' )->select( 'test' );
+		ksort( $rows[0] );
+
+		$expected = [
+			'birthday' => '2000-01-01', 'code' => 'test', 'config' => '{}', 'content' => 'some text',
+			'ctime' => '2000-01-01 00:00:00', 'hex' => '0xff', 'id' => 1, 'image' => 'svg+xml:',
+			'mtime' => '2000-01-01 00:00:00', 'pos' => 1, 'price' => 100, 'scale' => 0.1, 'status' => 1,
+			'time' => '12:00:00', 'type' => 123, 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd',
+			'editor' => null
+		];
+
+		foreach( $expected as $key => $value )
+		{
+			if( $rows[0][$key] != $value )
+			{
+				$d1 = var_export( $value, true );
+				$d2 = var_export( $rows[0][$key], true );
+				throw new \RuntimeException( "Data mismatch, expected: " . $d1 . ", actual: " . $d2 );
+			}
+		}
 	}
 }

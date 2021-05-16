@@ -43,6 +43,13 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testCall()
+	{
+		$this->expectException( '\BadMethodCallException' );
+		$this->object->unittest2();
+	}
+
+
 	public function testGetMagic()
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Foreign' )
@@ -70,9 +77,15 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testName()
+	public function testNameGet()
 	{
 		$this->assertEquals( 'fk_name', $this->object->name() );
+	}
+
+
+	public function testNameSet()
+	{
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Foreign::class, $this->object->name( 'fk_name2' ) );
 	}
 
 

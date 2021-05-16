@@ -59,5 +59,7 @@ trait Macro
 		if( $fcn = self::macro( $method ) ) {
 			return call_user_func_array( $fcn->bindTo( $this, static::class ), $args );
 		}
+
+		throw new \BadMethodCallException( sprintf( 'Unknown method "%1$s" in %2$s', $method, __CLASS__ ) );
 	}
 }

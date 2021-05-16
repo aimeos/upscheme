@@ -373,6 +373,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testHasColumnNot()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( false ) );
+		$this->assertFalse( $this->object->hasColumn( 'unittest' ) );
+	}
+
+
 	public function testHasColumnMultiple()
 	{
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
@@ -387,6 +394,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testHasIndexNot()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( false ) );
+		$this->assertFalse( $this->object->hasIndex( 'unittest' ) );
+	}
+
+
 	public function testHasIndexMultiple()
 	{
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->will( $this->returnValue( true ) );
@@ -398,6 +412,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->will( $this->returnValue( true ) );
 		$this->assertTrue( $this->object->hasForeign( 'unittest' ) );
+	}
+
+
+	public function testHasForeignNot()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->will( $this->returnValue( false ) );
+		$this->assertFalse( $this->object->hasForeign( 'unittest' ) );
 	}
 
 
