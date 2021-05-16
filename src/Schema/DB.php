@@ -365,7 +365,15 @@ class DB
 
 		$result = $stmt->executeQuery();
 
-		while( $row = $result->fetchAssociative() ) {
+		while( $row = $result->fetchAssociative() )
+		{
+			foreach( $row as $key => $value )
+			{
+				if( is_resource( $value ) ) {
+					$row[$key] = stream_get_contents( $value );
+				}
+			}
+
 			$list[] = $row;
 		}
 
