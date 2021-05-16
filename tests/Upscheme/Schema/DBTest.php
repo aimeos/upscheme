@@ -39,7 +39,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 
-		$this->connmock->expects( $this->any() )->method( 'createSchemaManager' )
+		$method = method_exists( $this->connmock, 'createSchemaManager' ) ? 'createSchemaManager' : 'getSchemaManager';
+		$this->connmock->expects( $this->any() )->method( $method )
 			->will( $this->returnValue( $smmock ) );
 
 		$smmock->expects( $this->any() )->method( 'createSchema' )

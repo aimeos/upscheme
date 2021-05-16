@@ -31,7 +31,9 @@ class DB
 	 */
 	public function __construct( \Aimeos\Upscheme\Up $up, \Doctrine\DBAL\Connection $conn )
 	{
-		$this->to = $conn->createSchemaManager()->createSchema();
+		$manager = method_exists( $conn, 'createSchemaManager' ) ? $conn->createSchemaManager() : $conn->getSchemaManager();
+
+		$this->to = $manager->createSchema();
 		$this->from = clone $this->to;
 
 		$this->conn = $conn;
@@ -357,13 +359,13 @@ class DB
 		$idx = 0;
 		$list = [];
 
-		$stmt = $this->conn->createQueryBuilder()->select( '*' )->from( $table );
+		$builder = $this->conn->createQueryBuilder()->select( '*' )->from( $table );
 
 		foreach( $conditions ?? [] as $column => $value ) {
-			$stmt->where( $column . ' = ?' )->setParameter( $idx, $value );
+			$builder->where( $column . ' = ?' )->setParameter( $idx, $value );
 		}
 
-		$result = $stmt->executeQuery();
+		$result = method_exists( $builder, 'executeQuery' ) ? $builder->executeQuery() : $builder->execute();
 
 		while( $row = $result->fetchAssociative() )
 		{

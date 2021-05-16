@@ -96,7 +96,7 @@ class Table
 	 */
 	public function binary( string $name, int $length = 255 ) : Column
 	{
-		return $this->col( $name, 'binary' )->default( '' )->length( $length );
+		return $this->col( $name, 'binary' )->length( $length );
 	}
 
 
@@ -298,7 +298,7 @@ class Table
 	 */
 	public function string( string $name, int $length = 255 ) : Column
 	{
-		return $this->col( $name, 'string' )->default( '' )->length( $length );
+		return $this->col( $name, 'string' )->length( $length );
 	}
 
 
