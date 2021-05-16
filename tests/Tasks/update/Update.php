@@ -36,7 +36,7 @@ class Update extends Base
 //			'hex' => ['0xff'],
 			'id' => [1],
 //			'image' => ['svg+xml:'],
-			'mtime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00+00'], // Standard, PostgreSQL
+//			'mtime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00+xx'], // MySQL5/SQLite, PostgreSQL
 			'pos' => [1],
 			'price' => [100],
 			'scale' => [0.1],
