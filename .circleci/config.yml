@@ -1,0 +1,141 @@
+# PHP CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-php/ for more details
+#
+version: 2
+
+jobs:
+  "php-7.1 / mariadb-10":
+    docker:
+      - image: aimeos/ci-php:7.1
+      - image: circleci/mariadb:10
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: upscheme
+          MYSQL_USER: upscheme
+          MYSQL_PASSWORD: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php71-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php71-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-7.2 / mysql-5.7":
+    docker:
+      - image: aimeos/ci-php:7.2
+      - image: circleci/mysql:5.7
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: upscheme
+          MYSQL_USER: upscheme
+          MYSQL_PASSWORD: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php72-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php72-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-7.3 / pgsql-13":
+    docker:
+      - image: aimeos/ci-php:7.3
+      - image: circleci/postgres:13
+        environment:
+          POSTGRES_PASSWORD: upscheme
+          POSTGRES_USER: upscheme
+          POSTGRES_DB: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php73-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php73-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 5432 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-7.4 / mssql-2019":
+    docker:
+      - image: aimeos/ci-php:7.4
+      - image: mcr.microsoft.com/mssql/server:2019-latest
+        environment:
+          SA_PASSWORD: S3c0r3P4ss
+          ACCEPT_EULA: Y
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php74-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php74-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: echo "CREATE DATABASE upscheme;" > sqlserver.sql; for i in `seq 1 5`; do /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'S3c0r3P4ss' -i sqlserver.sql && exit 0; sleep 3; done
+      - run: echo "<?php return ['driver' => 'pdo_sqlsrv', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'SA', 'password' => 'S3c0r3P4ss'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-8.0 / mysql-8.0":
+    docker:
+      - image: aimeos/ci-php:8.0
+      - image: circleci/mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: upscheme
+          MYSQL_USER: upscheme
+          MYSQL_PASSWORD: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php80-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php80-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-7.4 / sqlite":
+    docker:
+      - image: aimeos/ci-php:7.4
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php80-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php80-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: echo "<?php return ['driver' => 'pdo_sqlite', 'path' => 'sqlite.test'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+      - run: ./vendor/bin/php-coveralls -vvv
+
+workflows:
+  version: 2
+  unittest:
+    jobs:
+      - "php-7.1 / mariadb-10"
+      - "php-7.2 / mysql-5.7"
+      - "php-7.3 / pgsql-13"
+      - "php-7.4 / mssql-2019"
+      - "php-8.0 / mysql-8.0"
+      - "php-7.4 / sqlite"
+
