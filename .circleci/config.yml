@@ -112,9 +112,9 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.4 / sqlite":
+  "php-8.0 / sqlite":
     docker:
-      - image: aimeos/ci-php:7.4
+      - image: aimeos/ci-php:8.0
     steps:
       - checkout
       - restore_cache:
@@ -125,8 +125,8 @@ jobs:
           key: php80-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "<?php return ['driver' => 'pdo_sqlite', 'path' => 'sqlite.test'];" > tests/config.php
-      - run: ./vendor/bin/phpunit
-      - run: ./vendor/bin/php-coveralls -vvv
+      - run: ./vendor/bin/phpunit --coverage-clover coverage.xml
+      - run: ./vendor/bin/php-coveralls -vvv -x coverage.xml
 
 workflows:
   version: 2
@@ -137,5 +137,5 @@ workflows:
       - "php-7.3 / pgsql-13"
       - "php-7.4 / mssql-2019"
       - "php-8.0 / mysql-8.0"
-      - "php-7.4 / sqlite"
+      - "php-8.0 / sqlite"
 
