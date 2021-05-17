@@ -221,7 +221,7 @@ class Up
 			{
 				if( $item->isDir() === true || substr( $item->getFilename(), -4 ) != '.php' ) { continue; }
 
-				$this->includeFile( $item->getPathName() );
+				include_once $item->getPathName();
 
 				$taskname = substr( $item->getFilename(), 0, -4 );
 				$classname = '\Aimeos\Upscheme\Task\\' . $taskname;
@@ -244,19 +244,6 @@ class Up
 
 		ksort( $tasks );
 		return $tasks;
-	}
-
-
-	/**
-	 * Includes a PHP file.
-	 *
-	 * @param string $pathname Path to the file including the file name
-	 */
-	protected function includeFile( string $pathname )
-	{
-		if( ( include_once $pathname ) === false ) {
-			throw new \RuntimeException( sprintf( 'Unable to include file "%1$s"', $pathname ) );
-		}
 	}
 
 
