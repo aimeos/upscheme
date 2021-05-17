@@ -6,7 +6,7 @@ namespace Aimeos\Upscheme\Task;
 use Aimeos\Upscheme\Schema\Table;
 
 
-class Iface
+class NoIface
 {
 	public function before() : array
 	{

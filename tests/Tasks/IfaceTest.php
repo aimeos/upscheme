@@ -19,6 +19,6 @@ class IfaceTest extends \PHPUnit\Framework\TestCase
 	public function testIface()
 	{
 		$this->expectException( '\RuntimeException' );
-		\Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/invalid' )->up();
+		\Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/iface' )->up();
 	}
 }
