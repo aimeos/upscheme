@@ -30,7 +30,7 @@ class Update extends Base
 
 		} )->dropColumn( 'test' )->up();
 
-		$rows = $this->db( 'test' )->select( 'test' );
+		$rows = $this->db( 'test' )->select( 'test', ['id' => 1, 'pos' => 1] );
 
 		$expected = [
 			'birthday' => ['2000-01-01'],
