@@ -11,12 +11,17 @@ namespace Aimeos\Upscheme\Schema;
 class ColumnTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
+	private $dbmock;
 	private $colmock;
 	private $tablemock;
 
 
 	protected function setUp() : void
 	{
+		$this->dbmock = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
+			->disableOriginalConstructor()
+			->getMock();
+
 		$this->tablemock = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Table' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -25,13 +30,13 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->object = new \Aimeos\Upscheme\Schema\Column( $this->tablemock, $this->colmock );
+		$this->object = new \Aimeos\Upscheme\Schema\Column( $this->dbmock, $this->tablemock, $this->colmock );
 	}
 
 
 	protected function tearDown() : void
 	{
-		unset( $this->object, $this->colmock, $this->tablemock );
+		unset( $this->object, $this->colmock, $this->tablemock, $this->dbmock );
 	}
 
 
@@ -82,6 +87,24 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes' ) );
+	}
+
+
+	public function testOptSetType()
+	{
+		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'mydb' ) );
+	}
+
+
+	public function testOptSetTypeNot()
+	{
+		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->colmock->expects( $this->never() )->method( 'setCustomSchemaOption' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'yourdb' ) );
 	}
 
 

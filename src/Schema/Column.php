@@ -17,6 +17,7 @@ class Column
 	use \Aimeos\Upscheme\Macro;
 
 
+	private $db;
 	private $table;
 	private $column;
 
@@ -24,11 +25,13 @@ class Column
 	/**
 	 * Initializes the table object
 	 *
+	 * @param \Aimeos\Upscheme\Schema\DB $db DB schema object
 	 * @param \Aimeos\Upscheme\Schema\Table $table Table schema object
 	 * @param \Doctrine\DBAL\Schema\Column $column Doctrine column object
 	 */
-	public function __construct( Table $table, \Doctrine\DBAL\Schema\Column $column )
+	public function __construct( DB $db, Table $table, \Doctrine\DBAL\Schema\Column $column )
 	{
+		$this->db = $db;
 		$this->table = $table;
 		$this->column = $column;
 	}
@@ -80,15 +83,19 @@ class Column
 	 *
 	 * @param string $option Column option name
 	 * @param mixed $value New column option value or NULL to return current value
+	 * @param array|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @return self|mixed Same object for setting the value, current value without parameter
 	 */
-	public function opt( string $option, $value = null )
+	public function opt( string $option, $value = null, $for = null )
 	{
 		if( $value === null ) {
 			return $this->column->getCustomSchemaOption( $option );
 		}
 
-		$this->column->setCustomSchemaOption( $option, $value );
+		if( $for === null || in_array( $this->db->type(), (array) $for ) ) {
+			$this->column->setCustomSchemaOption( $option, $value );
+		}
+
 		return $this;
 	}
 

@@ -204,14 +204,13 @@ class DB
 	 * before executing custom statements to make sure that the tables you want
 	 * to use has been created before!
 	 *
-	 * @param string $type Database type
+	 * @param array|string $type Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @param array|string $sql Custom SQL statement or statements
 	 * @return self Same object for fluid method calls
-	 * @see type() method for available types
 	 */
-	public function for( string $type, $sql ) : self
+	public function for( $for, $sql ) : self
 	{
-		if( $this->type() === $type )
+		if( in_array( $this->type(), (array) $for ) )
 		{
 			foreach( (array) $sql as $entry ) {
 				$this->conn->executeStatement( $entry );
@@ -456,10 +455,10 @@ class DB
 	 *
 	 * Possible values are:
 	 * - db2
+	 * - mssql
 	 * - mysql
 	 * - oracle
 	 * - postgresql
-	 * - mssql
 	 * - sqlite
 	 *
 	 * @return string Database type

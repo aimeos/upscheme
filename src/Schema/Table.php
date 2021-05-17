@@ -158,7 +158,7 @@ class Table
 			$col = $this->table->addColumn( $name, $type );
 		}
 
-		return new Column( $this, $col );
+		return new Column( $this->db, $this, $col );
 	}
 
 
