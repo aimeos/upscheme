@@ -47,7 +47,7 @@ class Create extends Base
 
 			$this->info( 'Create testref table', 1 );
 
-			$t->bigint( 'id' )->seq( true )->primary( true );
+			$t->id();
 			$t->foreign( 'parentid', 'test' );
 			$t->string( 'label' );
 

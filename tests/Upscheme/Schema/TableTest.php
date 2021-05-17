@@ -234,6 +234,19 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testId()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+
+		$col = $this->object->id();
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
+		$this->assertEquals( 'id', $col->name() );
+		$this->assertEquals( 'integer', $col->type() );
+		$this->assertTrue( $col->seq() );
+	}
+
+
 	public function testInt()
 	{
 		$col = $this->object->int( 'unittest' );

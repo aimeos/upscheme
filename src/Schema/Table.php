@@ -237,6 +237,19 @@ class Table
 
 
 	/**
+	 * Creates a new ID column of type "integer" or returns the existing one
+	 *
+	 * The column gets a sequence (autoincrement) and a primary key assigned automatically
+	 *
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function id() : Column
+	{
+		return $this->integer( 'id' )->seq( true )->primary();
+	}
+
+
+	/**
 	 * Creates a new column of type "integer" or returns the existing one
 	 *
 	 * This method is an alias for integer()
