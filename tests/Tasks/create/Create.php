@@ -19,8 +19,8 @@ class Create extends Base
 			$this->info( 'Create test table', 1 );
 
 			$t->bigint( 'id' )->seq( true )->primary( true );
-//			$t->binary( 'hex' );
-//			$t->blob( 'image' );
+			$t->binary( 'hex' );
+			$t->blob( 'image' );
 			$t->bool( 'status' );
 			$t->date( 'birthday' );
 			$t->datetime( 'ctime' );
@@ -54,7 +54,7 @@ class Create extends Base
 		} );
 
 		$db->insert( 'test', [
-//			'hex' => '0xff', 'image' => 'svg+xml:',
+			'hex' => 0x90, 'image' => 'svg+xml:',
 			'status' => true, 'birthday' => '2000-01-01',
 			'ctime' => '2000-01-01 00:00:00', 'mtime' => '2000-01-01 00:00:00', 'price' => '100.00',
 			'scale' => 0.1, 'pos' => 1, 'test' => 1234, 'config' => '{}', 'type' => 123, 'code' => 'test',
