@@ -76,12 +76,13 @@ abstract class Base implements Iface
 	 * Outputs the message depending on the verbosity
 	 *
 	 * @param string $msg Message to display
+	 * @param string $verbosity Verbosity level ("v": standard, "vv": more info, "vvv": debug)
 	 * @param int $level Level for indenting the message
 	 * @return self Same object for fluid method calls
 	 */
-	protected function info( string $msg, int $level = 0 ) : self
+	protected function info( string $msg, string $verbosity = 'v', int $level = 0 ) : self
 	{
-		$this->up->info( str_repeat( ' ', $level * 2 ) . $msg, 'v' );
+		$this->up->info( str_repeat( ' ', $level * 2 ) . $msg, $verbosity );
 		return $this;
 	}
 
