@@ -116,6 +116,7 @@ jobs:
     docker:
       - image: aimeos/ci-php:8.0
     steps:
+      - run: ls -la /home/circleci/*
       - checkout
       - restore_cache:
           keys:
