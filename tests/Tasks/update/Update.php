@@ -30,7 +30,9 @@ class Update extends Base
 
 		} )->dropColumn( 'test' )->up();
 
-		$rows = $this->db( 'test' )->select( 'test', ['id' => 1, 'pos' => 1] );
+		if( ( $row = current( $this->db( 'test' )->select( 'test', ['id' => 1, 'pos' => 1] ) ) ) === false ) {
+			throw new \RuntimeException( 'No row available' );
+		}
 
 		$expected = [
 			'birthday' => ['2000-01-01'],
@@ -54,10 +56,10 @@ class Update extends Base
 
 		foreach( $expected as $key => $values )
 		{
-			if( !in_array( $rows[0][$key], $values ) )
+			if( !in_array( $row[$key], $values ) )
 			{
 				$d1 = var_export( $values, true );
-				$d2 = var_export( $rows[0][$key], true );
+				$d2 = var_export( $row[$key], true );
 				throw new \RuntimeException( "Data mismatch for '" . $key . "', expected: " . $d1 . ", actual: " . $d2 );
 			}
 		}

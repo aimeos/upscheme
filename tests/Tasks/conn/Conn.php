@@ -14,7 +14,7 @@ class Conn extends Base
 
 		$this->db( 'test' )->table( 'testconn' )->int( 'id' )->up();
 
-		for( $i = 0; $i < 1000; $i++ ) {
+		for( $i = 0; $i < 250; $i++ ) {
 			$this->db( 'test', true )->delete( 'testconn' )->close();
 		}
 
