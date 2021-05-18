@@ -15,6 +15,10 @@ composer req aimeos/upscheme
 
 * [Why Upscheme](#why-upscheme)
 * [Integrating Upscheme](#integrate-upscheme)
+* [Writing migrations](#writing-migrations)
+  * [Schemas](#schemas)
+  * [Messages](#messages)
+  * [Dependencies](#dependencies)
 
 ## Why Upscheme
 
@@ -167,4 +171,128 @@ To enable (debugging) output, use the verbose() method:
 \Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose()->up(); // most important only
 \Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose( 'vv' )->up(); // more verbose
 \Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose( 'vvv' )->up(); // debugging
+```
+
+## Writing migrations
+
+A migration task only requires implementing the `up()` method and must be stored in one of the directories passed to the `Up` class:
+
+```php
+<?php
+
+namespace Aimeos\Upscheme\Task;
+use Aimeos\Upscheme\Schema\Table;
+
+
+class TestTable extends Base
+{
+	public function up()
+	{
+		$this->db()->table( 'test', function( Table $t ) {
+			$t->id();
+			$t->string( 'label' );
+			$t->bool( 'status' );
+		} );
+	}
+}
+```
+
+The file your class is stored in must have the same name (case sensitive) as the class itself and the `.php` suffix, e.g:
+
+```
+class TestTable -> TestTable.php
+```
+
+There's no strict convention how to name migration task classes. You can either name them by what they do (e.g. "CreateTestTable"), what they operate on (e.g. "TestTable") or even use a timestamp (e.g. "20201231_Test"). If the tasks doesn't contain dependencies, they are sorted and executed in in alphabethical order and the sorting would be:
+
+```
+20201231_Test
+CreateTestTable
+TestTable
+```
+
+In your PHP file, always include the `namespace` statement first. The `use` statement is optional and only needed as shortcut for the type hint for the closure function argument. Your class also has to extend from the "Base" class or implement the ["Iface" interface](https://github.com/aimeos/upscheme/blob/master/src/Task/Iface.php).
+
+### Dependencies
+
+To specify dependencies to other migration tasks, use the `before()` and `after()` methods. `before()` must return the class names of the migration tasks which must be executed before your task while the `after()` method must return the class names which should be executed after your task (the post-dependencies):
+
+```php
+class TestTable extends Base
+{
+	public function before() : array
+	{
+		return ['CreateRefTable'];
+	}
+
+	public function after() : array
+	{
+		return ['InsertTestData'];
+	}
+}
+```
+
+Thus, the order of execution would be:
+
+```
+CreateRefTable -> TestTable -> InsertTestData
+```
+
+### Schemas
+
+In the `up()` method, you have access to the database schema using the `db()` method. In case you've passed more than one database configuration to `Up::use()`, you can access the different schemas by their configuration key:
+
+```php
+// $config = ['db' => [...], 'temp' => [...]];
+// \Aimeos\Upscheme\Up::use( $config, '...' )->up();
+
+$this->db();
+$this->db( 'db' );
+$this->db( 'temp' );
+```
+
+If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use `insert()`, `select()`, `update()`, `delete()` and `stmt()` to manipulate the records of the tables.
+
+In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
+
+```php
+$db = $this->db( 'db', true );
+```
+
+To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
+
+```php
+$db->close();
+```
+
+### Messages
+
+To output messages in your migration task use the `info()` method:
+
+```php
+$this->info( 'some message' );
+$this->info( 'more verbose message', 'vv' );
+$this->info( 'very verbose debug message', 'vvv' );
+```
+
+The second parameter is the verbosity level and none or `v` are standard messages, `vv` are messages that are only displayed if more verbosity is wanted while `vvv` is for debugging messages. There's also a third parameter for indenting the messages:
+
+```php
+$this->info( 'some message' );
+$this->info( 'second level message', 'v', 1 );
+$this->info( 'third level message', 'v', 2 );
+```
+
+This will display:
+
+```
+some message
+  second level message
+    third level message
+```
+
+Prerequisite is that the `verbose()` method of the `Up` class has been called before:
+
+```php
+\Aimeos\Upscheme\Up::use( $config, '...' )->verbose()->up();
 ```
