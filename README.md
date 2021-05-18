@@ -14,6 +14,7 @@ composer req aimeos/upscheme
 **Table of contents**
 
 * [Why Upscheme](#why-upscheme)
+* [Integrating Upscheme](#integrate-upscheme)
 
 ## Why Upscheme
 
@@ -89,3 +90,81 @@ Doctrine Migration relies on migration classes that are named by the time they h
 If your application supports 3rd party extensions, these extensions are likely to add columns to existing tables and migrate data themselves. As there's no way to define dependencies between migrations, it can get almost impossible to run migrations in an application with several 3rd party extensions without conflicts. To avoid that, Upscheme offers easy to use `before()` and `after()` methods in each migration task where the tasks can define its dependencies to other tasks.
 
 Because Doctrine Migrations uses a database table to record which migration already has been executed, these records can get easily out of sync in case of problems. Contrary, Upscheme only relies on the actual schema so it's possible to upgrade from any state, regardless of what has happend before.
+
+## Integrating Upscheme
+
+After you've installed the `aimeos/upscheme` package using composer, you can use the `Up` class to execute your migration tasks:
+
+```php
+$config = [
+	'driver' => 'pdo_mysql',
+	'host' => '127.0.0.1',
+	'dbname' => '<database>',
+	'user' => '<dbuser>',
+	'password' => '<secret>'
+];
+
+\Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->up();
+```
+
+The `Up::use()` method requires two parameters: The database configuration and the path(s) to the migration tasks. For the config, the array keys and the values for `driver` must be supported by Doctrine DBAL. Available drivers are:
+
+- pdo_mysql
+- pdo_sqlite
+- pdo_pgsql
+- pdo_oci
+- oci8
+- ibm_db2
+- pdo_sqlsrv
+- mysqli
+- drizzle_pdo_mysql
+- sqlanywhere
+- sqlsrv
+
+If you didn't use Doctrine DBAL before, your database configuration may have a different structure and/or use different values for the database type. Upscheme allows you to register a custom method that transforms your configration intovalid DBAL settings, e.g.:
+
+```php
+\Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
+	return [
+		'driver' => $config['adapter'] !== 'mysql' ? $config['adapter'] : 'pdo_mysql',
+		'host' => $config['host'],
+		'dbname' => $config['database'],
+		'user' => $config['username'],
+		'password' => $config['secret']
+	];
+} );
+```
+
+Upscheme also supports several database connections which you can distinguish by their key name:
+
+```php
+$config = [
+	'db' => [
+		'driver' => 'pdo_mysql',
+		'host' => '127.0.0.1',
+		'dbname' => '<database>',
+		'user' => '<dbuser>',
+		'password' => '<secret>'
+	],
+	'temp' => [
+		'driver' => 'pdo_sqlite',
+		'path' => '/tmp/mydb.sqlite'
+	]
+];
+
+\Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->up();
+```
+
+Of course, you can also pass several migration paths to the `Up` class:
+
+```php
+\Aimeos\Upscheme\Up::use( $config, ['src/migrations', 'ext/migrations'] )->up();
+```
+
+To enable (debugging) output, use the verbose() method:
+
+```php
+\Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose()->up(); // most important only
+\Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose( 'vv' )->up(); // more verbose
+\Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose( 'vvv' )->up(); // debugging
+```
