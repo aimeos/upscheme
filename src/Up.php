@@ -167,6 +167,10 @@ class Up
 			$this->runTasks( [$taskname] );
 		}
 
+		foreach( $this->db as $db ) {
+			$db->up();
+		}
+
 		return $this;
 	}
 
