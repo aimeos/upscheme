@@ -77,6 +77,7 @@ class DB
 	 */
 	public function close()
 	{
+		$this->up();
 		$this->conn->close();
 	}
 
