@@ -167,10 +167,6 @@ class Up
 			$this->runTasks( [$taskname] );
 		}
 
-		foreach( $this->db as $db ) {
-			$db->up();
-		}
-
 		return $this;
 	}
 
@@ -281,6 +277,10 @@ class Up
 			{
 				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename, 'vv' );
 				$this->tasks[$taskname]->up();
+
+				foreach( $this->db as $db ) {
+					$db->up();
+				}
 			}
 
 			$this->tasksDone[] = $taskname;
