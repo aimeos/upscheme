@@ -311,31 +311,32 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 
 <nav>
 
-<a href="#database">Database</a>
-<ul>
-	<li><a href="#DB::__call">__call()</a></li>
-	<li><a href="#DB::close">close()</a></li>
-	<li><a href="#DB::delete">delete()</a></li>
-	<li><a href="#DB::dropColumn">dropColumn()</a></li>
-	<li><a href="#DB::dropForeign">dropForeign()</a></li>
-	<li><a href="#DB::dropIndex">dropIndex()</a></li>
-	<li><a href="#DB::dropSequence">dropSequence()</a></li>
-	<li><a href="#DB::dropTable">dropTable()</a></li>
-	<li><a href="#DB::for">for()</a></li>
-	<li><a href="#DB::hasColumn">hasColumn()</a></li>
-	<li><a href="#DB::hasForeign">hasForeign()</a></li>
-	<li><a href="#DB::hasIndex">hasIndex()</a></li>
-	<li><a href="#DB::hasSequence">hasSequence()</a></li>
-	<li><a href="#DB::hasTable">hasTable()</a></li>
-	<li><a href="#DB::insert">insert()</a></li>
-	<li><a href="#DB::lastId">lastId()</a></li>
-	<li><a href="#DB::select">select()</a></li>
-	<li><a href="#DB::sequence">sequence()</a></li>
-	<li><a href="#DB::stmt">stmt()</a></li>
-	<li><a href="#DB::table">table()</a></li>
-	<li><a href="#DB::type">type()</a></li>
-	<li><a href="#DB::up">up()</a></li>
-	<li><a href="#DB::update">update()</a></li>
+### [DB](#database)
+
+<ul class="method-list">
+	<li><a href="#db__call">__call()</a></li>
+	<li><a href="#dbclose">close()</a></li>
+	<li><a href="#dbdelete">delete()</a></li>
+	<li><a href="#dbdropColumn">dropColumn()</a></li>
+	<li><a href="#dbdropForeign">dropForeign()</a></li>
+	<li><a href="#dbdropIndex">dropIndex()</a></li>
+	<li><a href="#dbdropSequence">dropSequence()</a></li>
+	<li><a href="#dbdropTable">dropTable()</a></li>
+	<li><a href="#dbfor">for()</a></li>
+	<li><a href="#dbhasColumn">hasColumn()</a></li>
+	<li><a href="#dbhasForeign">hasForeign()</a></li>
+	<li><a href="#dbhasIndex">hasIndex()</a></li>
+	<li><a href="#dbhasSequence">hasSequence()</a></li>
+	<li><a href="#dbhasTable">hasTable()</a></li>
+	<li><a href="#dbinsert">insert()</a></li>
+	<li><a href="#dblastId">lastId()</a></li>
+	<li><a href="#dbselect">select()</a></li>
+	<li><a href="#dbsequence">sequence()</a></li>
+	<li><a href="#dbstmt">stmt()</a></li>
+	<li><a href="#dbtable">table()</a></li>
+	<li><a href="#dbtype">type()</a></li>
+	<li><a href="#dbup">up()</a></li>
+	<li><a href="#dbupdate">update()</a></li>
 </ul>
 
 </nav>

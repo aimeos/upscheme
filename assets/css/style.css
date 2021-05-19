@@ -85,8 +85,12 @@ header svg {
 	line-height: 2.25rem;
 }
 
-.sidebar a.hide {
+.sidebar li.hide {
 	display: none;
+}
+
+.sidebar li.show {
+	display: list-item;
 }
 
 .main-content {
