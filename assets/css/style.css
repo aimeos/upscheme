@@ -99,7 +99,7 @@ header svg {
 	margin-top: -1rem;
 }
 
-.main-content nav {
+.main-content nav .method-list {
 	column-count: 3;
 	column-width: 8rem;
 }

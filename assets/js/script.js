@@ -41,9 +41,9 @@
 
 		methods.querySelectorAll('a').forEach(function(item) {
 			if(regex.test(item.textContent)) {
-				item.classList.remove('hide');
+				item.parentNode.classList.remove('hide');
 			} else {
-				item.classList.add('hide');
+				item.parentNode.classList.add('hide');
 			}
 		});
 	});
