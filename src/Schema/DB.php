@@ -205,7 +205,7 @@ class DB
 	 * before executing custom statements to make sure that the tables you want
 	 * to use has been created before!
 	 *
-	 * @param array|string $type Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+	 * @param array|string $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @param array|string $sql Custom SQL statement or statements
 	 * @return self Same object for fluid method calls
 	 */
@@ -223,7 +223,7 @@ class DB
 
 
 	/**
-	 * Checks if the column exists
+	 * Checks if the columns exists
 	 *
 	 * @param string $table Name of the table the column belongs to
 	 * @param array|string $name Name of the column or columns
@@ -240,7 +240,7 @@ class DB
 
 
 	/**
-	 * Checks if the foreign key constraint exists
+	 * Checks if the foreign key constraints exists
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
 	 * @param array|string $name Name of the foreign key constraint or constraints
@@ -257,7 +257,7 @@ class DB
 
 
 	/**
-	 * Checks if the index exists
+	 * Checks if the indexes exists
 	 *
 	 * @param string $table Name of the table the index belongs to
 	 * @param array|string $name Name of the index or indexes
@@ -274,7 +274,7 @@ class DB
 
 
 	/**
-	 * Checks if the sequence exists
+	 * Checks if the sequences exists
 	 *
 	 * @param array|string $name Name of the sequence or sequences
 	 * @return TRUE if the sequence exists, FALSE if not
@@ -293,7 +293,7 @@ class DB
 
 
 	/**
-	 * Checks if the table exists
+	 * Checks if the tables exists
 	 *
 	 * @param array|string $name Name of the table or tables
 	 * @return TRUE if the table exists, FALSE if not
@@ -386,9 +386,11 @@ class DB
 	/**
 	 * Returns the sequence object for the given name
 	 *
-	 * If the sequence doesn't exist yet, it will be created.
+	 * If the sequence doesn't exist yet, it will be created. Passing a closure
+	 * to modify the sequence will also persist the changes in the database automatically.
 	 *
 	 * @param string $name Name of the sequence
+	 * @param \Closure|null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
 	 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 	 */
 	public function sequence( string $name, \Closure $fcn = null ) : Sequence
@@ -425,7 +427,8 @@ class DB
 	/**
 	 * Returns the table object for the given name
 	 *
-	 * If the table doesn't exist yet, it will be created.
+	 * If the table doesn't exist yet, it will be created. Passing a closure to
+	 * modify the sequence will also persist the changes in the database automatically.
 	 *
 	 * @param string $name Name of the table
 	 * @param \Closure|null $fcn Anonymous function with ($table) parameter creating or updating the table definition
