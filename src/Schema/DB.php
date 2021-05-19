@@ -351,17 +351,17 @@ class DB
 	 * from the stmt() method instead.
 	 *
 	 * @param string $table Name of the table
-	 * @param array $conditions Key/value pairs of column names and value to compare with
+	 * @param array|null $conditions Key/value pairs of column names and value to compare with
 	 * @return array List of associative arrays containing column name/value pairs
 	 */
-	public function select( string $table, array $conditions = [] ) : array
+	public function select( string $table, array $conditions = null ) : array
 	{
 		$idx = 0;
 		$list = [];
 
 		$builder = $this->conn->createQueryBuilder()->select( '*' )->from( $table );
 
-		foreach( $conditions as $column => $value ) {
+		foreach( $conditions ?? [] as $column => $value ) {
 			$builder->andWhere( $column . ' = ?' )->setParameter( $idx++, $value );
 		}
 
