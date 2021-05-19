@@ -30,7 +30,8 @@ For upgrading relational database schemas, two packages are currently used most 
 
 The API of DBAL is very verbose and you need to write lots of code even for simple things. Upscheme uses Doctrine DBAL to offer an easy to use API for upgrading the database schema of your application with minimal code. Let's compare some example code you have to write for DBAL and for Upscheme in a migration.
 
-DBAL:
+#### DBAL
+
 ```php
 $dbalManager = $conn->createSchemaManager();
 $from = $manager->createSchema();
@@ -69,7 +70,8 @@ foreach( $from->getMigrateToSql( $to, $conn->getDatabasePlatform() ) as $sql ) {
 }
 ```
 
-Upscheme:
+#### Upscheme
+
 ```php
 $this->db()->table( 'test', function( $t ) {
 	$t->engine = 'InnoDB';
@@ -94,6 +96,8 @@ Doctrine Migration relies on migration classes that are named by the time they h
 If your application supports 3rd party extensions, these extensions are likely to add columns to existing tables and migrate data themselves. As there's no way to define dependencies between migrations, it can get almost impossible to run migrations in an application with several 3rd party extensions without conflicts. To avoid that, Upscheme offers easy to use `before()` and `after()` methods in each migration task where the tasks can define its dependencies to other tasks.
 
 Because Doctrine Migrations uses a database table to record which migration already has been executed, these records can get easily out of sync in case of problems. Contrary, Upscheme only relies on the actual schema so it's possible to upgrade from any state, regardless of what has happend before.
+
+Doctrine Migrations also supports the reverse operations in `down()` methods so you can roll back migrations which Upscheme does not. Experience has shown that it's often impossible to roll back migrations, e.g. after adding a new colum, migrating the data of an existing column and dropping the old column afterwards. If the migration of the data was lossy, you can't recreate the same state in a `down()` method. The same is the case if you've dropped a table. Thus, Upscheme only offers scheme upgrading but no downgrading to avoid implicit data loss.
 
 ## Integrating Upscheme
 
@@ -125,7 +129,7 @@ The `Up::use()` method requires two parameters: The database configuration and t
 - sqlanywhere
 - sqlsrv
 
-If you didn't use Doctrine DBAL before, your database configuration may have a different structure and/or use different values for the database type. Upscheme allows you to register a custom method that transforms your configration intovalid DBAL settings, e.g.:
+If you didn't use Doctrine DBAL before, your database configuration may have a different structure and/or use different values for the database type. Upscheme allows you to register a custom method that transforms your configration into valid DBAL settings, e.g.:
 
 ```php
 \Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
@@ -253,13 +257,15 @@ $this->db( 'temp' );
 
 If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use `insert()`, `select()`, `update()`, `delete()` and `stmt()` to manipulate the records of the tables.
 
+After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. An `up()` method is also in any table, sequence, and column object available so you can call `up()` also there.
+
 In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
 
 ```php
 $db = $this->db( 'db', true );
 ```
 
-To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
+All schema changes made are applied to the database before the schema with the new connection is returned. To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
 
 ```php
 $db->close();
