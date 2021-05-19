@@ -19,6 +19,9 @@ composer req aimeos/upscheme
   * [Schemas](#schemas)
   * [Messages](#messages)
   * [Dependencies](#dependencies)
+* [Schema objects](#schema-objects)
+  * [Database](#database)
+
 
 ## Why Upscheme
 
@@ -98,6 +101,7 @@ If your application supports 3rd party extensions, these extensions are likely t
 Because Doctrine Migrations uses a database table to record which migration already has been executed, these records can get easily out of sync in case of problems. Contrary, Upscheme only relies on the actual schema so it's possible to upgrade from any state, regardless of what has happend before.
 
 Doctrine Migrations also supports the reverse operations in `down()` methods so you can roll back migrations which Upscheme does not. Experience has shown that it's often impossible to roll back migrations, e.g. after adding a new colum, migrating the data of an existing column and dropping the old column afterwards. If the migration of the data was lossy, you can't recreate the same state in a `down()` method. The same is the case if you've dropped a table. Thus, Upscheme only offers scheme upgrading but no downgrading to avoid implicit data loss.
+
 
 ## Integrating Upscheme
 
@@ -302,3 +306,588 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 ```php
 \Aimeos\Upscheme\Up::use( $config, '...' )->verbose()->up();
 ```
+
+## Schema objects
+
+<nav>
+
+<a href="#database">Database</a>
+<ul>
+	<li><a href="#DB::__call">__call()</a></li>
+	<li><a href="#DB::close">close()</a></li>
+	<li><a href="#DB::delete">delete()</a></li>
+	<li><a href="#DB::dropColumn">dropColumn()</a></li>
+	<li><a href="#DB::dropForeign">dropForeign()</a></li>
+	<li><a href="#DB::dropIndex">dropIndex()</a></li>
+	<li><a href="#DB::dropSequence">dropSequence()</a></li>
+	<li><a href="#DB::dropTable">dropTable()</a></li>
+	<li><a href="#DB::for">for()</a></li>
+	<li><a href="#DB::hasColumn">hasColumn()</a></li>
+	<li><a href="#DB::hasForeign">hasForeign()</a></li>
+	<li><a href="#DB::hasIndex">hasIndex()</a></li>
+	<li><a href="#DB::hasSequence">hasSequence()</a></li>
+	<li><a href="#DB::hasTable">hasTable()</a></li>
+	<li><a href="#DB::insert">insert()</a></li>
+	<li><a href="#DB::lastId">lastId()</a></li>
+	<li><a href="#DB::select">select()</a></li>
+	<li><a href="#DB::sequence">sequence()</a></li>
+	<li><a href="#DB::stmt">stmt()</a></li>
+	<li><a href="#DB::table">table()</a></li>
+	<li><a href="#DB::type">type()</a></li>
+	<li><a href="#DB::up">up()</a></li>
+	<li><a href="#DB::update">update()</a></li>
+</ul>
+
+</nav>
+
+### Database
+
+The database scheme object you get by calling `$this->db()` in your migration task gives you full access to the current schema including all tables, sequences and other schema objects, e.g.:
+
+```php
+$table = $this->db()->table( 'test' );
+$seq = $this->db()->sequence( 'seq_test' );
+```
+
+#### DB::__call()
+
+Calls custom methods or passes unknown method calls to the Doctrine schema object
+
+```php
+public function __call( string $method, array $args )
+```
+
+* @param string `$method` Name of the method
+* @param array `$args` Method parameters
+* @return mixed Return value of the called method
+
+**Examples:**
+
+You can register custom methods that have access to the class properties of the Upscheme DB object:
+
+```php
+\Aimeos\Upscheme\Schema\DB::macro( 'hasFkIndexes', function( $val ) {
+	return $this->to->hasExplicitForeignKeyIndexes();
+} );
+
+$db->hasFkIndexes();
+```
+
+Available class properties are:
+
+; `$this->from`
+: Original Doctrine database schema representing the current database
+
+; `$this->to`
+: Doctrine database schema containing the changes made up to now
+
+; `$this->conn`
+: Doctrine database connection
+
+; `$this->up`
+: Upscheme object
+
+Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Schema.php) method directly, e.g.:
+
+```php
+$db->hasExplicitForeignKeyIndexes();
+```
+
+
+#### DB::close()
+
+Closes the database connection
+
+```php
+public function close()
+```
+
+Call `close()` only for DB schema objects created with `$this->db( '...', true )`. Otherwise, you will close the main connection and DBAL has to reconnect to the server which will degrade performance!
+
+**Examples:**
+
+```php
+$db = $this->db( 'temp', true );
+$db->dropTable( 'test' );
+$db->close();
+```
+
+
+#### DB::delete()
+
+Deletes the records from the given table
+
+```php
+public function delete( string $table, array $conditions = null ) : self
+```
+
+* @param string `$table` Name of the table
+* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @return self Same object for fluid method calls
+
+Warning: The condition values are escaped but the table name and condition
+column names are not! Only use fixed strings for table name and condition
+column names but no external input!
+
+**Examples:**
+
+```php
+$db->delete( 'test', ['status' => false, 'type' => 'old'] );
+$db->delete( 'test' );
+```
+
+Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+
+
+#### DB::dropColumn()
+
+Drops the column given by its name if it exists
+
+```php
+public function dropColumn( string $table, $name ) : self
+```
+
+* @param string `$table` Name of the table the column belongs to
+* @param array|string `$name` Name of the column or columns
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropColumn( 'test', 'oldcol' );
+$db->dropColumn( 'test', ['oldcol', 'oldcol2'] );
+```
+
+If the column or one of the columns doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+
+#### DB::dropForeign()
+
+Drops the foreign key constraint given by its name if it exists
+
+```php
+public function dropForeign( string $table, $name ) : self
+```
+
+* @param string `$table` Name of the table the foreign key constraint belongs to
+* @param array|string `$name` Name of the foreign key constraint or constraints
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropForeign( 'test', 'fk_old' );
+$db->dropForeign( 'test', ['fk_old', 'fk_old2'] );
+```
+
+If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+
+#### DB::dropIndex()
+
+Drops the index given by its name if it exists
+
+```php
+public function dropIndex( string $table, $name ) : self
+```
+
+* @param string `$table` Name of the table the index belongs to
+* @param array|string `$name` Name of the index or indexes
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropIndex( 'test', 'idx_old' );
+$db->dropIndex( 'test', ['idx_old', 'idx_old2'] );
+```
+
+If the index or one of the indexes doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+
+#### DB::dropSequence()
+
+Drops the sequence given by its name if it exists
+
+```php
+public function dropSequence( $name ) : self
+```
+
+* @param array|string `$name` Name of the sequence or sequences
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropSequence( 'seq_old' );
+$db->dropSequence( ['seq_old', 'seq_old2'] );
+```
+
+If the sequence or one of the sequences doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+
+#### DB::dropTable()
+
+Drops the table given by its name if it exists
+
+```php
+public function dropTable( $name ) : self
+```
+
+* @param array|string $name Name of the table or tables
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropTable( 'test' );
+$db->dropTable( ['test', 'test2'] );
+```
+
+If the table or one of the tables doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+
+#### DB::for()
+
+Executes a custom SQL statement if the database is of the given database platform type
+
+```php
+public function for( $for, $sql ) : self
+```
+
+* @param array|string `$type` Database type the statement should be executed for
+* @param array|string `$sql` Custom SQL statement or statements
+* @return self Same object for fluid method calls
+
+Available database platform types are:
+
+- mysql
+- postgresql
+- sqlite
+- mssql
+- oracle
+- db2
+
+The database changes are not applied immediately so always call `up()`
+before executing custom statements to make sure that the tables you want
+to use has been created before!
+
+**Examples:**
+
+```php
+$db->for( 'mysql', 'CREATE INDEX idx_test_label ON test (label(16))' );
+
+$db->for( ['mysql', 'sqlite'], [
+	'DROP INDEX unq_test_status',
+	'UPDATE test SET status = 0 WHERE status IS NULL',
+] );
+```
+
+
+#### DB::hasColumn()
+
+Checks if the column or columns exists
+
+```php
+public function hasColumn( string $table, $name ) : bool
+```
+
+* @param string `$table` Name of the table the column belongs to
+* @param array|string `$name` Name of the column or columns
+* @return TRUE if the columns exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasColumn( 'test', 'testcol' );
+$db->hasColumn( 'test', ['testcol', 'testcol2'] );
+```
+
+
+#### DB::hasForeign()
+
+Checks if the foreign key constraints exists
+
+```php
+public function hasForeign( string $table, $name ) : bool
+```
+
+* @param string `$table` Name of the table the foreign key constraint belongs to
+* @param array|string `$name` Name of the foreign key constraint or constraints
+* @return TRUE if the foreign key constraint exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasForeign( 'test', 'fk_testcol' );
+$db->hasForeign( 'test', ['fk_testcol', 'fk_testcol2'] );
+```
+
+
+#### DB::hasIndex()
+
+Checks if the indexes exists
+
+```php
+public function hasIndex( string $table, $name ) : bool
+```
+
+* @param string `$table` Name of the table the index belongs to
+* @param array|string `$name` Name of the index or indexes
+* @return TRUE if the index exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasIndex( 'test', 'idx_test_col' );
+$db->hasIndex( 'test', ['idx_test_col', 'idx_test_col2'] );
+```
+
+
+#### DB::hasSequence()
+
+Checks if the sequences exists
+
+```php
+public function hasSequence( $name ) : bool
+```
+
+* @param array|string `$name` Name of the sequence or sequences
+* @return TRUE if the sequence exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasSequence( 'seq_test' );
+$db->hasSequence( ['seq_test', 'seq_test2'] );
+```
+
+
+#### DB::hasTable()
+
+Checks if the tables exists
+
+```php
+public function hasTable( $name ) : bool
+```
+
+* @param array|string `$name` Name of the table or tables
+* @return TRUE if the table exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasTable( 'test' );
+$db->hasTable( ['test', 'test2'] );
+```
+
+
+#### DB::insert()
+
+Inserts a record into the given table
+
+```php
+	public function insert( string $table, array $data ) : self
+```
+
+* @param string `$table` Name of the table
+* @param array `$data` Key/value pairs of column name/value to insert
+* @return self Same object for fluid method calls
+
+Warning: The data values are escaped but the table name and column names are not!
+Only use fixed strings for table name and column names but no external input!
+
+**Examples:**
+
+```php
+$db->insert( 'test', ['label' => 'myvalue', 'status' => true] );
+```
+
+
+#### DB::lastId()
+
+Returns the ID of the last inserted row into any database table
+
+```php
+public function lastId( string $seq = null ) : string
+```
+
+* @param string|null `$seq` Name of the sequence generating the ID
+* @return string Generated ID from the database
+
+**Examples:**
+
+```php
+$db->lastId();
+$db->lastId( 'seq_test' );
+```
+
+
+#### DB::select()
+
+Returns the records from the given table
+
+```php
+public function select( string $table, array $conditions = null ) : array
+```
+
+* @param string `$table` Name of the table
+* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @return array List of associative arrays containing column name/value pairs
+
+Warning: The condition values are escaped but the table name and condition
+column names are not! Only use fixed strings for table name and condition
+column names but no external input!
+
+**Examples:**
+
+```php
+$db->select( 'test', ['status' => false, 'type' => 'old'] );
+$db->select( 'test' );
+```
+
+Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+
+
+#### DB::sequence()
+
+Returns the sequence object for the given name
+
+```php
+public function sequence( string $name, \Closure $fcn = null ) : Sequence
+```
+
+* @param string `$name` Name of the sequence
+* @param \Closure|null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
+* @return \Aimeos\Upscheme\Schema\Sequence Sequence object
+
+If the sequence doesn't exist yet, it will be created. Passing a closure to modify the sequence will also persist the changes in the database automatically.
+
+**Examples:**
+
+```php
+$sequence = $db->sequence( 'seq_test' );
+
+$sequence = $db->sequence( 'seq_test', function( $seq ) {
+	$seq->start( 1000 )->step( 2 )->cache( 100 );
+} );
+```
+
+
+#### DB::stmt()
+
+Returns the query builder for a new SQL statement
+
+```php
+public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
+```
+
+* @return \Doctrine\DBAL\Query\QueryBuilder Query builder object
+
+**Examples:**
+
+```php
+$db->stmt()->delete( 'test' )->where( 'status = ?' )->setParameter( 0, false );
+$db->stmt()->select( 'id', 'label' )->from( 'test' );
+$db->stmt()->update( 'test' )->set( 'status', '?' )->setParameter( 0, true );
+```
+
+For more details about the available Doctrine QueryBuilder methods, please have a look at the [Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#building-a-query).
+
+
+#### DB::table()
+
+Returns the table object for the given name
+
+```php
+public function table( string $name, \Closure $fcn = null ) : Table
+```
+
+* @param string `$name` Name of the table
+* @param \Closure|null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
+* @return \Aimeos\Upscheme\Schema\Table Table object
+
+If the table doesn't exist yet, it will be created. Passing a closure to modify the table will also persist the changes in the database automatically.
+
+**Examples:**
+
+```php
+$table = $db->table( 'test' );
+
+$table = $db->table( 'test', function( $t ) {
+	$t->id();
+	$t->string( 'label' );
+	$t->bool( 'status' );
+} );
+```
+
+
+#### DB::type()
+
+Returns the type of the database
+
+```php
+public function type() : string
+```
+
+* @return string Database type
+
+Possible values are:
+
+* db2
+* mssql
+* mysql
+* oracle
+* postgresql
+* sqlite
+
+**Examples:**
+
+```php
+$type = $db->type();
+```
+
+
+#### DB::up()
+
+Applies the changes to the database schema
+
+```php
+public function up() : self
+```
+
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->up();
+```
+
+
+#### DB::update()
+
+Updates the records from the given table
+
+```php
+public function update( string $table, array $data, array $conditions = null ) : self
+```
+
+* @param string `$table` Name of the table
+* @param array `$data` Key/value pairs of column name/value to update
+* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @return self Same object for fluid method calls
+
+Warning: The condition and data values are escaped but the table name and
+column names are not! Only use fixed strings for table name and condition
+column names but no external input!
+
+**Examples:**
+
+```php
+$db->update( 'test', ['status' => true] );
+$db->update( 'test', ['status' => true], ['status' => false, 'type' => 'new'] );
+```
+
+Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+
