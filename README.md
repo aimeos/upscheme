@@ -22,6 +22,7 @@ composer req aimeos/upscheme
 * [Schema objects](#schema-objects)
   * [Database](#database)
   * [Tables](#tables)
+  * [Columns](#columns)
 
 
 ## Why Upscheme
@@ -381,6 +382,30 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#tableunique">unique()</a></li>
 	<li><a href="#tableuuid">uuid()</a></li>
 	<li><a href="#tableup">up()</a></li>
+</ul>
+
+<h3><a href="#columns">Columns</a></h3>
+<ul class="method-list">
+	<li><a href="#column__call">__call()</a></li>
+	<li><a href="#column__get">__get()</a></li>
+	<li><a href="#column__set">__set()</a></li>
+	<li><a href="#columncomment">comment()</a></li>
+	<li><a href="#columndefault">default()</a></li>
+	<li><a href="#columnfixed">fixed()</a></li>
+	<li><a href="#columnindex">index()</a></li>
+	<li><a href="#columnlength">length()</a></li>
+	<li><a href="#columnname">name()</a></li>
+	<li><a href="#columnnull">null()</a></li>
+	<li><a href="#columnopt">opt()</a></li>
+	<li><a href="#columnprecision">precision()</a></li>
+	<li><a href="#columnprimary">primary()</a></li>
+	<li><a href="#columnscale">scale()</a></li>
+	<li><a href="#columnseq">seq()</a></li>
+	<li><a href="#columnspatial">spatial()</a></li>
+	<li><a href="#columntype">type()</a></li>
+	<li><a href="#columnunique">unique()</a></li>
+	<li><a href="#columnunsigned">unsigned()</a></li>
+	<li><a href="#columnup">up()</a></li>
 </ul>
 
 </nav>
@@ -950,7 +975,7 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-Besides the `col()` method which can add columns of arbitrary types, there are some shortcut methods available for types available in all database server implementations:
+Besides the `col()` method which can add columns of arbitrary types, there are some shortcut methods for types available in all database server implementations:
 
 | Column type | Description |
 |-------------|-------------|
@@ -1855,4 +1880,461 @@ public function up() : self
 
 ```php
 $table->up();
+```
+
+
+
+### Columns
+
+The column scheme object you get by calling `$table->col( '<name>', '<type>' )` in your migration task gives you access to all column properties and you can also add indexes to single columns, e.g.:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->id()->unsigned( true );
+	$table->string( 'label' )->opt( 'charset', 'binary' );
+	$table->col( 'status', 'tinyint' )->default( 0 );
+} );
+```
+
+There are some shortcut methods for column types available in all database server implementations:
+
+| Column type | Description |
+|-------------|-------------|
+| [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
+| [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
+| [blob](#tableblob) | BLOB column with up to 2GB |
+| [bool](#tablebool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
+| [boolean](#tableboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
+| [date](#tabledate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
+| [datetime](#tabledatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
+| [tablesdatetimetz](#tabledatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
+| [decimal](#tabledecimal) | DECIMAL column for numeric data with fixed-point precision (string in PHP) |
+| [float](#tablefloat) | FLOAT column for numeric data with a 8-byte floating-point precision |
+| [guid](#tableguid) | Globally unique identifier with 36 bytes |
+| [id](#tableid) | INTEGER column with a sequence/autoincrement and a primary key assigned |
+| [int](#tableint) | INTEGER colum, alias for "integer" |
+| [integer](#tableinteger) | INTEGER colum with a range from −2147483648 to 2147483647 |
+| [json](#tablejson) | JSON column for UTF-8 encoded JSON data |
+| [smallint](#tablesmallint) | INTEGER colum with a range from −32768 to 32767 |
+| [string](#tablestring) | VARCHAR column with up to 255 characters |
+| [text](#tabletext) | TEXT/CLOB column with up to 2GB characters |
+| [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
+| [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
+
+
+#### Column::__call()
+
+Calls custom methods or passes unknown method calls to the Doctrine column object
+
+```php
+public function __call( string $method, array $args )
+```
+
+* @param string `$method` Name of the method
+* @param array `$args` Method parameters
+* @return mixed Return value of the called method
+
+**Examples:**
+
+You can register custom methods that have access to the class properties of the Upscheme Column object:
+
+```php
+\Aimeos\Upscheme\Schema\Column::macro( 'platform', function( array $options ) {
+	return $this->to->setPlatformOptions( $options );
+} );
+
+$column->platform( ['option' => 'value'] );
+```
+
+Available class properties are:
+
+`$this->db`
+: Upscheme DB object
+
+`$this->table`
+: Doctrine table schema
+
+`$this->column`
+: Doctrine column schema
+
+Furthermore, you can call any [Doctrine column](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Column.php) method directly, e.g.:
+
+```php
+$column->setPlatformOptions( ['option' => 'value'] );
+```
+
+#### Column::__get()
+
+Returns the value for the given column option
+
+```php
+public function __get( string $name )
+```
+
+* @param string `$name` Column option name
+* @return mixed Column option value
+
+The list of available column options are:
+
+* charset (MySQL)
+* collation (MySQL, PostgreSQL, Sqlite and SQL Server)
+* check
+* unique (All)
+
+**Examples:**
+
+```php
+$charset = $column->charset;
+
+// same as
+$charset = $column->opt( 'charset' );
+```
+
+
+#### Column::__set()
+
+Sets the new value for the given column option
+
+```php
+public function __set( string $name, $value )
+```
+
+* @param string `$name` Column option name
+* @param mixed Column option value
+
+The list of available column options are:
+
+* charset (MySQL)
+* collation (MySQL, PostgreSQL, Sqlite and SQL Server)
+* check
+* unique (All)
+
+**Examples:**
+
+```php
+$column->charset = 'utf8';
+
+// same as
+$column->opt( 'charset', 'utf8' );
+```
+
+
+#### Column::comment()
+
+Sets the column comment or returns the current value
+
+```php
+public function comment( string $value = null )
+```
+
+* @param string&#124;null $value New column comment or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$comment = $column->comment();
+$column->comment( 'column comment' );
+```
+
+
+#### Column::default()
+
+Sets the column default value or returns the current value
+
+```php
+public function default( $value = null )
+```
+
+* @param mixed $value New column default value or NULL to return current value
+* @return self&#124;mixed Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->default();
+$column->default( 0 );
+```
+
+
+#### Column::fixed()
+
+Sets the column fixed flag or returns the current value
+
+```php
+public function fixed( bool $value = null )
+```
+
+* @param string&#124;null $value New column fixed flag or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->fixed();
+$column->fixed( true );
+```
+
+
+#### Column::index()
+
+Creates a regular index for the column
+
+```php
+public function index( string $name = null ) : self
+```
+
+* @param string&#124;null Name of the index or NULL to generate automatically
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$column->index();
+$column->index( 'idx_col' );
+```
+
+
+#### Column::length()
+
+Sets the column length or returns the current value
+
+```php
+public function length( int $value = null )
+```
+
+* @param string&#124;null $value New column length or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->length();
+$column->length( 32 );
+```
+
+
+#### Column::name()
+
+Returns the name of the column
+
+```php
+public function name() : string
+```
+
+* @return string Column name
+
+**Examples:**
+
+```php
+$name = $column->name();
+```
+
+
+#### Column::null()
+
+Sets the column null flag or returns the current value
+
+```php
+public function null( bool $value = null )
+```
+
+* @param string&#124;null $value New column null flag or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->null();
+$column->null( true );
+```
+
+
+#### Column::opt()
+
+Sets the column option value or returns the current value
+
+```php
+public function opt( string $option, $value = null, $for = null )
+```
+
+* @param string $option Column option name
+* @param mixed $value New column option value or NULL to return current value
+* @param array&#124;string&#124;null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @return self&#124;mixed Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->opt( 'length' );
+$column->opt( 'length', 64 );
+```
+
+
+#### Column::precision()
+
+Sets the column precision or returns the current value
+
+```php
+public function precision( int $value = null )
+```
+
+* @param string&#124;null $value New column precision value or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->precision();
+$column->precision( 10 );
+```
+
+
+#### Column::primary()
+
+Creates a primary index for the column
+
+```php
+public function primary( string $name = null ) : self
+```
+
+* @param string&#124;null Name of the index or NULL to generate automatically
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$column->primary();
+$column->primary( 'pk_col' );
+```
+
+
+#### Column::scale()
+
+Sets the column scale or returns the current value
+
+```php
+public function scale( int $value = null )
+```
+
+* @param string&#124;null $value New column scale value or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->scale();
+$column->scale( 3 );
+```
+
+
+#### Column::seq()
+
+Sets the column as autoincrement or returns the current value
+
+```php
+public function seq( bool $value = null )
+```
+
+* @param bool&#124;null $value New autoincrement flag or NULL to return current value
+* @return self&#124;bool Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->seq();
+$column->seq( true );
+```
+
+
+#### Column::spatial()
+
+Creates a spatial index for the column
+
+```php
+public function spatial( string $name = null ) : self
+```
+
+* @param string&#124;null Name of the index or NULL to generate automatically
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$column->spatial();
+$column->spatial( 'idx_col' );
+```
+
+
+#### Column::type()
+
+Sets the column type or returns the current value
+
+```php
+public function type( string $value = null )
+```
+
+* @param string&#124;null $value New column type or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->type();
+$column->type( 'tinyint' );
+```
+
+
+#### Column::unique()
+
+Creates an unique index for the column
+
+```php
+public function unique( string $name = null ) : self
+```
+
+* @param string&#124;null Name of the index or NULL to generate automatically
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$column->unique();
+$column->unique( 'unq_col' );
+```
+
+
+#### Column::unsigned()
+
+Sets the column unsigned flag or returns the current value
+
+```php
+public function unsigned( bool $value = null )
+```
+
+* @param bool&#124;null $value New column unsigned flag or NULL to return current value
+* @return self&#124;bool Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $column->unsigned();
+$column->unsigned( true );
+```
+
+
+#### Column::up()
+
+Applies the changes to the database schema
+
+```php
+public function up() : self
+```
+
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$column->up();
 ```
