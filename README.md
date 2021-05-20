@@ -338,6 +338,50 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#dbupdate">update()</a></li>
 </ul>
 
+<h3><a href="#tables">Tables</a></h3>
+<ul class="method-list">
+	<li><a href="#tables__call">__call()</a></li>
+	<li><a href="#tables__get">__get()</a></li>
+	<li><a href="#tables__set">__set()</a></li>
+	<li><a href="#tablesbigint">bigint()</a></li>
+	<li><a href="#tablesbinary">binary()</a></li>
+	<li><a href="#tablesblob">blob()</a></li>
+	<li><a href="#tablesbool">bool()</a></li>
+	<li><a href="#tablesboolean">boolean()</a></li>
+	<li><a href="#tablescol">col()</a></li>
+	<li><a href="#tablesdate">date()</a></li>
+	<li><a href="#tablesdatetime">datetime()</a></li>
+	<li><a href="#tablesdatetimetz">datetimetz()</a></li>
+	<li><a href="#tablesdecimal">decimal()</a></li>
+	<li><a href="#tablesdropColumn">dropColumn()</a></li>
+	<li><a href="#tablesdropIndex">dropIndex()</a></li>
+	<li><a href="#tablesdropForeign">dropForeign()</a></li>
+	<li><a href="#tablesdropPrimary">dropPrimary()</a></li>
+	<li><a href="#tablesfloat">float()</a></li>
+	<li><a href="#tablesforeign">foreign()</a></li>
+	<li><a href="#tablesguid">guid()</a></li>
+	<li><a href="#tableshasColumn">hasColumn()</a></li>
+	<li><a href="#tableshasIndex">hasIndex()</a></li>
+	<li><a href="#tableshasForeign">hasForeign()</a></li>
+	<li><a href="#tablesid">id()</a></li>
+	<li><a href="#tablesindex">index()</a></li>
+	<li><a href="#tablesint">int()</a></li>
+	<li><a href="#tablesinteger">integer()</a></li>
+	<li><a href="#tablesjson">json()</a></li>
+	<li><a href="#tablesname">name()</a></li>
+	<li><a href="#tablesopt">opt()</a></li>
+	<li><a href="#tablesprimary">primary()</a></li>
+	<li><a href="#tablesrenameIndex">renameIndex()</a></li>
+	<li><a href="#tablessmallint">smallint()</a></li>
+	<li><a href="#tablesspatial">spatial()</a></li>
+	<li><a href="#tablesstring">string()</a></li>
+	<li><a href="#tablestext">text()</a></li>
+	<li><a href="#tablestime">time()</a></li>
+	<li><a href="#tablesunique">unique()</a></li>
+	<li><a href="#tablesuuid">uuid()</a></li>
+	<li><a href="#tablesup">up()</a></li>
+</ul>
+
 </nav>
 
 ### Database
@@ -891,3 +935,923 @@ $db->update( 'test', ['status' => true], ['status' => false, 'type' => 'new'] );
 
 Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
 
+
+
+### Tables
+
+The table scheme object you get by calling `$db->table( '<table name>' )` in your migration task gives you full access to the table and you can add, change or remove columns, indexes and foreign keys, e.g.:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->id();
+	$table->string( 'label' );
+	$table->col( 'status', 'tinyint' )->default( 0 );
+} );
+```
+
+Besides the `col()` method which can add columns of arbitrary types, there are some shortcut methods available for types available in all database server implementations:
+
+| Column type | Description |
+|-------------|-------------|
+| [bigint](#tablesbigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
+| [binary](#tablesbinary) | VARBINARY column with up to 255 bytes |
+| [blob](#tablesblob) | BLOB column with up to 2GB |
+| [bool](#tablesbool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
+| [boolean](#tablesboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
+| [date](#tablesdate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
+| [datetime](#tablesdatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
+| [tablesdatetimetz](#tablesdatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
+| [decimal](#tablesdecimal) | DECIMAL column for numeric data with fixed-point precision (string in PHP) |
+| [float](#tablesfloat) | FLOAT column for numeric data with a 8-byte floating-point precision |
+| [guid](#tablesguid) | Globally unique identifier with 36 bytes |
+| [id](#tablesid) | INTEGER column with a sequence/autoincrement and a primary key assigned |
+| [int](#tablesint) | INTEGER colum, alias for "integer" |
+| [integer](#tablesinteger) | INTEGER colum with a range from −2147483648 to 2147483647 |
+| [json](#tablesjson) | JSON column for UTF-8 encoded JSON data |
+| [smallint](#tablessmallint) | INTEGER colum with a range from −32768 to 32767 |
+| [string](#tablesstring) | VARCHAR column with up to 255 characters |
+| [text](#tablestext) | TEXT/CLOB column with up to 2GB characters |
+| [time](#tablestime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
+| [uuid](#tablesuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
+
+
+#### Table::__call()
+
+Calls custom methods or passes unknown method calls to the Doctrine table object
+
+```php
+public function __call( string $method, array $args )
+```
+
+* @param string `$method` Name of the method
+* @param array `$args` Method parameters
+* @return mixed Return value of the called method
+
+**Examples:**
+
+You can register custom methods that have access to the class properties of the Upscheme Table object:
+
+```php
+\Aimeos\Upscheme\Schema\Table::macro( 'addConstraint', function( array $columns ) {
+	return $this->to->addUniqueConstraint( $columns );
+} );
+
+$table->addConstraint( ['col1', 'col2'] );
+```
+
+Available class properties are:
+
+`$this->table`
+: Doctrine table schema
+
+`$this->up`
+: Upscheme object
+
+Furthermore, you can call any [Doctrine table](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Table.php) method directly, e.g.:
+
+```php
+$table->addUniqueConstraint( ['col1', 'col2'] );
+```
+
+#### Table::__get()
+
+Returns the value for the given table option
+
+```php
+public function __get( string $name )
+```
+
+* @param string `$name` Table option name
+* @return mixed Table option value
+
+The list of available table options are:
+
+* charset (MySQL)
+* collation (MySQL)
+* engine (MySQL)
+* temporary (MySQL)
+
+**Examples:**
+
+```php
+$engine = $table->engine;
+
+// same as
+$engine = $table->opt( 'engine' );
+```
+
+
+#### Table::__set()
+
+Sets the new value for the given table option
+
+```php
+public function __set( string $name, $value )
+```
+
+* @param string `$name` Table option name
+* @param mixed Table option value
+
+The list of available table options are:
+
+* charset (MySQL)
+* collation (MySQL)
+* engine (MySQL)
+* temporary (MySQL)
+
+**Examples:**
+
+```php
+$table->engine = 'InnoDB';
+
+// same as
+$table->opt( 'engine', 'InnoDB' );
+```
+
+
+#### Table::bigint()
+
+Creates a new column of type "bigint" or returns the existing one
+
+```php
+public function bigint( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->bigint( 'testcol' );
+```
+
+
+#### Table::binary()
+
+Creates a new column of type "binary" or returns the existing one
+
+```php
+public function binary( string $name, int $length = 255 ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$length` Length of the column in bytes
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->binary( 'testcol' );
+$table->binary( 'testcol', 32 );
+```
+
+
+#### Table::blob()
+
+Creates a new column of type "blob" or returns the existing one
+
+```php
+public function blob( string $name, int $length = 0x7fff ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$length` Length of the column in bytes
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+The maximum length of a "blob" column is 2GB.
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->blob( 'testcol' );
+$table->blob( 'testcol', 0x7fffffff );
+```
+
+
+#### Table::bool()
+
+Creates a new column of type "boolean" or returns the existing one
+
+```php
+public function bool( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+This method is an alias for boolean().
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->bool( 'testcol' );
+```
+
+
+#### Table::boolean()
+
+Creates a new column of type "boolean" or returns the existing one
+
+```php
+public function boolean( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->boolean( 'testcol' );
+```
+
+
+#### Table::col()
+
+Creates a new column or returns the existing one
+
+```php
+public function col( string $name, string $type ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param string `$type` Type of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->col( 'testcol', 'tinyint' );
+```
+
+
+#### Table::date()
+
+Creates a new column of type "date" or returns the existing one
+
+```php
+public function date( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->date( 'testcol' );
+```
+
+
+#### Table::datetime()
+
+Creates a new column of type "datetime" or returns the existing one
+
+```php
+public function datetime( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->datetime( 'testcol' );
+```
+
+
+#### Table::datetimetz()
+
+Creates a new column of type "datetimetz" or returns the existing one
+
+```php
+public function datetimetz( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->datetimetz( 'testcol' );
+```
+
+
+#### Table::decimal()
+
+Creates a new column of type "decimal" or returns the existing one
+
+```php
+public function decimal( string $name, int $digits, int $decimals = 2 ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$digits` Total number of decimal digits including decimals
+* @param int `$decimals` Number of digits after the decimal point
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->decimal( 'testcol', 10 ); // 10 digits incl. 2 decimals
+$table->decimal( 'testcol', 10, 4 ); // 10 digits incl. 4 decimals
+```
+
+
+#### Table::dropColumn()
+
+Drops the column given by its name if it exists
+
+```php
+public function dropColumn( $name ) : self
+```
+
+* @param array&#124;string `$name` Name of the column or columns
+* @return self Same object for fluid method calls
+
+If the column or one of the columns doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+**Examples:**
+
+```php
+$table->dropColumn( 'testcol' );
+$table->dropColumn( ['testcol', 'testcol2'] );
+```
+
+
+#### Table::dropIndex()
+
+Drops the index given by its name if it exists
+
+```php
+public function dropIndex( $name ) : self
+```
+
+* @param array&#124;string `$name` Name of the index or indexes
+* @return self Same object for fluid method calls
+
+If the index or one of the indexes doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+**Examples:**
+
+```php
+$table->dropIndex( 'idx_test_col' );
+$table->dropIndex( ['idx_test_col', 'idx_test_col2'] );
+```
+
+
+#### Table::dropForeign()
+
+Drops the foreign key constraint given by its name if it exists
+
+```php
+public function dropForeign( $name ) : self
+```
+
+* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @return self Same object for fluid method calls
+
+If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+**Examples:**
+
+```php
+$table->dropForeign( 'fk_test_col' );
+$table->dropForeign( ['fk_test_col', 'fk_test_col2'] );
+```
+
+
+#### Table::dropPrimary()
+
+Drops the primary key if it exists
+
+```php
+public function dropPrimary() : self
+```
+
+* @return self Same object for fluid method calls
+
+If the primary key doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+
+**Examples:**
+
+```php
+$table->dropPrimary();
+```
+
+
+#### Table::float()
+
+Creates a new column of type "float" or returns the existing one
+
+```php
+public function float( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->float( 'testcol' );
+```
+
+
+#### Table::foreign()
+
+Creates a new foreign key or returns the existing one
+
+```php
+public function foreign( $localcolumn, string $foreigntable, $foreigncolumn = 'id', string $name = null ) : Foreign
+```
+
+* @param array&#124;string $localcolumn Name of the local column or columns
+* @param string $foreigntable Name of the referenced table
+* @param array&#124;string $localcolumn Name of the referenced column or columns
+* @param string&#124;null Name of the foreign key constraint and foreign key index or NULL for autogenerated name
+* @return \Aimeos\Upscheme\Schema\Foreign Foreign key constraint object
+
+The length of the foreign key name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+$table->foreign( 'parentid', 'test' );
+$table->foreign( 'parentid', 'test', 'uid' );
+$table->foreign( 'parentid', 'test', 'id', 'fk_test_pid' );
+$table->foreign( ['parentid', 'siteid'], 'test', ['uid', 'siteid'] );
+```
+
+
+#### Table::guid()
+
+Creates a new column of type "guid" or returns the existing one
+
+```php
+public function guid( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->guid( 'testcol' );
+```
+
+
+#### Table::hasColumn()
+
+Checks if the column exists
+
+```php
+public function hasColumn( $name ) : bool
+```
+
+* @param array&#124;string `$name` Name of the column or columns
+* @return TRUE if the columns exists, FALSE if not
+
+**Examples:**
+
+```php
+$table->hasColumn( 'testcol' );
+$table->hasColumn( ['testcol', 'testcol2'] );
+```
+
+
+#### Table::hasIndex()
+
+Checks if the index exists
+
+```php
+public function hasIndex( $name ) : bool
+```
+
+* @param array&#124;string `$name` Name of the index or indexes
+* @return TRUE if the indexes exists, FALSE if not
+
+**Examples:**
+
+```php
+$table->hasIndex( 'idx_test_col' );
+$table->hasIndex( ['idx_test_col', 'idx_test_col2'] );
+```
+
+
+#### Table::hasForeign()
+
+Checks if the foreign key constraint exists
+
+```php
+public function hasForeign( $name ) : bool
+```
+
+* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @return TRUE if the foreign key constraints exists, FALSE if not
+
+**Examples:**
+
+```php
+$table->hasForeign( 'fk_test_col' );
+$table->hasForeign( ['fk_test_col', 'fk_test_col2'] );
+```
+
+
+#### Table::id()
+
+Creates a new ID column of type "integer" or returns the existing one
+
+```php
+public function id() : Column
+```
+
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+The column gets a sequence (autoincrement) and a primary key assigned automatically.
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->id();
+```
+
+
+#### Table::index()
+
+Creates a new index or replaces an existing one
+
+```php
+public function index( $columns, string $name = null ) : self
+```
+
+* @param array&#124;string $columns Name of the columns or columns spawning the index
+* @param string&#124;null $name Index name or NULL for autogenerated name
+* @return self Same object for fluid method calls
+
+The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+$table->index( 'testcol' );
+$table->index( ['testcol', 'testcol2'] );
+$table->index( 'testcol', 'idx_test_testcol );
+```
+
+
+#### Table::int()
+
+Creates a new column of type "integer" or returns the existing one
+
+```php
+public function int( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+This method is an alias for integer().
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->int( 'testcol' );
+```
+
+
+#### Table::integer()
+
+Creates a new column of type "integer" or returns the existing one
+
+```php
+public function integer( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->integer( 'testcol' );
+```
+
+
+#### Table::json()
+
+Creates a new column of type "json" or returns the existing one
+
+```php
+public function json( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->json( 'testcol' );
+```
+
+
+#### Table::name()
+
+Returns the name of the table
+
+```php
+public function name() : string
+```
+
+* @return string Table name
+
+**Examples:**
+
+```php
+$tablename = $table->name();
+```
+
+
+#### Table::opt()
+
+Sets a custom schema option or returns the current value
+
+```php
+public function opt( string $name, $value = null )
+```
+
+* @param string $name Name of the table-related custom schema option
+* @param mixed $value Value of the custom schema option
+* @return self&#124;mixed Same object for setting value, current value without second parameter
+
+Available custom schema options are:
+
+* charset (MySQL)
+* collation (MySQL)
+* engine (MySQL)
+* temporary (MySQL)
+
+**Examples:**
+
+```php
+$charset = $table->opt( 'charset' );
+$table->opt( 'charset', 'utf8' )->opt( 'collation', 'utf8_bin' );
+
+// Magic methods:
+$charset = $table->charset;
+$table->charset = 'binary';
+```
+
+
+#### Table::primary()
+
+Creates a new primary index or replaces an existing one
+
+```php
+public function primary( $columns, string $name = null ) : self
+```
+
+* @param array&#124;string $columns Name of the columns or columns spawning the index
+* @param string&#124;null $name Index name or NULL for autogenerated name
+* @return self Same object for fluid method calls
+
+The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+$table->primary( 'testcol' );
+$table->primary( ['testcol', 'testcol2'] );
+$table->primary( 'testcol', 'pk_test_testcol' );
+```
+
+
+#### Table::renameIndex()
+
+Renames an index or a list of indexes
+
+```php
+public function renameIndex( $from, string $to = null ) : self
+```
+
+* @param array&#124;string $from Index name or array of old/new index names (if new index name is NULL, it will be generated)
+* @param string&#124;null $to New index name or NULL for autogenerated name (ignored if first parameter is an array)
+* @return self Same object for fluid method calls
+
+The length of the indexes name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+// generate a new name automatically
+$table->renameIndex( 'test_col_index' );
+
+// custom name
+$table->renameIndex( 'test_col_index', 'idx_test_col' );
+
+// rename several indexes at once
+$table->renameIndex( ['test_col_index' => null, 'test_index' => 'idx_test_col'] );
+```
+
+
+#### Table::smallint()
+
+Creates a new column of type "smallint" or returns the existing one
+
+```php
+public function smallint( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->smallint( 'testcol' );
+```
+
+
+#### Table::spatial()
+
+Creates a new spatial index or replaces an existing one
+
+```php
+public function spatial( $columns, string $name = null ) : self
+```
+
+* @param array&#124;string $columns Name of the columns or columns spawning the index
+* @param string&#124;null $name Index name or NULL for autogenerated name
+* @return self Same object for fluid method calls
+
+The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+$table->spatial( 'testcol' );
+$table->spatial( ['testcol', 'testcol2'] );
+$table->spatial( 'testcol', 'idx_test_testcol' );
+```
+
+
+#### Table::string()
+
+Creates a new column of type "string" or returns the existing one
+
+```php
+public function string( string $name, int $length = 255 ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$length` Length of the column in characters
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+This type should be used for up to 255 characters. For more characters, use the "text" type.
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->string( 'testcol' );
+$table->string( 'testcol', 32 );
+```
+
+
+#### Table::text()
+
+Creates a new column of type "text" or returns the existing one
+
+```php
+public function text( string $name, int $length = 0xffff ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$length` Length of the column in characters
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+The maximum length of a "text" column is 2GB.
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->text( 'testcol' );
+$table->text( 'testcol', 0x7fffffff );
+```
+
+
+#### Table::time()
+
+Creates a new column of type "time" or returns the existing one
+
+```php
+public function time( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->time( 'testcol' );
+```
+
+
+#### Table::unique()
+
+Creates a new unique index or replaces an existing one
+
+```php
+public function unique( $columns, string $name = null ) : self
+```
+
+* @param array&#124;string $columns Name of the columns or columns spawning the index
+* @param string&#124;null $name Index name or NULL for autogenerated name
+* @return self Same object for fluid method calls
+
+The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+
+**Examples:**
+
+```php
+$table->unique( 'testcol' );
+$table->unique( ['testcol', 'testcol2'] );
+$table->unique( 'testcol', 'unq_test_testcol' );
+```
+
+
+#### Table::uuid()
+
+Creates a new column of type "guid" or returns the existing one
+
+```php
+public function uuid( string $name ) : Column
+```
+
+* @param string `$name` Name of the column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+This method is an alias for guid().
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->uuid( 'testcol' );
+```
+
+
+#### Table::up()
+
+Applies the changes to the database schema
+
+```php
+public function up() : self
+```
+
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$table->up();
+```
