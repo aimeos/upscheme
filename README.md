@@ -311,8 +311,7 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 
 <nav>
 
-### [DB](#database)
-
+<h3><a href="#database">Database</a></h3>
 <ul class="method-list">
 	<li><a href="#db__call">__call()</a></li>
 	<li><a href="#dbclose">close()</a></li>
@@ -376,16 +375,16 @@ $db->hasFkIndexes();
 
 Available class properties are:
 
-; `$this->from`
+`$this->from`
 : Original Doctrine database schema representing the current database
 
-; `$this->to`
+`$this->to`
 : Doctrine database schema containing the changes made up to now
 
-; `$this->conn`
+`$this->conn`
 : Doctrine database connection
 
-; `$this->up`
+`$this->up`
 : Upscheme object
 
 Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Schema.php) method directly, e.g.:
@@ -423,7 +422,7 @@ public function delete( string $table, array $conditions = null ) : self
 ```
 
 * @param string `$table` Name of the table
-* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return self Same object for fluid method calls
 
 Warning: The condition values are escaped but the table name and condition
@@ -449,7 +448,7 @@ public function dropColumn( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the column belongs to
-* @param array|string `$name` Name of the column or columns
+* @param array&#124;string `$name` Name of the column or columns
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -471,7 +470,7 @@ public function dropForeign( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array|string `$name` Name of the foreign key constraint or constraints
+* @param array&#124;string `$name` Name of the foreign key constraint or constraints
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -493,7 +492,7 @@ public function dropIndex( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the index belongs to
-* @param array|string `$name` Name of the index or indexes
+* @param array&#124;string `$name` Name of the index or indexes
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -514,7 +513,7 @@ Drops the sequence given by its name if it exists
 public function dropSequence( $name ) : self
 ```
 
-* @param array|string `$name` Name of the sequence or sequences
+* @param array&#124;string `$name` Name of the sequence or sequences
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -535,7 +534,7 @@ Drops the table given by its name if it exists
 public function dropTable( $name ) : self
 ```
 
-* @param array|string $name Name of the table or tables
+* @param array&#124;string $name Name of the table or tables
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -556,8 +555,8 @@ Executes a custom SQL statement if the database is of the given database platfor
 public function for( $for, $sql ) : self
 ```
 
-* @param array|string `$type` Database type the statement should be executed for
-* @param array|string `$sql` Custom SQL statement or statements
+* @param array&#124;string `$type` Database type the statement should be executed for
+* @param array&#124;string `$sql` Custom SQL statement or statements
 * @return self Same object for fluid method calls
 
 Available database platform types are:
@@ -594,7 +593,7 @@ public function hasColumn( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the column belongs to
-* @param array|string `$name` Name of the column or columns
+* @param array&#124;string `$name` Name of the column or columns
 * @return TRUE if the columns exists, FALSE if not
 
 **Examples:**
@@ -614,7 +613,7 @@ public function hasForeign( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array|string `$name` Name of the foreign key constraint or constraints
+* @param array&#124;string `$name` Name of the foreign key constraint or constraints
 * @return TRUE if the foreign key constraint exists, FALSE if not
 
 **Examples:**
@@ -634,7 +633,7 @@ public function hasIndex( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the index belongs to
-* @param array|string `$name` Name of the index or indexes
+* @param array&#124;string `$name` Name of the index or indexes
 * @return TRUE if the index exists, FALSE if not
 
 **Examples:**
@@ -653,7 +652,7 @@ Checks if the sequences exists
 public function hasSequence( $name ) : bool
 ```
 
-* @param array|string `$name` Name of the sequence or sequences
+* @param array&#124;string `$name` Name of the sequence or sequences
 * @return TRUE if the sequence exists, FALSE if not
 
 **Examples:**
@@ -672,7 +671,7 @@ Checks if the tables exists
 public function hasTable( $name ) : bool
 ```
 
-* @param array|string `$name` Name of the table or tables
+* @param array&#124;string `$name` Name of the table or tables
 * @return TRUE if the table exists, FALSE if not
 
 **Examples:**
@@ -713,7 +712,7 @@ Returns the ID of the last inserted row into any database table
 public function lastId( string $seq = null ) : string
 ```
 
-* @param string|null `$seq` Name of the sequence generating the ID
+* @param string&#124;null `$seq` Name of the sequence generating the ID
 * @return string Generated ID from the database
 
 **Examples:**
@@ -733,7 +732,7 @@ public function select( string $table, array $conditions = null ) : array
 ```
 
 * @param string `$table` Name of the table
-* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return array List of associative arrays containing column name/value pairs
 
 Warning: The condition values are escaped but the table name and condition
@@ -759,7 +758,7 @@ public function sequence( string $name, \Closure $fcn = null ) : Sequence
 ```
 
 * @param string `$name` Name of the sequence
-* @param \Closure|null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
+* @param \Closure&#124;null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 
 If the sequence doesn't exist yet, it will be created. Passing a closure to modify the sequence will also persist the changes in the database automatically.
@@ -805,7 +804,7 @@ public function table( string $name, \Closure $fcn = null ) : Table
 ```
 
 * @param string `$name` Name of the table
-* @param \Closure|null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
+* @param \Closure&#124;null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
 * @return \Aimeos\Upscheme\Schema\Table Table object
 
 If the table doesn't exist yet, it will be created. Passing a closure to modify the table will also persist the changes in the database automatically.
@@ -876,7 +875,7 @@ public function update( string $table, array $data, array $conditions = null ) :
 
 * @param string `$table` Name of the table
 * @param array `$data` Key/value pairs of column name/value to update
-* @param array|null `$conditions` Key/value pairs of column names and value to compare with
+* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return self Same object for fluid method calls
 
 Warning: The condition and data values are escaped but the table name and
