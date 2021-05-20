@@ -24,6 +24,7 @@ composer req aimeos/upscheme
   * [Tables](#tables)
   * [Columns](#columns)
   * [Foreign keys](#foreign-keys)
+  * [Sequences](#sequences)
 
 
 ## Why Upscheme
@@ -418,6 +419,18 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#foreignondelete">onDelete()</a></li>
 	<li><a href="#foreignonupdate">onUpdate()</a></li>
 	<li><a href="#foreignup">up()</a></li>
+</ul>
+
+<h3><a href="#sequences">Sequences</a></h3>
+<ul class="method-list">
+	<li><a href="#sequences__call">__call()</a></li>
+	<li><a href="#sequences__get">__get()</a></li>
+	<li><a href="#sequences__set">__set()</a></li>
+	<li><a href="#sequencescache">cache()</a></li>
+	<li><a href="#sequencesname">name()</a></li>
+	<li><a href="#sequencesstart">start()</a></li>
+	<li><a href="#sequencestep">step()</a></li>
+	<li><a href="#sequencesup">up()</a></li>
 </ul>
 
 </nav>
@@ -2383,7 +2396,7 @@ You can register custom methods that have access to the class properties of the 
 
 ```php
 \Aimeos\Upscheme\Schema\Foreign::macro( 'default', function() {
-	return $this->opts = ['onDelete' => 'SET NULL', 'onUpdate' => 'SET NULL'];
+	$this->opts = ['onDelete' => 'SET NULL', 'onUpdate' => 'SET NULL'];
 } );
 
 $foreign->default();
@@ -2576,4 +2589,176 @@ public function up() : self
 
 ```php
 $foreign->up();
+```
+
+
+
+### Sequences
+
+The Sequence scheme object you get by calling `$db->sequence( '<name>' )` in your migration task gives you access to the sequence properties, e.g.:
+
+```php
+$this->db()->sequence( 'seq_test' )->start( 1000 )->step( 2 );
+
+// same as
+$this->db()->sequence( 'seq_test', function( $seq ) {
+	$seq->start( 1000 );
+	$seq->step( 2 );
+} );
+```
+
+
+#### Sequence::__call()
+
+Calls custom methods or passes unknown method calls to the Doctrine table object
+
+```php
+public function __call( string $method, array $args )
+```
+
+* @param string `$method` Name of the method
+* @param array `$args` Method parameters
+* @return mixed Return value of the called method
+
+**Examples:**
+
+You can register custom methods that have access to the class properties of the Upscheme Sequence object:
+
+```php
+\Aimeos\Upscheme\Schema\Sequence::macro( 'default', function() {
+	$this->start( 1 )->step( 2 );
+} );
+
+$sequence->default();
+```
+
+Available class properties are:
+
+`$this->db`
+: Upscheme DB object
+
+`$this->sequence`
+: Doctrine sequence schema
+
+
+#### Sequence::__get()
+
+Returns the value for the given sequence option
+
+```php
+public function __get( string $name )
+```
+
+* @param string `$name` Sequence option name
+* @return mixed Sequence option value
+
+**Examples:**
+
+```php
+$value = $sequence->getInitialValue();
+// same as
+$value = $sequence->start();
+```
+
+
+#### Sequence::__set()
+
+Sets the new value for the given sequence option
+
+```php
+public function __set( string $name, $value )
+```
+
+* @param string `$name` Sequence option name
+* @param mixed Sequence option value
+
+**Examples:**
+
+```php
+$value = $sequence->setInitialValue( 1000 );
+// same as
+$value = $sequence->start( 1000 );
+```
+
+
+#### Sequence::cache()
+
+Sets the cached size of the sequence or returns the current value
+
+```php
+public function cache( int $value = null )
+```
+
+* @param int $value New number of sequence IDs cached by the client or NULL to return current value
+* @return self&#124;int Same object for setting value, current value without parameter
+
+**Examples:**
+
+```php
+$value = $sequence->cache();
+$sequence->cache( 100 );
+```
+
+
+#### Sequence::name()
+
+Returns the name of the sequence
+
+```php
+public function name()
+```
+
+* @return string Sequence name
+
+```php
+$name = $sequence->name();
+```
+
+
+#### Sequence::start()
+
+Sets the new start value of the sequence or returns the current value
+
+```php
+public function start( int $value = null )
+```
+
+* @param int $value New start value of the sequence or NULL to return current value
+* @return self&#124;int Same object for setting value, current value without parameter
+
+```php
+$value = $sequence->start();
+$sequence->start( 1000 );
+```
+
+
+#### Sequence::step()
+
+Sets the step size of new sequence values or returns the current value
+
+```php
+public function step( string $value = null )
+```
+
+* @param int $value New step size the sequence is incremented or decremented by or NULL to return current value
+* @return self&#124;int Same object for setting value, current value without parameter
+
+```php
+$value = $sequence->step();
+$sequence->step( 2 );
+```
+
+
+#### Sequence::up()
+
+Applies the changes to the database schema
+
+```php
+public function up() : self
+```
+
+* @return self Same object for fluid method calls
+
+```php
+$sequence->up();
 ```
