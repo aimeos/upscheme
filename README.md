@@ -21,6 +21,7 @@ composer req aimeos/upscheme
   * [Dependencies](#dependencies)
 * [Schema objects](#schema-objects)
   * [Database](#database)
+  * [Tables](#tables)
 
 
 ## Why Upscheme
@@ -316,19 +317,19 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#db__call">__call()</a></li>
 	<li><a href="#dbclose">close()</a></li>
 	<li><a href="#dbdelete">delete()</a></li>
-	<li><a href="#dbdropColumn">dropColumn()</a></li>
-	<li><a href="#dbdropForeign">dropForeign()</a></li>
-	<li><a href="#dbdropIndex">dropIndex()</a></li>
-	<li><a href="#dbdropSequence">dropSequence()</a></li>
-	<li><a href="#dbdropTable">dropTable()</a></li>
+	<li><a href="#dbdropcolumn">dropColumn()</a></li>
+	<li><a href="#dbdropforeign">dropForeign()</a></li>
+	<li><a href="#dbdropindex">dropIndex()</a></li>
+	<li><a href="#dbdropsequence">dropSequence()</a></li>
+	<li><a href="#dbdroptable">dropTable()</a></li>
 	<li><a href="#dbfor">for()</a></li>
-	<li><a href="#dbhasColumn">hasColumn()</a></li>
-	<li><a href="#dbhasForeign">hasForeign()</a></li>
-	<li><a href="#dbhasIndex">hasIndex()</a></li>
-	<li><a href="#dbhasSequence">hasSequence()</a></li>
-	<li><a href="#dbhasTable">hasTable()</a></li>
+	<li><a href="#dbhascolumn">hasColumn()</a></li>
+	<li><a href="#dbhasforeign">hasForeign()</a></li>
+	<li><a href="#dbhasindex">hasIndex()</a></li>
+	<li><a href="#dbhassequence">hasSequence()</a></li>
+	<li><a href="#dbhastable">hasTable()</a></li>
 	<li><a href="#dbinsert">insert()</a></li>
-	<li><a href="#dblastId">lastId()</a></li>
+	<li><a href="#dblastid">lastId()</a></li>
 	<li><a href="#dbselect">select()</a></li>
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
@@ -340,46 +341,46 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 
 <h3><a href="#tables">Tables</a></h3>
 <ul class="method-list">
-	<li><a href="#tables__call">__call()</a></li>
-	<li><a href="#tables__get">__get()</a></li>
-	<li><a href="#tables__set">__set()</a></li>
-	<li><a href="#tablesbigint">bigint()</a></li>
-	<li><a href="#tablesbinary">binary()</a></li>
-	<li><a href="#tablesblob">blob()</a></li>
-	<li><a href="#tablesbool">bool()</a></li>
-	<li><a href="#tablesboolean">boolean()</a></li>
-	<li><a href="#tablescol">col()</a></li>
-	<li><a href="#tablesdate">date()</a></li>
-	<li><a href="#tablesdatetime">datetime()</a></li>
-	<li><a href="#tablesdatetimetz">datetimetz()</a></li>
-	<li><a href="#tablesdecimal">decimal()</a></li>
-	<li><a href="#tablesdropColumn">dropColumn()</a></li>
-	<li><a href="#tablesdropIndex">dropIndex()</a></li>
-	<li><a href="#tablesdropForeign">dropForeign()</a></li>
-	<li><a href="#tablesdropPrimary">dropPrimary()</a></li>
-	<li><a href="#tablesfloat">float()</a></li>
-	<li><a href="#tablesforeign">foreign()</a></li>
-	<li><a href="#tablesguid">guid()</a></li>
-	<li><a href="#tableshasColumn">hasColumn()</a></li>
-	<li><a href="#tableshasIndex">hasIndex()</a></li>
-	<li><a href="#tableshasForeign">hasForeign()</a></li>
-	<li><a href="#tablesid">id()</a></li>
-	<li><a href="#tablesindex">index()</a></li>
-	<li><a href="#tablesint">int()</a></li>
-	<li><a href="#tablesinteger">integer()</a></li>
-	<li><a href="#tablesjson">json()</a></li>
-	<li><a href="#tablesname">name()</a></li>
-	<li><a href="#tablesopt">opt()</a></li>
-	<li><a href="#tablesprimary">primary()</a></li>
-	<li><a href="#tablesrenameIndex">renameIndex()</a></li>
-	<li><a href="#tablessmallint">smallint()</a></li>
-	<li><a href="#tablesspatial">spatial()</a></li>
-	<li><a href="#tablesstring">string()</a></li>
-	<li><a href="#tablestext">text()</a></li>
-	<li><a href="#tablestime">time()</a></li>
-	<li><a href="#tablesunique">unique()</a></li>
-	<li><a href="#tablesuuid">uuid()</a></li>
-	<li><a href="#tablesup">up()</a></li>
+	<li><a href="#table__call">__call()</a></li>
+	<li><a href="#table__get">__get()</a></li>
+	<li><a href="#table__set">__set()</a></li>
+	<li><a href="#tablebigint">bigint()</a></li>
+	<li><a href="#tablebinary">binary()</a></li>
+	<li><a href="#tableblob">blob()</a></li>
+	<li><a href="#tablebool">bool()</a></li>
+	<li><a href="#tableboolean">boolean()</a></li>
+	<li><a href="#tablecol">col()</a></li>
+	<li><a href="#tabledate">date()</a></li>
+	<li><a href="#tabledatetime">datetime()</a></li>
+	<li><a href="#tabledatetimetz">datetimetz()</a></li>
+	<li><a href="#tabledecimal">decimal()</a></li>
+	<li><a href="#tabledropcolumn">dropColumn()</a></li>
+	<li><a href="#tabledropindex">dropIndex()</a></li>
+	<li><a href="#tabledropforeign">dropForeign()</a></li>
+	<li><a href="#tabledropprimary">dropPrimary()</a></li>
+	<li><a href="#tablefloat">float()</a></li>
+	<li><a href="#tableforeign">foreign()</a></li>
+	<li><a href="#tableguid">guid()</a></li>
+	<li><a href="#tablehascolumn">hasColumn()</a></li>
+	<li><a href="#tablehasindex">hasIndex()</a></li>
+	<li><a href="#tablehasforeign">hasForeign()</a></li>
+	<li><a href="#tableid">id()</a></li>
+	<li><a href="#tableindex">index()</a></li>
+	<li><a href="#tableint">int()</a></li>
+	<li><a href="#tableinteger">integer()</a></li>
+	<li><a href="#tablejson">json()</a></li>
+	<li><a href="#tablename">name()</a></li>
+	<li><a href="#tableopt">opt()</a></li>
+	<li><a href="#tableprimary">primary()</a></li>
+	<li><a href="#tablerenameindex">renameIndex()</a></li>
+	<li><a href="#tablesmallint">smallint()</a></li>
+	<li><a href="#tablespatial">spatial()</a></li>
+	<li><a href="#tablestring">string()</a></li>
+	<li><a href="#tabletext">text()</a></li>
+	<li><a href="#tabletime">time()</a></li>
+	<li><a href="#tableunique">unique()</a></li>
+	<li><a href="#tableuuid">uuid()</a></li>
+	<li><a href="#tableup">up()</a></li>
 </ul>
 
 </nav>
@@ -953,26 +954,26 @@ Besides the `col()` method which can add columns of arbitrary types, there are s
 
 | Column type | Description |
 |-------------|-------------|
-| [bigint](#tablesbigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
-| [binary](#tablesbinary) | VARBINARY column with up to 255 bytes |
-| [blob](#tablesblob) | BLOB column with up to 2GB |
-| [bool](#tablesbool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
-| [boolean](#tablesboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
-| [date](#tablesdate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
-| [datetime](#tablesdatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
-| [tablesdatetimetz](#tablesdatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
-| [decimal](#tablesdecimal) | DECIMAL column for numeric data with fixed-point precision (string in PHP) |
-| [float](#tablesfloat) | FLOAT column for numeric data with a 8-byte floating-point precision |
-| [guid](#tablesguid) | Globally unique identifier with 36 bytes |
-| [id](#tablesid) | INTEGER column with a sequence/autoincrement and a primary key assigned |
-| [int](#tablesint) | INTEGER colum, alias for "integer" |
-| [integer](#tablesinteger) | INTEGER colum with a range from −2147483648 to 2147483647 |
-| [json](#tablesjson) | JSON column for UTF-8 encoded JSON data |
-| [smallint](#tablessmallint) | INTEGER colum with a range from −32768 to 32767 |
-| [string](#tablesstring) | VARCHAR column with up to 255 characters |
-| [text](#tablestext) | TEXT/CLOB column with up to 2GB characters |
-| [time](#tablestime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
-| [uuid](#tablesuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
+| [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
+| [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
+| [blob](#tableblob) | BLOB column with up to 2GB |
+| [bool](#tablebool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
+| [boolean](#tableboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
+| [date](#tabledate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
+| [datetime](#tabledatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
+| [tablesdatetimetz](#tabledatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
+| [decimal](#tabledecimal) | DECIMAL column for numeric data with fixed-point precision (string in PHP) |
+| [float](#tablefloat) | FLOAT column for numeric data with a 8-byte floating-point precision |
+| [guid](#tableguid) | Globally unique identifier with 36 bytes |
+| [id](#tableid) | INTEGER column with a sequence/autoincrement and a primary key assigned |
+| [int](#tableint) | INTEGER colum, alias for "integer" |
+| [integer](#tableinteger) | INTEGER colum with a range from −2147483648 to 2147483647 |
+| [json](#tablejson) | JSON column for UTF-8 encoded JSON data |
+| [smallint](#tablesmallint) | INTEGER colum with a range from −32768 to 32767 |
+| [string](#tablestring) | VARCHAR column with up to 255 characters |
+| [text](#tabletext) | TEXT/CLOB column with up to 2GB characters |
+| [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
+| [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
 
 
 #### Table::__call()
