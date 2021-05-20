@@ -23,6 +23,7 @@ composer req aimeos/upscheme
   * [Database](#database)
   * [Tables](#tables)
   * [Columns](#columns)
+  * [Foreign keys](#foreign-keys)
 
 
 ## Why Upscheme
@@ -406,6 +407,17 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#columnunique">unique()</a></li>
 	<li><a href="#columnunsigned">unsigned()</a></li>
 	<li><a href="#columnup">up()</a></li>
+</ul>
+
+<h3><a href="#foreign-keys">Foreign keys</a></h3>
+<ul class="method-list">
+	<li><a href="#foreign__call">__call()</a></li>
+	<li><a href="#foreign__get">__get()</a></li>
+	<li><a href="#foreign__set">__set()</a></li>
+	<li><a href="#foreignname">name()</a></li>
+	<li><a href="#foreignondelete">onDelete()</a></li>
+	<li><a href="#foreignonupdate">onUpdate()</a></li>
+	<li><a href="#foreignup">up()</a></li>
 </ul>
 
 </nav>
@@ -2337,4 +2349,231 @@ public function up() : self
 
 ```php
 $column->up();
+```
+
+
+
+### Foreign keys
+
+The foreign key scheme object you get by calling `$table->foreign( '<col>', '<table>' )` in your migration task gives you access to the foreign key properties, e.g.:
+
+```php
+$this->db()->table( 'testref', function( $table ) {
+	$table->id();
+	$table->foreign( 'parentid', 'test' )->onDelete( 'SET NULL' );
+} );
+```
+
+
+#### Foreign::__call()
+
+Calls custom methods
+
+```php
+public function __call( string $method, array $args )
+```
+
+* @param string `$method` Name of the method
+* @param array `$args` Method parameters
+* @return mixed Return value of the called method
+
+**Examples:**
+
+You can register custom methods that have access to the class properties of the Upscheme Foreign object:
+
+```php
+\Aimeos\Upscheme\Schema\Foreign::macro( 'default', function() {
+	return $this->opts = ['onDelete' => 'SET NULL', 'onUpdate' => 'SET NULL'];
+} );
+
+$foreign->default();
+```
+
+Available class properties are:
+
+`$this->dbaltable`
+: Doctrine table schema
+
+`$this->table`
+: Upscheme Table object
+
+`$this->localcol`
+: Local column name or names
+
+`$this->fktable`
+: Foreign table name
+
+`$this->fkcol`
+: Foreign column name or names
+
+`$this->name`
+: Foreign key name
+
+`$this->opts`
+: Associative list of foreign key options (mainly "onDelete" and "onUpdate")
+
+
+#### Foreign::__get()
+
+Returns the value for the given foreign key option
+
+```php
+public function __get( string $name )
+```
+
+* @param string `$name` Foreign key option name
+* @return mixed Foreign key option value
+
+The list of available foreign key options are:
+
+* onDelete
+* onUpdate
+
+Possible values for both options are:
+
+* CASCADE : Update referenced value
+* NO ACTION : No change in referenced value
+* RESTRICT : Forbid changing values
+* SET DEFAULT : Set referenced value to the default value
+* SET NULL : Set referenced value to NULL
+
+**Examples:**
+
+```php
+$value = $foreign->onDelete;
+// same as
+$value = $foreign->opt( 'onDelete' );
+```
+
+
+#### Foreign::__set()
+
+Sets the new value for the given Foreign key option
+
+```php
+public function __set( string $name, $value )
+```
+
+* @param string `$name` Foreign key option name
+* @param mixed Foreign key option value
+
+The list of available Foreign key options are:
+
+* onDelete
+* onUpdate
+
+Possible values for both options are:
+
+* CASCADE : Update referenced value
+* NO ACTION : No change in referenced value
+* RESTRICT : Forbid changing values
+* SET DEFAULT : Set referenced value to the default value
+* SET NULL : Set referenced value to NULL
+
+**Examples:**
+
+```php
+$foreign->onDelete = 'SET NULL';
+// same as
+$foreign->onDelete( 'SET NULL' );
+$foreign->opt( 'onDelete', 'SET NULL' );
+```
+
+
+#### Foreign::name()
+
+* Sets the name of the constraint or returns the current name
+
+```php
+public function name( string $value = null )
+```
+
+* @param string&#124;null $value New name of the constraint or NULL to return current value
+* @return self&#124;string Same object for setting the name, current name without parameter
+
+**Examples:**
+
+```php
+$fkname = $foreign->name();
+```
+
+
+#### Foreign::onDelete()
+
+* Sets the action if the referenced row is deleted or returns the current value
+
+```php
+public function onDelete( string $value = null )
+```
+
+* @param string&#124;null $value Performed action or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+* Available actions are:
+* - CASCADE : Delete referenced value
+* - NO ACTION : No change in referenced value
+* - RESTRICT : Forbid changing values
+* - SET DEFAULT : Set referenced value to the default value
+* - SET NULL : Set referenced value to NULL
+
+**Examples:**
+
+```php
+$value = $foreign->onDelete();
+
+$foreign->onDelete( 'SET NULL' );
+// same as
+$foreign->onDelete = 'SET NULL';
+$foreign->opt( 'onDelete', 'SET NULL' );
+
+$foreign->onDelete( 'SET NULL' )->onUpdate( 'SET NULL' );
+```
+
+
+#### Foreign::onUpdate()
+
+* Sets the action if the referenced row is updated or returns the current value
+
+```php
+public function onUpdate( string $value = null )
+```
+
+* @param string&#124;null $value Performed action or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+* Available actions are:
+* - CASCADE : Update referenced value
+* - NO ACTION : No change in referenced value
+* - RESTRICT : Forbid changing values
+* - SET DEFAULT : Set referenced value to the default value
+* - SET NULL : Set referenced value to NULL
+
+**Examples:**
+
+```php
+$value = $foreign->onUpdate();
+
+$foreign->onUpdate( 'SET NULL' );
+// same as
+$foreign->onUpdate = 'SET NULL';
+$foreign->opt( 'onUpdate', 'SET NULL' );
+
+$foreign->onUpdate( 'SET NULL' )->onDelete( 'SET NULL' );
+```
+
+
+#### Foreign::up()
+
+* Applies the changes to the database schema
+
+```php
+public function up() : self
+```
+
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$foreign->up();
 ```
