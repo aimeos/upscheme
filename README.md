@@ -391,6 +391,7 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#column__call">__call()</a></li>
 	<li><a href="#column__get">__get()</a></li>
 	<li><a href="#column__set">__set()</a></li>
+	<li><a href="#columnautoincrement">autoincrement()</a></li>
 	<li><a href="#columncomment">comment()</a></li>
 	<li><a href="#columndefault">default()</a></li>
 	<li><a href="#columnfixed">fixed()</a></li>
@@ -2041,6 +2042,27 @@ $column->charset = 'utf8';
 
 // same as
 $column->opt( 'charset', 'utf8' );
+```
+
+
+#### Column::autoincrement()
+
+Sets the column as autoincrement or returns the current value
+
+```php
+public function autoincrement( bool $value = null )
+```
+
+* @param bool&#124;null $value New autoincrement flag or NULL to return current value
+* @return self&#124;bool Same object for setting the value, current value without parameter
+
+This method is an alias for the [`seq()` method](#columnseq).
+
+**Examples:**
+
+```php
+$value = $column->autoincrement();
+$column->autoincrement( true );
 ```
 
 

@@ -101,6 +101,20 @@ class Column
 
 
 	/**
+	 * Sets the column as autoincrement or returns the current value
+	 *
+	 * This method is an alias for seq().
+	 *
+	 * @param bool|null $value New autoincrement flag or NULL to return current value
+	 * @return self|bool Same object for setting the value, current value without parameter
+	 */
+	public function autoincrement( bool $value = null )
+	{
+		return $this->seq( $value );
+	}
+
+
+	/**
 	 * Sets the column comment or returns the current value
 	 *
 	 * @param string|null $value New column comment or NULL to return current value

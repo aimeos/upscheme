@@ -108,6 +108,23 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testAutoincrementGet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'getAutoincrement' )
+			->will( $this->returnValue( true ) );
+
+		$this->assertEquals( true, $this->object->autoincrement() );
+	}
+
+
+	public function testAutoincrementSet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'setAutoincrement' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->autoincrement( true ) );
+	}
+
+
 	public function testCommentGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getComment' )
