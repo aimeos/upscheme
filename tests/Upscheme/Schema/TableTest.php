@@ -94,6 +94,32 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testBigid()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+
+		$col = $this->object->bigid();
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
+		$this->assertEquals( 'id', $col->name() );
+		$this->assertEquals( 'bigint', $col->type() );
+		$this->assertTrue( $col->seq() );
+	}
+
+
+	public function testBigidName()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+
+		$col = $this->object->bigid( 'uid' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
+		$this->assertEquals( 'uid', $col->name() );
+		$this->assertEquals( 'bigint', $col->type() );
+		$this->assertTrue( $col->seq() );
+	}
+
+
 	public function testBigint()
 	{
 		$col = $this->object->bigint( 'unittest' );
