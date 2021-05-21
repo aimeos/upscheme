@@ -255,11 +255,12 @@ class Table
 	 *
 	 * The column gets a sequence (autoincrement) and a primary key assigned automatically
 	 *
+	 * @param string|null Name of the ID column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function id() : Column
+	public function id( string $name = null ) : Column
 	{
-		return $this->integer( 'id' )->seq( true )->primary();
+		return $this->integer( $name ?: 'id' )->seq( true )->primary();
 	}
 
 
