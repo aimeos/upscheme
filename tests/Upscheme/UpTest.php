@@ -154,9 +154,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 		$this->expectOutputString( 'custom' );
 		$this->object->info( 'test', 'v' );
 
-		\Aimeos\Upscheme\Up::macro( 'info', function( $msg, $level ) {
-			echo strlen( (string) $level ) <= $this->verbose ? $msg : '';
-		} );
+		\Aimeos\Upscheme\Up::reset( 'info' );
 	}
 
 
@@ -181,6 +179,9 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	public function testVerboseCustom()
 	{
 		\Aimeos\Upscheme\Up::macro( 'verbose', function( $level ) { return 3; } );
-		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $this->object->verbose( 'v' ) );
+		$result = $this->object->verbose( 'v' );
+		\Aimeos\Upscheme\Up::reset( 'info' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 }

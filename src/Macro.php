@@ -35,6 +35,21 @@ trait Macro
 
 
 	/**
+	 * Resets the custom methods
+	 *
+	 * @param string $method Method name or NULL for all custom methods
+	 */
+	public static function reset( string $method = null )
+	{
+		if( $method ) {
+			unset( self::$macros[$method] );
+		} else {
+			self::$macros[$method] = [];
+		}
+	}
+
+
+	/**
 	 * Passes unknown method calls to the custom methods
 	 *
 	 * @param string $method Method name

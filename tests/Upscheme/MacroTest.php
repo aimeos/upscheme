@@ -39,6 +39,15 @@ class MacroTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testMacroReset()
+	{
+		$this->object::macro( 'macrotest', function( $a, $b ) { return $a + $b; } );
+		$this->object::reset( 'macrotest' );
+
+		$this->assertNull( $this->object::macro( 'macrotest' ) );
+	}
+
+
 	public function testCall()
 	{
 		$this->object::macro( 'macrotest', function() { return true; } );
