@@ -22,7 +22,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$methods = [
-			'addIndex', 'addUniqueIndex', 'getIndex', 'renameIndex',
+			'addIndex', 'addUniqueIndex', 'getIndex', 'getIndexes', 'renameIndex',
 			'dropPrimaryKey', 'getPrimaryKey', 'setPrimaryKey',
 			'dropColumn', 'dropIndex', 'removeForeignKey', 'hasUniqueConstraint',
 			'hasColumn', 'hasIndex', 'hasForeignKey', 'hasPrimaryKey', 'removeUniqueConstraint',
@@ -554,6 +554,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->tablemock->expects( $this->once() )->method( 'addIndex' );
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->will( $this->returnValue( [] ) );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->index( 'pid' ) );
 	}
@@ -568,6 +569,21 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 
 	public function testIndexExists()
+	{
+		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
+			->setMethods( ['getColumns'] )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$idxmock->expects( $this->once() )->method( 'getColumns' )->will( $this->returnValue( ['pid'] ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->will( $this->returnValue( [$idxmock] ) );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->index( 'pid' ) );
+	}
+
+
+	public function testIndexExistsName()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
 			->setMethods( ['spansColumns'] )

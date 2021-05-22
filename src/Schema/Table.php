@@ -559,6 +559,16 @@ class Table
 			$this->table->dropIndex( $name );
 		}
 
+		if( $name === null )
+		{
+			foreach( $this->table->getIndexes() as $index )
+			{
+				if( $index->getColumns() === $columns ) {
+					return $this;
+				}
+			}
+		}
+
 		$this->table->addIndex( $columns, $name );
 		return $this;
 	}

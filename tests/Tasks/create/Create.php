@@ -34,11 +34,12 @@ class Create extends Base
 			$t->string( 'code' );
 			$t->text( 'content' );
 			$t->time( 'time' );
-			$t->uuid( 'uuid' );
+			$t->guid( 'uuid' );
 			$t->default();
 
 			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_type' );
+			$t->index( 'uuid' );
 
 		} );
 

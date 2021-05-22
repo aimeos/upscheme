@@ -27,6 +27,7 @@ class Update extends Base
 
 			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_type' );
+			$t->index( 'uuid' );
 
 		} )->dropColumn( 'test' )->up();
 
