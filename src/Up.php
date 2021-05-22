@@ -111,7 +111,7 @@ class Up
 		}
 
 		if( !isset( $this->db[$name] ) ) {
-			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $this->createConnection( $cfg ) );
+			$this->db[$name] = new \Aimeos\Upscheme\Schema\DB( $this, $this->connect( $cfg ) );
 		}
 
 		return $new ? clone $this->db[$name] : $this->db[$name];
@@ -190,15 +190,15 @@ class Up
 	 * @param array $cfg Database configuration
 	 * @return \Doctrine\DBAL\Connection New DBAL database connection
 	 */
-	protected function createConnection( array $cfg ) : \Doctrine\DBAL\Connection
+	protected function connect( array $cfg ) : \Doctrine\DBAL\Connection
 	{
 		$cfg['driverOptions'][\PDO::ATTR_CASE] = \PDO::CASE_NATURAL;
 		$cfg['driverOptions'][\PDO::ATTR_ERRMODE] = \PDO::ERRMODE_EXCEPTION;
 		$cfg['driverOptions'][\PDO::ATTR_ORACLE_NULLS] = \PDO::NULL_NATURAL;
 		$cfg['driverOptions'][\PDO::ATTR_STRINGIFY_FETCHES] = false;
 
-		if( self::macro( 'createConnection' ) ) {
-			$cfg = $this->call( 'createConnection', [$cfg] );
+		if( self::macro( 'connect' ) ) {
+			return $this->call( 'connect', [$cfg] );
 		}
 
 		return \Doctrine\DBAL\DriverManager::getConnection( $cfg );

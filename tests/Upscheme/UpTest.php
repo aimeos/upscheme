@@ -120,16 +120,14 @@ class UpTest extends \PHPUnit\Framework\TestCase
 
 	public function testDbCustom()
 	{
-		\Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
-			return array_replace( $cfg, ['driver' => 'pdo_sqlite', 'path' => 'up.test'] );
+		\Aimeos\Upscheme\Up::macro( 'connect', function( array $cfg ) {
+			return \Doctrine\DBAL\DriverManager::getConnection( ['driver' => 'pdo_sqlite', 'path' => 'up.test'] );
 		} );
 
-		$object = new \Aimeos\Upscheme\Up( ['driver' => 'pdo_mysql'], 'testpath' );
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->db() );
+		$result = (new \Aimeos\Upscheme\Up( ['driver' => 'pdo_mysql'], 'testpath' ))->db();
+		\Aimeos\Upscheme\Up::reset( 'connect' );
 
-		\Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
-			return $cfg;
-		} );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $result );
 	}
 
 
