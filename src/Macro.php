@@ -44,7 +44,7 @@ trait Macro
 		if( $method ) {
 			unset( self::$macros[$method] );
 		} else {
-			self::$macros[$method] = [];
+			self::$macros = [];
 		}
 	}
 
