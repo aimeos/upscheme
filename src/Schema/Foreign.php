@@ -103,22 +103,13 @@ class Foreign
 
 
 	/**
-	 * Sets the name of the constraint or returns the current name
+	 * Returns the current name of the foreign key constraint
 	 *
-	 * @param string|null $value New name of the constraint or NULL to return current value
-	 * @return self|string Same object for setting the name, current name without parameter
+	 * @return string Name of the foreign key constraint
 	 */
-	public function name( string $value = null )
+	public function name()
 	{
-		if( $value === null ) {
-			return $this->name;
-		}
-
-		if( $this->name !== $value ) {
-			$this->replace( $value );
-		}
-
-		return $this;
+		return $this->name;
 	}
 
 

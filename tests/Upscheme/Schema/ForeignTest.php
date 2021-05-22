@@ -77,15 +77,9 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testNameGet()
+	public function testName()
 	{
 		$this->assertEquals( 'fk_name', $this->object->name() );
-	}
-
-
-	public function testNameSet()
-	{
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Foreign::class, $this->object->name( 'fk_name2' ) );
 	}
 
 
