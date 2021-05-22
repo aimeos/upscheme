@@ -347,6 +347,7 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#table__call">__call()</a></li>
 	<li><a href="#table__get">__get()</a></li>
 	<li><a href="#table__set">__set()</a></li>
+	<li><a href="#tablebigid">bigid()</a></li>
 	<li><a href="#tablebigint">bigint()</a></li>
 	<li><a href="#tablebinary">binary()</a></li>
 	<li><a href="#tableblob">blob()</a></li>
@@ -1005,6 +1006,7 @@ Besides the `col()` method which can add columns of arbitrary types, there are s
 
 | Column type | Description |
 |-------------|-------------|
+| [bigid](#tableid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
 | [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
 | [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
 | [blob](#tableblob) | BLOB column with up to 2GB |
@@ -1118,6 +1120,28 @@ $table->engine = 'InnoDB';
 
 // same as
 $table->opt( 'engine', 'InnoDB' );
+```
+
+
+#### Table::bigid()
+
+Creates a new ID column of type "bigint" or returns the existing one
+
+```php
+public function bigid( string $name = null ) : Column
+```
+
+* @param string|null Name of the ID column
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+The column gets a sequence (autoincrement) and a primary key assigned automatically.
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->bigid();
+$table->bigid( 'uid' );
 ```
 
 
@@ -1541,9 +1565,10 @@ $table->hasForeign( ['fk_test_col', 'fk_test_col2'] );
 Creates a new ID column of type "integer" or returns the existing one
 
 ```php
-public function id() : Column
+public function id( string $name = null ) : Column
 ```
 
+* @param string|null Name of the ID column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 The column gets a sequence (autoincrement) and a primary key assigned automatically.
@@ -1553,6 +1578,7 @@ If the column doesn't exist yet, it will be created.
 
 ```php
 $table->id();
+$table->id( 'uid' );
 ```
 
 
@@ -1926,6 +1952,7 @@ There are some shortcut methods for column types available in all database serve
 
 | Column type | Description |
 |-------------|-------------|
+| [bigid](#tableid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
 | [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
 | [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
 | [blob](#tableblob) | BLOB column with up to 2GB |
