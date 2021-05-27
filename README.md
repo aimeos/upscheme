@@ -1,4 +1,4 @@
-<a class="badge" href="https://github.com/aimeos/upscheme/actions"><img src="https://circleci.com/gh/aimeos/aimeos-core.svg?style=shield" alt="Build Status" height="20"></a>
+<a class="badge" href="https://github.com/aimeos/upscheme"><img src="https://circleci.com/gh/aimeos/aimeos-core.svg?style=shield" alt="Build Status" height="20"></a>
 <a class="badge" href="https://coveralls.io/github/aimeos/upscheme"><img src="https://coveralls.io/repos/github/aimeos/upscheme/badge.svg" alt="Coverage Status" height="20"></a>
 <a class="badge" href="https://packagist.org/packages/aimeos/upscheme"><img src="https://poser.pugx.org/aimeos/upscheme/license.svg" alt="License" height="20"></a>
 
@@ -1131,7 +1131,7 @@ Creates a new ID column of type "bigint" or returns the existing one
 public function bigid( string $name = null ) : Column
 ```
 
-* @param string|null Name of the ID column
+* @param string&#124;null Name of the ID column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 The column gets a sequence (autoincrement) and a primary key assigned automatically.
@@ -1568,7 +1568,7 @@ Creates a new ID column of type "integer" or returns the existing one
 public function id( string $name = null ) : Column
 ```
 
-* @param string|null Name of the ID column
+* @param string&#124;null Name of the ID column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 The column gets a sequence (autoincrement) and a primary key assigned automatically.
