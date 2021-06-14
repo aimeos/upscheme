@@ -227,17 +227,17 @@ In your PHP file, always include the `namespace` statement first. The `use` stat
 
 ### Dependencies
 
-To specify dependencies to other migration tasks, use the `before()` and `after()` methods. `before()` must return the class names of the migration tasks which must be executed before your task while the `after()` method must return the class names which should be executed after your task (the post-dependencies):
+To specify dependencies to other migration tasks, use the `after()` and `before()` methods. Your task is executed after the tasks returned by `after()` and before the tasks returned by `before()`:
 
 ```php
 class TestTable extends Base
 {
-	public function before() : array
+	public function after() : array
 	{
 		return ['CreateRefTable'];
 	}
 
-	public function after() : array
+	public function before() : array
 	{
 		return ['InsertTestData'];
 	}

@@ -155,11 +155,11 @@ class Up
 		foreach( $this->tasks as $name => $task )
 		{
 			foreach( (array) $task->after() as $taskname ) {
-				$this->dependencies[$name][] = $taskname;
+				$this->dependencies[$taskname][] = $name;
 			}
 
 			foreach( (array) $task->before() as $taskname ) {
-				$this->dependencies[$taskname][] = $name;
+				$this->dependencies[$name][] = $taskname;
 			}
 		}
 
