@@ -1,9 +1,11 @@
 (function() {
-	const nav = document.querySelector('main nav');
+	const nav = document.querySelectorAll('main nav');
 	const methods = document.querySelector('.sidebar .methods');
 
 	if(nav && methods) {
-		methods.appendChild(nav.cloneNode(true));
+		nav.forEach(function(el) {
+			methods.appendChild(el.cloneNode(true));
+		});
 	}
 
 	const open = document.querySelector('.open');

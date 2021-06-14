@@ -14,17 +14,21 @@ composer req aimeos/upscheme
 **Table of contents**
 
 * [Why Upscheme](#why-upscheme)
-* [Integrating Upscheme](#integrate-upscheme)
+* [Integrating Upscheme](#integrating-upscheme)
 * [Writing migrations](#writing-migrations)
-  * [Schemas](#schemas)
-  * [Messages](#messages)
   * [Dependencies](#dependencies)
-* [Schema objects](#schema-objects)
-  * [Database](#database)
-  * [Tables](#tables)
-  * [Columns](#columns)
-  * [Foreign keys](#foreign-keys)
-  * [Sequences](#sequences)
+  * [Messages](#messages)
+  * [Schemas](#schemas)
+* [Database](#database)
+  * [Methods](#database-methods)
+* [Tables](#tables)
+  * [Methods](#table-methods)
+* [Columns](#columns)
+  * [Methods](#column-methods)
+* [Foreign keys](#foreign-keys)
+  * [Methods](#forein-key-methods)
+* [Sequences](#sequences)
+  * [Methods](#sequence-methods)
 
 
 ## Why Upscheme
@@ -185,6 +189,7 @@ To enable (debugging) output, use the verbose() method:
 \Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->verbose( 'vvv' )->up(); // debugging
 ```
 
+
 ## Writing migrations
 
 A migration task only requires implementing the `up()` method and must be stored in one of the directories passed to the `Up` class:
@@ -250,35 +255,6 @@ Thus, the order of execution would be:
 CreateRefTable -> TestTable -> InsertTestData
 ```
 
-### Schemas
-
-In the `up()` method, you have access to the database schema using the `db()` method. In case you've passed more than one database configuration to `Up::use()`, you can access the different schemas by their configuration key:
-
-```php
-// $config = ['db' => [...], 'temp' => [...]];
-// \Aimeos\Upscheme\Up::use( $config, '...' )->up();
-
-$this->db();
-$this->db( 'db' );
-$this->db( 'temp' );
-```
-
-If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use `insert()`, `select()`, `update()`, `delete()` and `stmt()` to manipulate the records of the tables.
-
-After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. An `up()` method is also in any table, sequence, and column object available so you can call `up()` also there.
-
-In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
-
-```php
-$db = $this->db( 'db', true );
-```
-
-All schema changes made are applied to the database before the schema with the new connection is returned. To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
-
-```php
-$db->close();
-```
-
 ### Messages
 
 To output messages in your migration task use the `info()` method:
@@ -311,11 +287,49 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 \Aimeos\Upscheme\Up::use( $config, '...' )->verbose()->up();
 ```
 
-## Schema objects
+### Schemas
+
+In the `up()` method, you have access to the database schema using the `db()` method. In case you've passed more than one database configuration to `Up::use()`, you can access the different schemas by their configuration key:
+
+```php
+// $config = ['db' => [...], 'temp' => [...]];
+// \Aimeos\Upscheme\Up::use( $config, '...' )->up();
+
+$this->db();
+$this->db( 'db' );
+$this->db( 'temp' );
+```
+
+If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use `insert()`, `select()`, `update()`, `delete()` and `stmt()` to manipulate the records of the tables.
+
+After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. An `up()` method is also in any table, sequence, and column object available so you can call `up()` also there.
+
+In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
+
+```php
+$db = $this->db( 'db', true );
+```
+
+All schema changes made are applied to the database before the schema with the new connection is returned. To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
+
+```php
+$db->close();
+```
+
+
+## Database
+
+You get the database schema object in your task by calling `$this->db()` like described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects, e.g.:
+
+```php
+$table = $this->db()->table( 'test' );
+$seq = $this->db()->sequence( 'seq_test' );
+```
+
+### Database methods
 
 <nav>
-
-<h3><a href="#database">Database</a></h3>
+<h4><a href="#database">Database</a></h4>
 <ul class="method-list">
 	<li><a href="#db__call">__call()</a></li>
 	<li><a href="#dbclose">close()</a></li>
@@ -341,110 +355,8 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 	<li><a href="#dbup">up()</a></li>
 	<li><a href="#dbupdate">update()</a></li>
 </ul>
-
-<h3><a href="#tables">Tables</a></h3>
-<ul class="method-list">
-	<li><a href="#table__call">__call()</a></li>
-	<li><a href="#table__get">__get()</a></li>
-	<li><a href="#table__set">__set()</a></li>
-	<li><a href="#tablebigid">bigid()</a></li>
-	<li><a href="#tablebigint">bigint()</a></li>
-	<li><a href="#tablebinary">binary()</a></li>
-	<li><a href="#tableblob">blob()</a></li>
-	<li><a href="#tablebool">bool()</a></li>
-	<li><a href="#tableboolean">boolean()</a></li>
-	<li><a href="#tablecol">col()</a></li>
-	<li><a href="#tabledate">date()</a></li>
-	<li><a href="#tabledatetime">datetime()</a></li>
-	<li><a href="#tabledatetimetz">datetimetz()</a></li>
-	<li><a href="#tabledecimal">decimal()</a></li>
-	<li><a href="#tabledropcolumn">dropColumn()</a></li>
-	<li><a href="#tabledropindex">dropIndex()</a></li>
-	<li><a href="#tabledropforeign">dropForeign()</a></li>
-	<li><a href="#tabledropprimary">dropPrimary()</a></li>
-	<li><a href="#tablefloat">float()</a></li>
-	<li><a href="#tableforeign">foreign()</a></li>
-	<li><a href="#tableguid">guid()</a></li>
-	<li><a href="#tablehascolumn">hasColumn()</a></li>
-	<li><a href="#tablehasindex">hasIndex()</a></li>
-	<li><a href="#tablehasforeign">hasForeign()</a></li>
-	<li><a href="#tableid">id()</a></li>
-	<li><a href="#tableindex">index()</a></li>
-	<li><a href="#tableint">int()</a></li>
-	<li><a href="#tableinteger">integer()</a></li>
-	<li><a href="#tablejson">json()</a></li>
-	<li><a href="#tablename">name()</a></li>
-	<li><a href="#tableopt">opt()</a></li>
-	<li><a href="#tableprimary">primary()</a></li>
-	<li><a href="#tablerenameindex">renameIndex()</a></li>
-	<li><a href="#tablesmallint">smallint()</a></li>
-	<li><a href="#tablespatial">spatial()</a></li>
-	<li><a href="#tablestring">string()</a></li>
-	<li><a href="#tabletext">text()</a></li>
-	<li><a href="#tabletime">time()</a></li>
-	<li><a href="#tableunique">unique()</a></li>
-	<li><a href="#tableuuid">uuid()</a></li>
-	<li><a href="#tableup">up()</a></li>
-</ul>
-
-<h3><a href="#columns">Columns</a></h3>
-<ul class="method-list">
-	<li><a href="#column__call">__call()</a></li>
-	<li><a href="#column__get">__get()</a></li>
-	<li><a href="#column__set">__set()</a></li>
-	<li><a href="#columnautoincrement">autoincrement()</a></li>
-	<li><a href="#columncomment">comment()</a></li>
-	<li><a href="#columndefault">default()</a></li>
-	<li><a href="#columnfixed">fixed()</a></li>
-	<li><a href="#columnindex">index()</a></li>
-	<li><a href="#columnlength">length()</a></li>
-	<li><a href="#columnname">name()</a></li>
-	<li><a href="#columnnull">null()</a></li>
-	<li><a href="#columnopt">opt()</a></li>
-	<li><a href="#columnprecision">precision()</a></li>
-	<li><a href="#columnprimary">primary()</a></li>
-	<li><a href="#columnscale">scale()</a></li>
-	<li><a href="#columnseq">seq()</a></li>
-	<li><a href="#columnspatial">spatial()</a></li>
-	<li><a href="#columntype">type()</a></li>
-	<li><a href="#columnunique">unique()</a></li>
-	<li><a href="#columnunsigned">unsigned()</a></li>
-	<li><a href="#columnup">up()</a></li>
-</ul>
-
-<h3><a href="#foreign-keys">Foreign keys</a></h3>
-<ul class="method-list">
-	<li><a href="#foreign__call">__call()</a></li>
-	<li><a href="#foreign__get">__get()</a></li>
-	<li><a href="#foreign__set">__set()</a></li>
-	<li><a href="#foreignname">name()</a></li>
-	<li><a href="#foreignondelete">onDelete()</a></li>
-	<li><a href="#foreignonupdate">onUpdate()</a></li>
-	<li><a href="#foreignup">up()</a></li>
-</ul>
-
-<h3><a href="#sequences">Sequences</a></h3>
-<ul class="method-list">
-	<li><a href="#sequences__call">__call()</a></li>
-	<li><a href="#sequences__get">__get()</a></li>
-	<li><a href="#sequences__set">__set()</a></li>
-	<li><a href="#sequencescache">cache()</a></li>
-	<li><a href="#sequencesname">name()</a></li>
-	<li><a href="#sequencesstart">start()</a></li>
-	<li><a href="#sequencestep">step()</a></li>
-	<li><a href="#sequencesup">up()</a></li>
-</ul>
-
 </nav>
 
-### Database
-
-The database scheme object you get by calling `$this->db()` in your migration task gives you full access to the current schema including all tables, sequences and other schema objects, e.g.:
-
-```php
-$table = $this->db()->table( 'test' );
-$seq = $this->db()->sequence( 'seq_test' );
-```
 
 #### DB::__call()
 
@@ -990,7 +902,7 @@ Several conditions passed in the second parameter are combined by "AND". If you 
 
 
 
-### Tables
+## Tables
 
 The table scheme object you get by calling `$db->table( '<table name>' )` in your migration task gives you full access to the table and you can add, change or remove columns, indexes and foreign keys, e.g.:
 
@@ -1027,6 +939,56 @@ Besides the `col()` method which can add columns of arbitrary types, there are s
 | [text](#tabletext) | TEXT/CLOB column with up to 2GB characters |
 | [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
 | [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
+
+
+### Table methods
+
+<nav>
+<h4><a href="#tables">Tables</a></h4>
+<ul class="method-list">
+	<li><a href="#table__call">__call()</a></li>
+	<li><a href="#table__get">__get()</a></li>
+	<li><a href="#table__set">__set()</a></li>
+	<li><a href="#tablebigid">bigid()</a></li>
+	<li><a href="#tablebigint">bigint()</a></li>
+	<li><a href="#tablebinary">binary()</a></li>
+	<li><a href="#tableblob">blob()</a></li>
+	<li><a href="#tablebool">bool()</a></li>
+	<li><a href="#tableboolean">boolean()</a></li>
+	<li><a href="#tablecol">col()</a></li>
+	<li><a href="#tabledate">date()</a></li>
+	<li><a href="#tabledatetime">datetime()</a></li>
+	<li><a href="#tabledatetimetz">datetimetz()</a></li>
+	<li><a href="#tabledecimal">decimal()</a></li>
+	<li><a href="#tabledropcolumn">dropColumn()</a></li>
+	<li><a href="#tabledropindex">dropIndex()</a></li>
+	<li><a href="#tabledropforeign">dropForeign()</a></li>
+	<li><a href="#tabledropprimary">dropPrimary()</a></li>
+	<li><a href="#tablefloat">float()</a></li>
+	<li><a href="#tableforeign">foreign()</a></li>
+	<li><a href="#tableguid">guid()</a></li>
+	<li><a href="#tablehascolumn">hasColumn()</a></li>
+	<li><a href="#tablehasindex">hasIndex()</a></li>
+	<li><a href="#tablehasforeign">hasForeign()</a></li>
+	<li><a href="#tableid">id()</a></li>
+	<li><a href="#tableindex">index()</a></li>
+	<li><a href="#tableint">int()</a></li>
+	<li><a href="#tableinteger">integer()</a></li>
+	<li><a href="#tablejson">json()</a></li>
+	<li><a href="#tablename">name()</a></li>
+	<li><a href="#tableopt">opt()</a></li>
+	<li><a href="#tableprimary">primary()</a></li>
+	<li><a href="#tablerenameindex">renameIndex()</a></li>
+	<li><a href="#tablesmallint">smallint()</a></li>
+	<li><a href="#tablespatial">spatial()</a></li>
+	<li><a href="#tablestring">string()</a></li>
+	<li><a href="#tabletext">text()</a></li>
+	<li><a href="#tabletime">time()</a></li>
+	<li><a href="#tableunique">unique()</a></li>
+	<li><a href="#tableuuid">uuid()</a></li>
+	<li><a href="#tableup">up()</a></li>
+</ul>
+</nav>
 
 
 #### Table::__call()
@@ -1936,7 +1898,7 @@ $table->up();
 
 
 
-### Columns
+## Columns
 
 The column scheme object you get by calling `$table->col( '<name>', '<type>' )` in your migration task gives you access to all column properties and you can also add indexes to single columns, e.g.:
 
@@ -1947,6 +1909,8 @@ $this->db()->table( 'test', function( $table ) {
 	$table->col( 'status', 'tinyint' )->default( 0 );
 } );
 ```
+
+### Available column types
 
 There are some shortcut methods for column types available in all database server implementations:
 
@@ -1973,6 +1937,36 @@ There are some shortcut methods for column types available in all database serve
 | [text](#tabletext) | TEXT/CLOB column with up to 2GB characters |
 | [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
 | [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
+
+
+### Column methods
+
+<nav>
+<h4><a href="#columns">Columns</a></h4>
+<ul class="method-list">
+	<li><a href="#column__call">__call()</a></li>
+	<li><a href="#column__get">__get()</a></li>
+	<li><a href="#column__set">__set()</a></li>
+	<li><a href="#columnautoincrement">autoincrement()</a></li>
+	<li><a href="#columncomment">comment()</a></li>
+	<li><a href="#columndefault">default()</a></li>
+	<li><a href="#columnfixed">fixed()</a></li>
+	<li><a href="#columnindex">index()</a></li>
+	<li><a href="#columnlength">length()</a></li>
+	<li><a href="#columnname">name()</a></li>
+	<li><a href="#columnnull">null()</a></li>
+	<li><a href="#columnopt">opt()</a></li>
+	<li><a href="#columnprecision">precision()</a></li>
+	<li><a href="#columnprimary">primary()</a></li>
+	<li><a href="#columnscale">scale()</a></li>
+	<li><a href="#columnseq">seq()</a></li>
+	<li><a href="#columnspatial">spatial()</a></li>
+	<li><a href="#columntype">type()</a></li>
+	<li><a href="#columnunique">unique()</a></li>
+	<li><a href="#columnunsigned">unsigned()</a></li>
+	<li><a href="#columnup">up()</a></li>
+</ul>
+</nav>
 
 
 #### Column::__call()
@@ -2415,7 +2409,7 @@ $column->up();
 
 
 
-### Foreign keys
+## Foreign keys
 
 The foreign key scheme object you get by calling `$table->foreign( '<col>', '<table>' )` in your migration task gives you access to the foreign key properties, e.g.:
 
@@ -2425,6 +2419,22 @@ $this->db()->table( 'testref', function( $table ) {
 	$table->foreign( 'parentid', 'test' )->onDelete( 'SET NULL' );
 } );
 ```
+
+
+### Foreign Key methods
+
+<nav>
+<h4><a href="#foreign-keys">Foreign keys</a></h4>
+<ul class="method-list">
+	<li><a href="#foreign__call">__call()</a></li>
+	<li><a href="#foreign__get">__get()</a></li>
+	<li><a href="#foreign__set">__set()</a></li>
+	<li><a href="#foreignname">name()</a></li>
+	<li><a href="#foreignondelete">onDelete()</a></li>
+	<li><a href="#foreignonupdate">onUpdate()</a></li>
+	<li><a href="#foreignup">up()</a></li>
+</ul>
+</nav>
 
 
 #### Foreign::__call()
@@ -2642,7 +2652,7 @@ $foreign->up();
 
 
 
-### Sequences
+## Sequences
 
 The Sequence scheme object you get by calling `$db->sequence( '<name>' )` in your migration task gives you access to the sequence properties, e.g.:
 
@@ -2655,6 +2665,23 @@ $this->db()->sequence( 'seq_test', function( $seq ) {
 	$seq->step( 2 );
 } );
 ```
+
+
+### Sequence methods
+
+<nav>
+<h4><a href="#sequences">Sequences</a></h4>
+<ul class="method-list">
+	<li><a href="#sequences__call">__call()</a></li>
+	<li><a href="#sequences__get">__get()</a></li>
+	<li><a href="#sequences__set">__set()</a></li>
+	<li><a href="#sequencescache">cache()</a></li>
+	<li><a href="#sequencesname">name()</a></li>
+	<li><a href="#sequencesstart">start()</a></li>
+	<li><a href="#sequencestep">step()</a></li>
+	<li><a href="#sequencesup">up()</a></li>
+</ul>
+</nav>
 
 
 #### Sequence::__call()
