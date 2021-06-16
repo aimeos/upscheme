@@ -103,6 +103,12 @@ header svg {
 	margin-top: -1rem;
 }
 
+.sidebar nav .method-header,
+.main-content nav .method-header {
+	margin-bottom: 1rem;
+	font-weight: bold;
+}
+
 .main-content nav .method-list {
 	column-count: 3;
 	column-width: 8rem;
@@ -116,6 +122,7 @@ header svg {
 .main-content .highlight pre, .main-content pre {
 	line-height: 1.75;
 }
+
 
 @media screen and (min-width: 64em) {
 	.container {

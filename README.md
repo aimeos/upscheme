@@ -329,7 +329,7 @@ $seq = $this->db()->sequence( 'seq_test' );
 ### Database methods
 
 <nav>
-<h4><a href="#database">Database</a></h4>
+<div class="method-header"><a href="#database">Database</a></div>
 <ul class="method-list">
 	<li><a href="#db__call">__call()</a></li>
 	<li><a href="#dbclose">close()</a></li>
@@ -944,7 +944,7 @@ Besides the `col()` method which can add columns of arbitrary types, there are s
 ### Table methods
 
 <nav>
-<h4><a href="#tables">Tables</a></h4>
+<div class="method-header"><a href="#tables">Tables</a></div>
 <ul class="method-list">
 	<li><a href="#table__call">__call()</a></li>
 	<li><a href="#table__get">__get()</a></li>
@@ -1942,7 +1942,7 @@ There are some shortcut methods for column types available in all database serve
 ### Column methods
 
 <nav>
-<h4><a href="#columns">Columns</a></h4>
+<div class="method-header"><a href="#columns">Columns</a></div>
 <ul class="method-list">
 	<li><a href="#column__call">__call()</a></li>
 	<li><a href="#column__get">__get()</a></li>
@@ -2424,7 +2424,7 @@ $this->db()->table( 'testref', function( $table ) {
 ### Foreign Key methods
 
 <nav>
-<h4><a href="#foreign-keys">Foreign keys</a></h4>
+<div class="method-header"><a href="#foreign-keys">Foreign keys</a></div>
 <ul class="method-list">
 	<li><a href="#foreign__call">__call()</a></li>
 	<li><a href="#foreign__get">__get()</a></li>
@@ -2670,7 +2670,7 @@ $this->db()->sequence( 'seq_test', function( $seq ) {
 ### Sequence methods
 
 <nav>
-<h4><a href="#sequences">Sequences</a></h4>
+<div class="method-header"><a href="#sequences">Sequences</a></div>
 <ul class="method-list">
 	<li><a href="#sequences__call">__call()</a></li>
 	<li><a href="#sequences__get">__get()</a></li>
