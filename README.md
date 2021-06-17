@@ -20,6 +20,11 @@ composer req aimeos/upscheme
   * [Messages](#messages)
   * [Schemas](#schemas)
 * [Database](#database)
+  * [Extending the schema](#extending-the-schema)
+  * [Checking for existence](#checking-for-existence)
+  * [Working with table rows](#working-with-table-rows)
+  * [Removing from schema](#removing-from-schema)
+  * [Executing custom SQL](#executing-custom-sql)
   * [Methods](#database-methods)
 * [Tables](#tables)
   * [Methods](#table-methods)
@@ -385,7 +390,7 @@ $db2->close();
 
 If you use `select()` simultaniously with `insert()`, `update()` or `delete()`, you must create a second database connection because the `select()` statement will return rows while you send new commands to the database server. This only works on separate connections, not on the same.
 
-You can only pass simple key/value pairs for conditions to the methods which are combined by AND. If you need more complex queries, use the `stmt()` instead:
+You can only pass simple key/value pairs for conditions to the methods which are combined by AND. If you need more complex queries, use the [stmt()](#dbstmt) instead:
 
 ```php
 $db = $this->db();
@@ -431,11 +436,11 @@ $db->dropSequence( 'seq_users' );
 $db->dropTable( 'users' );
 ```
 
-If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the `hasTable()`, `hasColumn()`, `hasIndex()`, `hasForeign()` and `hasSeqence()` methods before.
+If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolum), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
 
 ### Executing custom SQL
 
-Doctrine only supports a common subset of SQL statements and not all possibilities the database vendors have implemented. To remove that limit, Upscheme offers the [for()](#dbfor) method to execute custom SQL statements not supported by Doctrine DBAL:
+Doctrine only supports a common subset of SQL statements and not all possibilities the database vendors have implemented. To remove that limit, Upscheme offers the [for()](#dbfor) method to execute custom SQL statements not supported by Doctrine DBAL. The method will execute the statement only for the database platform or platforms named in the first parameter:
 
 ```php
 $db = $this->db();
