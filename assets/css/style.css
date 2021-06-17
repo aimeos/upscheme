@@ -40,7 +40,7 @@ header>svg {
 
 @media screen and (max-width: 48em) {
 	.logo {
-		height: 3.5rem;
+		height: 3rem;
 		width: auto;
 	}
 }
@@ -111,7 +111,7 @@ header>svg {
 
 .main-content h1, .main-content h2, .main-content h3,
 .main-content h4, .main-content h5, .main-content h6 {
-	padding-top: 4rem;
+	padding-top: 2.5rem;
 	margin-top: -1rem;
 }
 
