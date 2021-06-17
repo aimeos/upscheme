@@ -27,7 +27,7 @@ header .octocat {
 	width: 3rem;
 }
 
-header svg {
+header>svg {
 	display: none;
 	padding: 0.5rem;
 	color: #fff;
@@ -35,7 +35,14 @@ header svg {
 
 .logo {
 	width: 100%;
-	max-width: 40rem;
+	max-width: 27.5rem;
+}
+
+@media screen and (max-width: 48em) {
+	.logo {
+		height: 3.5rem;
+		width: auto;
+	}
 }
 
 .container {
