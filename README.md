@@ -300,31 +300,152 @@ $this->db( 'db' );
 $this->db( 'temp' );
 ```
 
-If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use `insert()`, `select()`, `update()`, `delete()` and `stmt()` to manipulate the records of the tables.
+If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use [insert()](#dbinsert), [select()](#dbselect), [update()](#dbupdate), [delete()](#dbdelete) and [stmt()](#dbstmt) to manipulate the records of the tables.
 
-After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. An `up()` method is also in any table, sequence, and column object available so you can call `up()` also there.
+After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. The `up()` method is also available in any table, sequence, and column object so you can call `up()` everywhere.
 
 In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
 
 ```php
-$db = $this->db( 'db', true );
+$db1 = $this->db();
+$db2 = $this->db( 'db', true );
+
+foreach( $db1->select( 'users', ['status' => false] ) as $row ) {
+	$db2->insert( 'oldusers', $row );
+}
+
+$db2->delete( 'users', ['status' => false] );
 ```
 
 All schema changes made are applied to the database before the schema with the new connection is returned. To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
 
 ```php
-$db->close();
+$db2->close();
 ```
 
 
 ## Database
 
-You get the database schema object in your task by calling `$this->db()` like described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects, e.g.:
+### Extending the schema
+
+You get the database schema object in your task by calling `$this->db()` as described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects:
 
 ```php
-$table = $this->db()->table( 'test' );
-$seq = $this->db()->sequence( 'seq_test' );
+$table = $this->db()->table( 'users' );
+$seq = $this->db()->sequence( 'seq_users' );
 ```
+
+If the table or seqence doesn't exist, it will be created. Otherwise, the existing table or sequence object is returned. In both cases, you can modify the objects afterwards and add e.g. new columns to the table.
+
+### Checking for existence
+
+You can test for tables, columns, indexes, foreign keys and sequences using the database schema returned by `$this->db()`:
+
+```php
+$db = $this->db();
+
+if( $db->hasTable( 'users' ) {
+    // The "users" table exists
+}
+
+if( $db->hasColumn ( 'users', 'name' ) {
+    // The "name" column in the "users" table exists
+}
+
+if( $db->hasIndex( 'users', 'idx_name' ) {
+    // The "idx_name" index in the "users" table exists
+}
+
+if( $db->hasForeign( 'users_address', 'fk_users_id' ) {
+    // The foreign key "fk_users_id" in the "users_address" table exists
+}
+
+if( $db->hasSequence( 'seq_users' ) {
+    // The "seq_users" sequence exists
+}
+```
+
+### Working with table rows
+
+The [insert()](#dbinsert), [select()](#dbselect), [update()](#dbupdate) and [delete()](#dbdelete) methods are an easy way to add, retrieve, modify and remove rows in any table:
+
+```php
+$db1 = $this->db();
+$db2 = $this->db( 'db', true );
+
+foreach( $db1->select( 'users', ['status' => false] ) as $row )
+{
+	$db2->insert( 'newusers', ['userid' => $row['id'], 'status' => true] );
+	$db2->update( 'users', ['refid' => $db2->lastId()], ['id' => $row['id']] );
+}
+
+$db2->delete( 'newusers', ['status' => false] );
+$db2->close();
+```
+
+If you use `select()` simultaniously with `insert()`, `update()` or `delete()`, you must create a second database connection because the `select()` statement will return rows while you send new commands to the database server. This only works on separate connections, not on the same.
+
+You can only pass simple key/value pairs for conditions to the methods which are combined by AND. If you need more complex queries, use the `stmt()` instead:
+
+```php
+$db = $this->db();
+
+$db->stmt()->select( 'id', 'name' )
+	->from( 'users' )
+	->where( 'status != ?' )
+	->setParameter( 0, false );
+
+$db->stmt()->delete( 'users' )
+	->where( 'status != ?' )
+	->setParameter( 0, false );
+
+$db->stmt()->update( 'users' )
+	->set( 'status', '?' )
+	->where( 'status != ?' )
+	->setParameters( 0, true )
+	->setParameters( 1, false );
+```
+
+The `stmt()` method returns a `Doctrine\DBAL\Query\QueryBuilder` object which enables you to build more advanced statement. Please have a look into the [Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html) documentation for more details.
+
+### Removing from schema
+
+The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
+
+```php
+$db = $this->db();
+
+// Drops the foreign key "fk_users_id" from the "users_address" table
+$db->dropForeign( 'users_address', 'fk_users_id' );
+
+// Drops the "idx_name" index from the "users" table
+$db->dropIndex( 'users', 'idx_name' );
+
+// Drops the "name" column from the "users" table
+$db->dropColumn ( 'users', 'name' );
+
+// Drops the "seq_users" sequence
+$db->dropSequence( 'seq_users' );
+
+// Drops the "users" table
+$db->dropTable( 'users' );
+```
+
+If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the `hasTable()`, `hasColumn()`, `hasIndex()`, `hasForeign()` and `hasSeqence()` methods before.
+
+### Executing custom SQL
+
+Doctrine only supports a common subset of SQL statements and not all possibilities the database vendors have implemented. To remove that limit, Upscheme offers the [for()](#dbfor) method to execute custom SQL statements not supported by Doctrine DBAL:
+
+```php
+$db = $this->db();
+
+if( !$db->hasIndex( 'product', 'idx_text' ) ) {
+	$db->for( 'mysql', 'CREATE FULLTEXT INDEX idx_text ON product (text)' );
+}
+```
+
+This is especially useful for creating special types of indexes where the syntax differs between the database implementations.
 
 ### Database methods
 
