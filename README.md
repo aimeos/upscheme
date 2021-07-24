@@ -407,8 +407,7 @@ $db->stmt()->delete( 'users' )
 $db->stmt()->update( 'users' )
 	->set( 'status', '?' )
 	->where( 'status != ?' )
-	->setParameters( 0, true )
-	->setParameters( 1, false );
+	->setParameters( [true, false] );
 ```
 
 The `stmt()` method returns a `Doctrine\DBAL\Query\QueryBuilder` object which enables you to build more advanced statement. Please have a look into the [Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html) documentation for more details.
@@ -436,7 +435,7 @@ $db->dropSequence( 'seq_users' );
 $db->dropTable( 'users' );
 ```
 
-If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolum), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
+If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolumn), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
 
 ### Executing custom SQL
 
