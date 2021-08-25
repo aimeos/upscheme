@@ -25,9 +25,14 @@ composer req aimeos/upscheme
   * [Removing schema objects](#removing-schema-objects)
   * [Query/modify table rows](#Query-modify-table-rows)
   * [Executing custom SQL](#executing-custom-sql)
-  * [Methods](#database-methods)
+  * [Database methods](#database-methods)
 * [Tables](#tables)
-  * [Methods](#table-methods)
+  * [Creating tables](#creating-tables)
+  * [Setting table options](#setting-table-options)
+  * [Checking table existence](#checking-table-existence)
+  * [Updating tables](#updating-tables)
+  * [Dropping tables](#dropping-tables)
+  * [Table methods](#table-methods)
 * [Columns](#columns)
   * [Methods](#column-methods)
 * [Foreign keys](#foreign-keys)
@@ -1029,6 +1034,8 @@ Several conditions passed in the second parameter are combined by "AND". If you 
 
 ## Tables
 
+### Creating tables
+
 The table scheme object you get by calling `$db->table( '<table name>' )` in your migration task gives you full access to the table and you can add, change or remove columns, indexes and foreign keys, e.g.:
 
 ```php
@@ -1065,6 +1072,129 @@ Besides the `col()` method which can add columns of arbitrary types, there are s
 | [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
 | [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
 
+### Setting table options
+
+MySQL (or MariaDB, etc.) supports a few options to define aspects of the table. The *engine*
+option will specify the storage engine used for the table:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->opt( 'engine', 'InnoDB' );
+} );
+```
+
+As a shortcut, it's also possible to set the option as property:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->engine = 'InnoDB';
+} );
+```
+
+To create a temporary table, use:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->engine = true;
+} );
+```
+
+
+It's also possible to set the default charset and collation for string and text columns:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+    $table->charset = 'utf8mb4';
+    $table->collation = 'utf8mb4_unicode_ci';
+} );
+```
+
+**Note:** Collations are also supported by PostgreSQL and SQL Server but their values
+are different. Thus, it's not possible to use the same value for all server types. To
+circumvent that problem, use the column [`opt()`](#columnopt) method and pass the database
+server type as third parameter:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+    $table->opt( 'charset', 'utf8mb4', 'mysql' );
+    $table->opt( 'collation', 'utf8mb4_unicode_ci', 'mysql' );
+} );
+```
+
+Now, the default charset and collation will be only set for MySQL database servers
+(or MariaDB and similar forks).
+
+### Checking table existence
+
+To check if a table already exists, use the [`hasTable()`](#dbhastable) method:
+
+```php
+if( $this->db()->hasTable( 'users' ) {
+    // The "users" table exists
+}
+```
+
+You can check for several tables at once too:
+
+```php
+if( $this->db()->hasTable( ['users', 'addresses'] ) {
+    // The "users" and "addresses" tables exist
+}
+```
+
+The `hasTable()` method will only return `TRUE` if all tables exist.
+
+### Updating tables
+
+Besides creating and accessing tables, the `table()` method from the schema object
+can be used to update a table schema too. It accepts the table name and a closure
+that will receive the table schema object.
+
+Let's create a table named "test" first including three columns:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->id();
+	$table->string( 'label' );
+	$table->col( 'status', 'tinyint' )->default( 0 );
+} );
+```
+
+Now, we want to update the table in another migration by adding a "code" column and
+changing the default value of the existing "status" column:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code' );
+	$table->col( 'status', 'tinyint' )->default( 1 );
+} );
+```
+
+The changes will be persisted in the database as soon as the `table()` method returns
+so there's no need to call [`up()`](#dbup) yourself afterwards. For the available
+column types and options, refer to the [columns section](#columns).
+
+### Dropping tables
+
+To remove a table, you should use the [`dropTable()`](#dbdroptable) method from the database schema:
+
+```php
+$this->db()->dropTable( 'users' );
+```
+
+You can also drop several tables at once by passing the list as array:
+
+```php
+$this->db()->dropTable( ['users', 'addresses'] );
+```
+
+Tables are only removed if they exist. If a table doesn't exist any more, no error is reported:
+
+```php
+$this->db()->dropTable( 'notexist' );
+```
+
+In that case, the method call will succeed but nothing will happen.
 
 ### Table methods
 
