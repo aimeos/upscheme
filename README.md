@@ -20,10 +20,10 @@ composer req aimeos/upscheme
   * [Messages](#messages)
   * [Schemas](#schemas)
 * [Database](#database)
-  * [Extending the schema](#extending-the-schema)
-  * [Checking for existence](#checking-for-existence)
-  * [Working with table rows](#working-with-table-rows)
-  * [Removing from schema](#removing-from-schema)
+  * [Accessing schema objects](#accessing-schema-objects)
+  * [Checking object existence](#checking-object-existence)
+  * [Removing schema objects](#removing-schema-objects)
+  * [Query/modify table rows](#Query-modify-table-rows)
   * [Executing custom SQL](#executing-custom-sql)
   * [Methods](#database-methods)
 * [Tables](#tables)
@@ -331,7 +331,7 @@ $db2->close();
 
 ## Database
 
-### Extending the schema
+### Accessing schema objects
 
 You get the database schema object in your task by calling `$this->db()` as described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects:
 
@@ -342,7 +342,7 @@ $seq = $this->db()->sequence( 'seq_users' );
 
 If the table or seqence doesn't exist, it will be created. Otherwise, the existing table or sequence object is returned. In both cases, you can modify the objects afterwards and add e.g. new columns to the table.
 
-### Checking for existence
+### Checking object existence
 
 You can test for tables, columns, indexes, foreign keys and sequences using the database schema returned by `$this->db()`:
 
@@ -370,7 +370,32 @@ if( $db->hasSequence( 'seq_users' ) {
 }
 ```
 
-### Working with table rows
+### Removing schema objects
+
+The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
+
+```php
+$db = $this->db();
+
+// Drops the foreign key "fk_users_id" from the "users_address" table
+$db->dropForeign( 'users_address', 'fk_users_id' );
+
+// Drops the "idx_name" index from the "users" table
+$db->dropIndex( 'users', 'idx_name' );
+
+// Drops the "name" column from the "users" table
+$db->dropColumn ( 'users', 'name' );
+
+// Drops the "seq_users" sequence
+$db->dropSequence( 'seq_users' );
+
+// Drops the "users" table
+$db->dropTable( 'users' );
+```
+
+If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolumn), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
+
+### Query and modify table rows
 
 The [insert()](#dbinsert), [select()](#dbselect), [update()](#dbupdate) and [delete()](#dbdelete) methods are an easy way to add, retrieve, modify and remove rows in any table:
 
@@ -411,31 +436,6 @@ $db->stmt()->update( 'users' )
 ```
 
 The `stmt()` method returns a `Doctrine\DBAL\Query\QueryBuilder` object which enables you to build more advanced statement. Please have a look into the [Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html) documentation for more details.
-
-### Removing from schema
-
-The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
-
-```php
-$db = $this->db();
-
-// Drops the foreign key "fk_users_id" from the "users_address" table
-$db->dropForeign( 'users_address', 'fk_users_id' );
-
-// Drops the "idx_name" index from the "users" table
-$db->dropIndex( 'users', 'idx_name' );
-
-// Drops the "name" column from the "users" table
-$db->dropColumn ( 'users', 'name' );
-
-// Drops the "seq_users" sequence
-$db->dropSequence( 'seq_users' );
-
-// Drops the "users" table
-$db->dropTable( 'users' );
-```
-
-If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolumn), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
 
 ### Executing custom SQL
 
