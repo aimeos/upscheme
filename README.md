@@ -1046,7 +1046,7 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-Besides the `col()` method which can add columns of arbitrary types, there are some shortcut methods for types available in all database server implementations:
+Besides the [`col()`](#tablecol) method which can add columns of arbitrary types, there are some shortcut methods for types available in all database server implementations:
 
 | Column type | Description |
 |-------------|-------------|
@@ -1091,7 +1091,7 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-To create a temporary table, use:
+To create a *temporary* table, use:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -1100,7 +1100,7 @@ $this->db()->table( 'test', function( $table ) {
 ```
 
 
-It's also possible to set the default charset and collation for string and text columns:
+It's also possible to set the default *charset* and *collation* for string and text columns:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -1142,15 +1142,15 @@ if( $this->db()->hasTable( ['users', 'addresses'] ) {
 }
 ```
 
-The `hasTable()` method will only return `TRUE` if all tables exist.
+The [`hasTable()`(#dbhastable) method will only return `TRUE` if all tables exist.
 
 ### Updating tables
 
-Besides creating and accessing tables, the `table()` method from the schema object
+Besides creating and accessing tables, the [`table()`](#dbtable) method from the schema object
 can be used to update a table schema too. It accepts the table name and a closure
 that will receive the table schema object.
 
-Let's create a table named "test" first including three columns:
+Let's create a table named *test* first including three columns:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -1160,8 +1160,8 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-Now, we want to update the table in another migration by adding a "code" column and
-changing the default value of the existing "status" column:
+Now, we want to update the table in another migration by adding a *code* column and
+changing the default value of the existing *status* column:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -1170,8 +1170,8 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-The changes will be persisted in the database as soon as the `table()` method returns
-so there's no need to call [`up()`](#dbup) yourself afterwards. For the available
+The changes will be persisted in the database as soon as the [`table()`](#dbtable) method
+returns so there's no need to call [`up()`](#dbup) yourself afterwards. For the available
 column types and options, refer to the [columns section](#columns).
 
 ### Dropping tables
