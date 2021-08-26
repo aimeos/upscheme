@@ -34,7 +34,13 @@ composer req aimeos/upscheme
   * [Dropping tables](#dropping-tables)
   * [Table methods](#table-methods)
 * [Columns](#columns)
-  * [Methods](#column-methods)
+  * [Adding columns](#adding-columns)
+  * [Available column types](#available-column-types)
+  * [Column modifiers](#column-modifiers)
+  * [Checking column existence](#checking-column-existence)
+  * [Changing columns](#changing-columns)
+  * [Dropping columns](#dropping-columns)
+  * [Column methods](#column-methods)
 * [Foreign keys](#foreign-keys)
   * [Methods](#forein-key-methods)
 * [Sequences](#sequences)
@@ -2155,19 +2161,32 @@ $table->up();
 
 ## Columns
 
-The column scheme object you get by calling `$table->col( '<name>', '<type>' )` in your migration task gives you access to all column properties and you can also add indexes to single columns, e.g.:
+### Adding columns
+
+The column schema object you get by calling `$table->col( '<name>', '<type>' )`
+in your migration task gives you access to all column properties. There are also
+shortcuts available for column type supported by all supported databases types.
+Each column can be changed by one or more modifier methods and you can also add
+indexes to single columns, e.g.:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
 	$table->id()->unsigned( true );
-	$table->string( 'label' )->opt( 'charset', 'binary' );
+	$table->string( 'label' )->index();
 	$table->col( 'status', 'tinyint' )->default( 0 );
 } );
 ```
 
+The example will add the following columns:
+
+* *id* of type integer with unsigend modifier
+* *label* of type string with 255 chars and an index
+* *status* of type tinyint (MySQL only) with a default value of zero
+
 ### Available column types
 
-There are some shortcut methods for column types available in all database server implementations:
+There are some shortcut methods for column types available in all database server
+implementations:
 
 | Column type | Description |
 |-------------|-------------|
@@ -2193,6 +2212,198 @@ There are some shortcut methods for column types available in all database serve
 | [time](#tabletime) | TIME column in 24 hour "HH:MM" fromat, e.g. "05:30" or "22:15" |
 | [uuid](#tableuuid) | Globally unique identifier with 36 bytes, alias for "guid" |
 
+To add database specific column types, use the [`col()`](#tablecol) method, e.g.:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->col( 'status', 'tinyint' );
+} );
+```
+
+### Column modifiers
+
+It's also possible to change column definitions by calling one or more column
+modifier methods:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->int( 'number' )->null( true )->unsigned( true );
+} );
+```
+
+The available column modifier methods are:
+
+| Column modifier | Description |
+|-----------------|-------------|
+| [->autoincrement( true )](#columnautoincrement) | Set INTEGER columns as auto-incrementing (alias for [`seq()`](#columnseq)) |
+| [->charset( 'utf8' )](#columncharset) | The character set used by the column (MySQL) |
+| [->collation( 'binary' )](#columncollation) | The column collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
+| [->comment( 'comment' )](#columncomment) | Add a comment to a column (MySQL/PostgreSQL/Oracle/SQLServer) |
+| [->default( 1 )](#columndefault) | Default value of the column if no value was specified (default: `NULL`) |
+| [->fixed( true )](#columnfixed) | If string or binary columns should have a fixed length |
+| [->index( 'idx_col' )](#columnindex) | Add an index to the column, index name is optional |
+| [->length( 32 )](#columnlength) | The maximum length of string and binary columns |
+| [->null( true )](#columnnull) | Allow NULL values to be inserted into the column |
+| [->precision( 12 )](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
+| [->primary( 'pk_col' )](#columnprimary) | Add a primary key to the column, primary key name is optional |
+| [->scale( 2 )](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
+| [->seq( true )](#columnseq) | Set INTEGER columns as auto-incrementing if no value was specified |
+| [->spatial( 'spt_col' )](#columnspatial) | Add a spatial (geo) index to the column, index name is optional |
+| [->unique( 'unq_col' )](#columnunique) | Add an unique index to the column, index name is optional |
+| [->unsigned( true )](#columnunsigned) | Allow unsigned INTEGER values only (MySQL) |
+
+To set custom schema options for columns, use the [`opt()`](#columncol) method, e.g.:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code' )->opt( 'collation', 'utf8mb4' );
+} );
+```
+
+It's even possible to set column modifiers for a specific database implementation
+by passing the database type as third parameter:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code' )->opt( 'collation', 'utf8mb4', 'mysql' );
+} );
+```
+
+### Checking column existence
+
+To check if a column already exists, use the [`hasColumn()`](#dbhascolumn) method:
+
+```php
+if( $this->db()->hasColumn ( 'users', 'name' ) ) {
+    // The "name" column in the "users" table exists
+}
+```
+
+You can check for several columns at once too. In that case, the [`hasColumn()`(#dbhascolumn)
+method will only return `TRUE` if all columns exist:
+
+```php
+if( $this->db()->hasColumn ( 'users', ['name', 'status'] ) ) {
+    // The "name" and "status" columns in the "users" table exists
+}
+```
+
+If you already have a table object, you can use [`hasColumn()`(#tablehascolumn) too:
+
+```php
+if( $table->hasColumn ( 'name' ) ) {
+    // The "name" column in the table exists
+}
+
+if( $table->hasColumn ( 'users', ['name', 'status'] ) ) {
+    // The "name" and "status" columns in the table exists
+}
+```
+
+Besides columns, you can also check if column modifiers are set and which value they have:
+
+```php
+if( $table->string( 'code' )->null() ) {
+	// The "code" columns is nullable
+}
+```
+
+It's possible to check for all column modifiers using these methods:
+
+| Column modifier | Description |
+|-----------------|-------------|
+| [->autoincrement()](#columnautoincrement) | TRUE if the the column is auto-incrementing (alias for [`seq()`](#columnseq)) |
+| [->charset()](#columncharset) | Used character set (MySQL) |
+| [->collation()](#columncollation) | Used collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
+| [->comment()](#columncomment) | Comment associated to the column (MySQL/PostgreSQL/Oracle/SQLServer) |
+| [->default()](#columndefault) | Default value of the column |
+| [->fixed()](#columnfixed) | If the string or binary column has a fixed length |
+| [->length()](#columnlength) | The maximum length of the string or binary column |
+| [->null()](#columnnull) | If NULL values are allowed |
+| [->precision()](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
+| [->scale()](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
+| [->seq()](#columnseq) | TRUE if the column is auto-incrementing |
+| [->unsigned()](#columnunsigned) | If only unsigned INTEGER values are allowed (MySQL) |
+
+To check for non-standard column modifiers, use the [`opt()`](#columnopt) method
+without second parameter. Then, it will return the current value of the column modifier:
+
+```php
+if( $table->string( 'code' )->opt( 'charset' ) === 'utf8' ) {
+	// The "code" columns uses UTF-8 charset (MySQL only)
+}
+```
+
+### Changing columns
+
+It's possible to change most column modifiers like the length of a string column:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code' )->length( 64 );
+} );
+```
+
+Some methods also offer additional parameters to set most often used modifiers
+directly:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code', 64 );
+} );
+```
+
+If you need to change the column modifiers immediately because you want to migrate
+the rows afterwards, use the [`up()`](#columnup) method to persist the changes:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'code', 64 )->null( true )->up();
+	// modify rows from "test" table
+} );
+```
+
+Changing the column type is possible by using the new method for the appropriate
+type or the [`type()](#columntype) method:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->text( 'code' );
+} );
+
+// or
+
+$this->db()->table( 'test', function( $table ) {
+	$table->col( 'code', 'text' );
+} );
+```
+
+Be aware that not all column types can be changed into another type or at
+least not without data loss. You can change an INTEGER column to a BIGINT column
+without problem but the other way round will fail. The same happens if you want
+to change a VARCHAR column (string) into an INTEGER column.
+
+### Dropping columns
+
+To drop columns , use the [`dropColumn()`](#dbdropcolumn) method:
+
+```php
+$this->db()->dropColumn( 'users', 'name' );
+```
+
+You can drop several columns at once if you pass the name of all columns you want
+to drop as array:
+
+```php
+$this->db()->dropColumn( 'users', ['name', 'status'] );
+```
+
+If you already have a table object, you can use [`dropColumn()`](#tabledropcolumn) too:
+
+```php
+$table->dropColumn( 'name' );
+$table->dropColumn( ['name', 'status'] );
+```
 
 ### Column methods
 
