@@ -360,23 +360,23 @@ You can test for tables, columns, indexes, foreign keys and sequences using the 
 ```php
 $db = $this->db();
 
-if( $db->hasTable( 'users' ) {
+if( $db->hasTable( 'users' ) ) {
     // The "users" table exists
 }
 
-if( $db->hasColumn ( 'users', 'name' ) {
+if( $db->hasColumn ( 'users', 'name' ) ) {
     // The "name" column in the "users" table exists
 }
 
-if( $db->hasIndex( 'users', 'idx_name' ) {
+if( $db->hasIndex( 'users', 'idx_name' ) ) {
     // The "idx_name" index in the "users" table exists
 }
 
-if( $db->hasForeign( 'users_address', 'fk_users_id' ) {
+if( $db->hasForeign( 'users_address', 'fk_users_id' ) ) {
     // The foreign key "fk_users_id" in the "users_address" table exists
 }
 
-if( $db->hasSequence( 'seq_users' ) {
+if( $db->hasSequence( 'seq_users' ) ) {
     // The "seq_users" sequence exists
 }
 ```
@@ -1135,7 +1135,7 @@ Now, the default *charset* and *collation* will be only set for MySQL database s
 To check if a table already exists, use the [`hasTable()`](#dbhastable) method:
 
 ```php
-if( $this->db()->hasTable( 'users' ) {
+if( $this->db()->hasTable( 'users' ) ) {
     // The "users" table exists
 }
 ```
@@ -1143,7 +1143,7 @@ if( $this->db()->hasTable( 'users' ) {
 You can check for several tables at once too:
 
 ```php
-if( $this->db()->hasTable( ['users', 'addresses'] ) {
+if( $this->db()->hasTable( ['users', 'addresses'] ) ) {
     // The "users" and "addresses" tables exist
 }
 ```
