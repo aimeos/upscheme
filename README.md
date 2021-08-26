@@ -1056,7 +1056,7 @@ Besides the [`col()`](#tablecol) method which can add columns of arbitrary types
 
 | Column type | Description |
 |-------------|-------------|
-| [bigid](#tableid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
+| [bigid](#tablebigid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
 | [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
 | [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
 | [blob](#tableblob) | BLOB column with up to 2GB |
@@ -2190,7 +2190,7 @@ implementations:
 
 | Column type | Description |
 |-------------|-------------|
-| [bigid](#tableid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
+| [bigid](#tablebigid) | BIGINT column with a sequence/autoincrement and a primary key assigned |
 | [bigint](#tablebigint) | BIGINT column with a range from −9223372036854775808 to 9223372036854775807 |
 | [binary](#tablebinary) | VARBINARY column with up to 255 bytes |
 | [blob](#tableblob) | BLOB column with up to 2GB |
@@ -2235,24 +2235,24 @@ The available column modifier methods are:
 
 | Column modifier | Description |
 |-----------------|-------------|
-| [->autoincrement( true )](#columnautoincrement) | Set INTEGER columns as auto-incrementing (alias for [`seq()`](#columnseq)) |
-| [->charset( 'utf8' )](#columncharset) | The character set used by the column (MySQL) |
-| [->collation( 'binary' )](#columncollation) | The column collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
-| [->comment( 'comment' )](#columncomment) | Add a comment to a column (MySQL/PostgreSQL/Oracle/SQLServer) |
-| [->default( 1 )](#columndefault) | Default value of the column if no value was specified (default: `NULL`) |
-| [->fixed( true )](#columnfixed) | If string or binary columns should have a fixed length |
-| [->index( 'idx_col' )](#columnindex) | Add an index to the column, index name is optional |
-| [->length( 32 )](#columnlength) | The maximum length of string and binary columns |
-| [->null( true )](#columnnull) | Allow NULL values to be inserted into the column |
-| [->precision( 12 )](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
-| [->primary( 'pk_col' )](#columnprimary) | Add a primary key to the column, primary key name is optional |
-| [->scale( 2 )](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
-| [->seq( true )](#columnseq) | Set INTEGER columns as auto-incrementing if no value was specified |
-| [->spatial( 'spt_col' )](#columnspatial) | Add a spatial (geo) index to the column, index name is optional |
-| [->unique( 'unq_col' )](#columnunique) | Add an unique index to the column, index name is optional |
-| [->unsigned( true )](#columnunsigned) | Allow unsigned INTEGER values only (MySQL) |
+| [autoincrement(true)](#columnautoincrement) | Set INTEGER columns as auto-incrementing (alias for [`seq()`](#columnseq)) |
+| [charset('utf8')](#columncharset) | The character set used by the column (MySQL) |
+| [collation('binary')](#columncollation) | The column collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
+| [comment('comment')](#columncomment) | Add a comment to a column (MySQL/PostgreSQL/Oracle/SQLServer) |
+| [default(1)](#columndefault) | Default value of the column if no value was specified (default: `NULL`) |
+| [fixed(true)](#columnfixed) | If string or binary columns should have a fixed length |
+| [index('idx_col')](#columnindex) | Add an index to the column, index name is optional |
+| [length(32)](#columnlength) | The max. length of string and binary columns |
+| [null(true)](#columnnull) | Allow NULL values to be inserted into the column |
+| [precision(12)](#columnlength) | The max. number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
+| [primary('pk_col')](#columnprimary) | Add a primary key to the column, primary key name is optional |
+| [scale(2)](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
+| [seq(true)](#columnseq) | Set INTEGER columns as auto-incrementing if no value was specified |
+| [spatial('spt_col')](#columnspatial) | Add a spatial (geo) index to the column, index name is optional |
+| [unique('unq_col')](#columnunique) | Add an unique index to the column, index name is optional |
+| [unsigned(true)](#columnunsigned) | Allow unsigned INTEGER values only (MySQL) |
 
-To set custom schema options for columns, use the [`opt()`](#columncol) method, e.g.:
+To set custom schema options for columns, use the [`opt()`](#columnopt) method, e.g.:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -2279,7 +2279,7 @@ if( $this->db()->hasColumn ( 'users', 'name' ) ) {
 }
 ```
 
-You can check for several columns at once too. In that case, the [`hasColumn()`(#dbhascolumn)
+You can check for several columns at once too. In that case, the [`hasColumn()`](#dbhascolumn)
 method will only return `TRUE` if all columns exist:
 
 ```php
@@ -2288,7 +2288,7 @@ if( $this->db()->hasColumn ( 'users', ['name', 'status'] ) ) {
 }
 ```
 
-If you already have a table object, you can use [`hasColumn()`(#tablehascolumn) too:
+If you already have a table object, you can use [`hasColumn()`](#tablehascolumn) too:
 
 ```php
 if( $table->hasColumn ( 'name' ) ) {
@@ -2312,18 +2312,18 @@ It's possible to check for all column modifiers using these methods:
 
 | Column modifier | Description |
 |-----------------|-------------|
-| [->autoincrement()](#columnautoincrement) | TRUE if the the column is auto-incrementing (alias for [`seq()`](#columnseq)) |
-| [->charset()](#columncharset) | Used character set (MySQL) |
-| [->collation()](#columncollation) | Used collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
-| [->comment()](#columncomment) | Comment associated to the column (MySQL/PostgreSQL/Oracle/SQLServer) |
-| [->default()](#columndefault) | Default value of the column |
-| [->fixed()](#columnfixed) | If the string or binary column has a fixed length |
-| [->length()](#columnlength) | The maximum length of the string or binary column |
-| [->null()](#columnnull) | If NULL values are allowed |
-| [->precision()](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
-| [->scale()](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
-| [->seq()](#columnseq) | TRUE if the column is auto-incrementing |
-| [->unsigned()](#columnunsigned) | If only unsigned INTEGER values are allowed (MySQL) |
+| [autoincrement()](#columnautoincrement) | TRUE if the the column is auto-incrementing (alias for [`seq()`](#columnseq)) |
+| [charset()](#columncharset) | Used character set (MySQL) |
+| [collation()](#columncollation) | Used collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
+| [comment()](#columncomment) | Comment associated to the column (MySQL/PostgreSQL/Oracle/SQLServer) |
+| [default()](#columndefault) | Default value of the column |
+| [fixed()](#columnfixed) | If the string or binary column has a fixed length |
+| [length()](#columnlength) | The maximum length of the string or binary column |
+| [null()](#columnnull) | If NULL values are allowed |
+| [precision()](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
+| [scale()](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
+| [seq()](#columnseq) | TRUE if the column is auto-incrementing |
+| [unsigned()](#columnunsigned) | If only unsigned INTEGER values are allowed (MySQL) |
 
 To check for non-standard column modifiers, use the [`opt()`](#columnopt) method
 without second parameter. Then, it will return the current value of the column modifier:
@@ -2364,16 +2364,12 @@ $this->db()->table( 'test', function( $table ) {
 ```
 
 Changing the column type is possible by using the new method for the appropriate
-type or the [`type()](#columntype) method:
+type or the [`type()`](#columntype) method:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
 	$table->text( 'code' );
-} );
-
-// or
-
-$this->db()->table( 'test', function( $table ) {
+	// or
 	$table->col( 'code', 'text' );
 } );
 ```
@@ -2550,6 +2546,44 @@ This method is an alias for the [`seq()` method](#columnseq).
 ```php
 $value = $column->autoincrement();
 $column->autoincrement( true );
+```
+
+
+#### Column::charset()
+
+Sets the column charset or returns the current value
+
+```php
+public function charset( string $value = null )
+```
+
+* @param string&#124;null $value New column charset or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$comment = $column->charset();
+$column->charset( 'utf8' );
+```
+
+
+#### Column::collation()
+
+Sets the column collation or returns the current value
+
+```php
+public function collation( string $value = null )
+```
+
+* @param string&#124;null $value New column collation or NULL to return current value
+* @return self&#124;string Same object for setting the value, current value without parameter
+
+**Examples:**
+
+```php
+$comment = $column->collation();
+$column->collation( 'binary' );
 ```
 
 
