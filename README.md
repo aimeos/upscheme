@@ -20,9 +20,9 @@ composer req aimeos/upscheme
   * [Messages](#messages)
   * [Schemas](#schemas)
 * [Database](#database)
-  * [Accessing schema objects](#accessing-schema-objects)
-  * [Checking object existence](#checking-object-existence)
-  * [Removing schema objects](#removing-schema-objects)
+  * [Accessing objects](#accessing-objects)
+  * [Checking existence](#checking-existence)
+  * [Removing objects](#removing-objects)
   * [Query/modify table rows](#Query-modify-table-rows)
   * [Executing custom SQL](#executing-custom-sql)
   * [Database methods](#database-methods)
@@ -336,7 +336,7 @@ $db2->close();
 
 ## Database
 
-### Accessing schema objects
+### Accessing objects
 
 You get the database schema object in your task by calling `$this->db()` as described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects:
 
@@ -347,7 +347,7 @@ $seq = $this->db()->sequence( 'seq_users' );
 
 If the table or seqence doesn't exist, it will be created. Otherwise, the existing table or sequence object is returned. In both cases, you can modify the objects afterwards and add e.g. new columns to the table.
 
-### Checking object existence
+### Checking existence
 
 You can test for tables, columns, indexes, foreign keys and sequences using the database schema returned by `$this->db()`:
 
@@ -375,7 +375,7 @@ if( $db->hasSequence( 'seq_users' ) {
 }
 ```
 
-### Removing schema objects
+### Removing objects
 
 The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
 
@@ -1121,7 +1121,7 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-Now, the default charset and collation will be only set for MySQL database servers
+Now, the default *charset* and *collation* will be only set for MySQL database servers
 (or MariaDB and similar forks).
 
 ### Checking table existence
