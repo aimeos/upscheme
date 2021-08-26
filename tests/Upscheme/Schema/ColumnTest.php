@@ -125,6 +125,40 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testCharsetGet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+			->will( $this->returnValue( 'utf8' ) );
+
+		$this->assertEquals( 'utf8', $this->object->charset() );
+	}
+
+
+	public function testCharsetSet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->charset( 'utf8' ) );
+	}
+
+
+	public function testCollationGet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+			->will( $this->returnValue( 'binary' ) );
+
+		$this->assertEquals( 'binary', $this->object->collation() );
+	}
+
+
+	public function testCollationSet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->collation( 'binary' ) );
+	}
+
+
 	public function testCommentGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getComment' )

@@ -115,6 +115,30 @@ class Column
 
 
 	/**
+	 * Sets the column charset or returns the current value
+	 *
+	 * @param mixed $value New column charset or NULL to return current value
+	 * @return self|mixed Same object for setting the value, current value without parameter
+	 */
+	public function charset( $value = null )
+	{
+		return $this->opt( 'charset', $value );
+	}
+
+
+	/**
+	 * Sets the column collation or returns the current value
+	 *
+	 * @param mixed $value New column collation or NULL to return current value
+	 * @return self|mixed Same object for setting the value, current value without parameter
+	 */
+	public function collation( $value = null )
+	{
+		return $this->opt( 'collation', $value );
+	}
+
+
+	/**
 	 * Sets the column comment or returns the current value
 	 *
 	 * @param string|null $value New column comment or NULL to return current value
