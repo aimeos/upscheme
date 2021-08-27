@@ -340,6 +340,7 @@ class DB
 	/**
 	 * Renames a column or a list of column which belong to the given table
 	 *
+	 * @param string $table Name of the table
 	 * @param array|string $from Column name or array of old/new column names
 	 * @param string|null $to New column name or NULL if first parameter is an array
 	 * @return self Same object for fluid method calls

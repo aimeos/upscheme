@@ -30,7 +30,7 @@ composer req aimeos/upscheme
   * [Creating tables](#creating-tables)
   * [Setting table options](#setting-table-options)
   * [Checking table existence](#checking-table-existence)
-  * [Updating tables](#updating-tables)
+  * [Changing tables](#changing-tables)
   * [Dropping tables](#dropping-tables)
   * [Table methods](#table-methods)
 * [Columns](#columns)
@@ -42,7 +42,7 @@ composer req aimeos/upscheme
   * [Dropping columns](#dropping-columns)
   * [Column methods](#column-methods)
 * [Foreign keys](#foreign-keys)
-  * [Methods](#forein-key-methods)
+  * [Methods](#foreign-key-methods)
 * [Sequences](#sequences)
   * [Methods](#sequence-methods)
 
@@ -483,6 +483,7 @@ This is especially useful for creating special types of indexes where the syntax
 	<li><a href="#dbhastable">hasTable()</a></li>
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
+	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
 	<li><a href="#dbselect">select()</a></li>
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
@@ -868,6 +869,30 @@ $db->lastId( 'seq_test' );
 ```
 
 
+#### DB::renameColumn()
+
+Renames a column or a list of columns
+
+```php
+public function renameColumn( string $table, $from, string $to = null ) : self
+```
+
+* @param string `$table` Name of the table
+* @param array&#124;string $from Column name or array of old/new column names
+* @param string&#124;null $to New column name ignored if first parameter is an array
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+// single column
+$db->renameColumn( 'testtable', 'test_col', 'test_column' );
+
+// rename several columns at once
+$db->renameColumn( 'testtable', ['tcol' => 'testcol', 'tcol2' => 'testcol2'] );
+```
+
+
 #### DB::select()
 
 Returns the records from the given table
@@ -1150,7 +1175,7 @@ if( $this->db()->hasTable( ['users', 'addresses'] ) ) {
 
 The [`hasTable()`(#dbhastable) method will only return `TRUE` if all tables exist.
 
-### Updating tables
+### Changing tables
 
 Besides creating and accessing tables, the [`table()`](#dbtable) method from the schema object
 can be used to update a table schema too. It accepts the table name and a closure
@@ -1239,6 +1264,7 @@ In that case, the method call will succeed but nothing will happen.
 	<li><a href="#tablename">name()</a></li>
 	<li><a href="#tableopt">opt()</a></li>
 	<li><a href="#tableprimary">primary()</a></li>
+	<li><a href="#tablerenamecolumn">renameColumn()</a></li>
 	<li><a href="#tablerenameindex">renameIndex()</a></li>
 	<li><a href="#tablesmallint">smallint()</a></li>
 	<li><a href="#tablespatial">spatial()</a></li>
@@ -1960,6 +1986,29 @@ $table->primary( 'testcol', 'pk_test_testcol' );
 ```
 
 
+#### Table::renameColumn()
+
+Renames a column or a list of columns
+
+```php
+public function renameColumn( $from, string $to = null ) : self
+```
+
+* @param array&#124;string $from Column name or array of old/new column names
+* @param string&#124;null $to New column name ignored if first parameter is an array
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+// single column
+$table->renameColumn( 'test_col', 'test_column' );
+
+// rename several columns at once
+$table->renameColumn( ['tcol' => 'testcol', 'tcol2' => 'testcol2'] );
+```
+
+
 #### Table::renameIndex()
 
 Renames an index or a list of indexes
@@ -2378,6 +2427,28 @@ Be aware that not all column types can be changed into another type or at
 least not without data loss. You can change an INTEGER column to a BIGINT column
 without problem but the other way round will fail. The same happens if you want
 to change a VARCHAR column (string) into an INTEGER column.
+
+### Renaming columns
+
+If a table object is already available, you can use its [`renameColumn()`](#tablerenamecolumn)
+method to rename one or more columns:
+
+```php
+$this->db()->table( 'testtable', function( $table ) {
+	$table->renameColumn( 'label', 'name' );
+	// or multiple columns
+	$table->renameColumn( ['label' => 'name', 'stat' => 'status'] );
+} );
+```
+
+It's also possible to rename columns directly, using the [`renameColumn()`](#dbrenamecolumn)
+method of the DB schema:
+
+```php
+$this->db()->renameColumn( 'testtable', 'label', 'name' );
+// or multiple columns
+$this->db()->renameColumn( 'testtable', ['label' => 'name', 'stat' => 'status'] );
+```
 
 ### Dropping columns
 
