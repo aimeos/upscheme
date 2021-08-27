@@ -22,6 +22,7 @@ composer req aimeos/upscheme
 * [Database](#database)
   * [Accessing objects](#accessing-objects)
   * [Checking existence](#checking-existence)
+  * [Renaming objects](#renaming-objects)
   * [Removing objects](#removing-objects)
   * [Query/modify table rows](#Query-modify-table-rows)
   * [Executing custom SQL](#executing-custom-sql)
@@ -31,6 +32,7 @@ composer req aimeos/upscheme
   * [Setting table options](#setting-table-options)
   * [Checking table existence](#checking-table-existence)
   * [Changing tables](#changing-tables)
+  * [Renaming tables](#renaming-tables)
   * [Dropping tables](#dropping-tables)
   * [Table methods](#table-methods)
 * [Columns](#columns)
@@ -39,6 +41,7 @@ composer req aimeos/upscheme
   * [Column modifiers](#column-modifiers)
   * [Checking column existence](#checking-column-existence)
   * [Changing columns](#changing-columns)
+  * [Renaming columns](#renaming-columns)
   * [Dropping columns](#dropping-columns)
   * [Column methods](#column-methods)
 * [Foreign keys](#foreign-keys)
@@ -381,6 +384,23 @@ if( $db->hasSequence( 'seq_users' ) ) {
 }
 ```
 
+### Renaming objects
+
+The database object returned by `$this->db()` offers the possibility to rename tables, columns and indexes using the [`renameTable()`](#dbrenametable), [`renameColumn()`](#dbrenamecolumn) and [`renameIndex()`](#dbrenameindex):
+
+```php
+$db = $this->db();
+
+// Renames the table "users" to "accounts"
+$db->renameTable( 'users', 'account' );
+
+// Renames the column "label" to "name" in the "users" table
+$db->renameColumn( 'users', 'label', 'name' );
+
+// Renames the column "idx_label" to "idx_name" in the "users" table
+$db->renameIndex ( 'users', 'idx_label', 'idx_name' );
+```
+
 ### Removing objects
 
 The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
@@ -484,6 +504,8 @@ This is especially useful for creating special types of indexes where the syntax
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
 	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
+	<li><a href="#dbrenameindex">renameIndex()</a></li>
+	<li><a href="#dbrenametable">renameTable()</a></li>
 	<li><a href="#dbselect">select()</a></li>
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
@@ -878,8 +900,8 @@ public function renameColumn( string $table, $from, string $to = null ) : self
 ```
 
 * @param string `$table` Name of the table
-* @param array&#124;string $from Column name or array of old/new column names
-* @param string&#124;null $to New column name ignored if first parameter is an array
+* @param array&#124;string `$from` Column name or array of old/new column names
+* @param string&#124;null `$to` New column name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -890,6 +912,53 @@ $db->renameColumn( 'testtable', 'test_col', 'test_column' );
 
 // rename several columns at once
 $db->renameColumn( 'testtable', ['tcol' => 'testcol', 'tcol2' => 'testcol2'] );
+```
+
+
+#### DB::renameIndex()
+
+Renames a column or a list of columns
+
+```php
+public function renameIndex( string $table, $from, string $to = null ) : self
+```
+
+* @param string `$table` Name of the table
+* @param array&#124;string `$from` Index name or array of old/new index names
+* @param string&#124;null `$to` New index name ignored if first parameter is an array
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+// single index
+$db->renameIndex( 'testtable', 'idxcol', 'idx_column' );
+
+// rename several indexes at once
+$db->renameIndex( 'testtable', ['idxcol' => 'idx_column', 'idxcol2' => 'idx_column2'] );
+```
+
+
+#### DB::renameTable()
+
+Renames a table or a list of tables
+
+```php
+public function renameTable( $from, string $to = null ) : self
+```
+
+* @param array&#124;string `$from` Table name or array of old/new table names
+* @param string&#124;null `$to` New table name ignored if first parameter is an array
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+// single table
+$db->renameTable( 'testtable', 'newtable' );
+
+// rename several tables at once
+$db->renameTable( ['testtable' => 'newtable', 'oldtable' => 'testtable2'] );
 ```
 
 
@@ -1173,7 +1242,7 @@ if( $this->db()->hasTable( ['users', 'addresses'] ) ) {
 }
 ```
 
-The [`hasTable()`(#dbhastable) method will only return `TRUE` if all tables exist.
+The [`hasTable()`](#dbhastable) method will only return `TRUE` if all tables exist.
 
 ### Changing tables
 
@@ -1204,6 +1273,20 @@ $this->db()->table( 'test', function( $table ) {
 The changes will be persisted in the database as soon as the [`table()`](#dbtable) method
 returns so there's no need to call [`up()`](#dbup) yourself afterwards. For the available
 column types and options, refer to the [columns section](#columns).
+
+### Renaming tables
+
+The database object returned by `$this->db()` can rename tables when using the [`renameTable()`](#dbrenametable) method:
+
+```php
+$db = $this->db();
+
+// Renames the table "users" to "accounts"
+$db->renameTable( 'users', 'account' );
+
+// Renames the table "users" to "accounts" and "blog" to "posts"
+$db->renameTable( ['users' => 'account', 'blog' => 'posts'] );
+```
 
 ### Dropping tables
 
@@ -1994,8 +2077,8 @@ Renames a column or a list of columns
 public function renameColumn( $from, string $to = null ) : self
 ```
 
-* @param array&#124;string $from Column name or array of old/new column names
-* @param string&#124;null $to New column name ignored if first parameter is an array
+* @param array&#124;string `$from` Column name or array of old/new column names
+* @param string&#124;null `$to` New column name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -2017,8 +2100,8 @@ Renames an index or a list of indexes
 public function renameIndex( $from, string $to = null ) : self
 ```
 
-* @param array&#124;string $from Index name or array of old/new index names (if new index name is NULL, it will be generated)
-* @param string&#124;null $to New index name or NULL for autogenerated name (ignored if first parameter is an array)
+* @param array&#124;string `$from` Index name or array of old/new index names (if new index name is NULL, it will be generated)
+* @param string&#124;null `$to` New index name or NULL for autogenerated name (ignored if first parameter is an array)
 * @return self Same object for fluid method calls
 
 The length of the indexes name shouldn't be longer than 30 characters for maximum compatibility.
