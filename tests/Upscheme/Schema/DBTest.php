@@ -348,6 +348,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testRenameIndex()
+	{
+		$this->object->expects( $this->once() )->method( 'table' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameIndex( 'table', 'unit', 'test' ) );
+	}
+
+
 	public function testSequence()
 	{
 		$seqmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Sequence' )

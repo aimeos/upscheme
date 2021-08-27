@@ -676,7 +676,7 @@ class Table
 			}
 		}
 
-		return $this;
+		return $this->up();
 	}
 
 
