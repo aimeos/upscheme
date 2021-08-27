@@ -12,6 +12,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
 	private $dbmock;
+	private $smmock;
 	private $tablemock;
 
 
@@ -25,7 +26,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$smmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\AbstractSchemaManager' )
+		$this->smmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\AbstractSchemaManager' )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -41,15 +42,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$method = method_exists( $this->connmock, 'createSchemaManager' ) ? 'createSchemaManager' : 'getSchemaManager';
 		$this->connmock->expects( $this->any() )->method( $method )
-			->will( $this->returnValue( $smmock ) );
+			->will( $this->returnValue( $this->smmock ) );
 
-		$smmock->expects( $this->any() )->method( 'createSchema' )
+		$this->smmock->expects( $this->any() )->method( 'createSchema' )
 			->will( $this->returnValue( $this->schemamock ) );
 
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['table', 'type', 'up'] )
+			->setMethods( ['table', 'type', 'up', 'getColumnSQL'] )
 			->getMock();
 
 		$this->object->expects( $this->any() )->method( 'table' )->will( $this->returnValue( $this->tablemock ) );
@@ -309,6 +310,41 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->will( $this->returnValue( '123' ) );
 		$this->assertEquals( '123', $this->object->lastId() );
+	}
+
+
+	public function testRenameColumn()
+	{
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->will( $this->returnArgument( 0 ) );
+		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->will( $this->returnValue( 'test INTEGER' ) );
+		$this->connmock->expects( $this->once() )->method( 'executeStatement' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameColumn( 'table', 'unit', 'test' ) );
+	}
+
+
+	public function testRenameColumnMultiple()
+	{
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->will( $this->returnArgument( 0 ) );
+		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->will( $this->returnValue( 'test INTEGER' ) );
+		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
+
+		$cols = ['unit' => 'test', 'unit2' => 'test2'];
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameColumn( 'table', $cols ) );
+	}
+
+
+	public function testRenameColumnException()
+	{
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+
+		$this->expectException( \RuntimeException::class );
+		$this->object->renameColumn( 'table', 'unit' );
 	}
 
 

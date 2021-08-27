@@ -31,13 +31,10 @@ class DB
 	 */
 	public function __construct( \Aimeos\Upscheme\Up $up, \Doctrine\DBAL\Connection $conn )
 	{
-		$manager = method_exists( $conn, 'createSchemaManager' ) ? $conn->createSchemaManager() : $conn->getSchemaManager();
-
-		$this->to = $manager->createSchema();
-		$this->from = clone $this->to;
-
-		$this->conn = $conn;
 		$this->up = $up;
+		$this->conn = $conn;
+
+		$this->setup();
 	}
 
 
@@ -341,6 +338,57 @@ class DB
 
 
 	/**
+	 * Renames a column or a list of column which belong to the given table
+	 *
+	 * @param array|string $from Column name or array of old/new column names
+	 * @param string|null $to New column name or NULL if first parameter is an array
+	 * @return self Same object for fluid method calls
+	 */
+	public function renameColumn( string $table, $from, string $to = null ) : self
+	{
+		$this->up();
+
+		if( !is_array( $from ) ) {
+			$from = [$from => $to];
+		}
+
+		$qtable = $this->conn->quoteIdentifier( $table );
+
+		foreach( $from as $name => $to )
+		{
+			if( $this->hasColumn( $table, $name ) )
+			{
+				if( !$to )
+				{
+					$msg = sprintf( 'Renaming "%1$s.%2$s" column requires a non-empty new name', $table, $name );
+					throw new \RuntimeException( $msg );
+				}
+
+				$qname = $this->conn->quoteIdentifier( $name );
+				$qto = $this->conn->quoteIdentifier( $to );
+
+				switch( $this->type() )
+				{
+					case 'mssql':
+						$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+						break;
+					case 'mysql':
+						$sql = $this->getColumnSQL( $table, $name, $to );
+						$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
+						break;
+					default:
+						$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $qto );
+				}
+
+				$this->conn->executeStatement( $sql );
+			}
+		}
+
+		return $this->setup();
+	}
+
+
+	/**
 	 * Returns the records from the given table
 	 *
 	 * Warning: The condition values are escaped but the table name and condition
@@ -508,6 +556,48 @@ class DB
 	public function update( string $table, array $data, array $conditions = null ) : self
 	{
 		$this->conn->update( $table, $data, $conditions ?? [1 => 1] );
+		return $this;
+	}
+
+
+	/**
+	 * Returns the column declaration as SQL string
+	 *
+	 * @param string $table Table name
+	 * @param string $name Old column name
+	 * @param string $to New column name
+	 * @return string SQL column declaration
+	 */
+	protected function getColumnSQL( string $table, string $name, string $to ) : string
+	{
+		$col = $this->to->getTable( $table )->getColumn( $name );
+		return $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
+	}
+
+
+	/**
+	 * Returns the Doctrine schema manager
+	 *
+	 * @return \Doctrine\DBAL\Schema\AbstractSchemaManager Doctrine schema manager
+	 */
+	protected function getSchemaManager() : \Doctrine\DBAL\Schema\AbstractSchemaManager
+	{
+		return method_exists( $this->conn, 'createSchemaManager' )
+			? $this->conn->createSchemaManager()
+			: $this->conn->getSchemaManager();
+	}
+
+
+	/**
+	 * Loads the actual Doctrine schema for the current database
+	 *
+	 * @return self Same object for fluid method calls
+	 */
+	protected function setup() : self
+	{
+		$this->to = $this->getSchemaManager()->createSchema();
+		$this->from = clone $this->to;
+
 		return $this;
 	}
 }
