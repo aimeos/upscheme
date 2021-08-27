@@ -636,6 +636,20 @@ class Table
 
 
 	/**
+	 * Renames a column or a list of column
+	 *
+	 * @param array|string $from Column name or array of old/new column names
+	 * @param string|null $to New column name or NULL if first parameter is an array
+	 * @return self Same object for fluid method calls
+	 */
+	public function renameColumn( $from, string $to = null ) : self
+	{
+		$this->db->renameColumn( $this->name(), $from, $to );
+		return $this;
+	}
+
+
+	/**
 	 * Renames an index or a list of indexes
 	 *
 	 * @param array|string $from Index name or array of old/new index names (if new index name is NULL, it will be generated)

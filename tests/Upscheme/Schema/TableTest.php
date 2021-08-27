@@ -22,10 +22,11 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$methods = [
-			'addIndex', 'addUniqueIndex', 'getIndex', 'getIndexes', 'renameIndex',
-			'dropPrimaryKey', 'getPrimaryKey', 'setPrimaryKey',
-			'dropColumn', 'dropIndex', 'removeForeignKey', 'hasUniqueConstraint',
-			'hasColumn', 'hasIndex', 'hasForeignKey', 'hasPrimaryKey', 'removeUniqueConstraint',
+			'addIndex', 'getIndex', 'getIndexes', 'hasIndex', 'renameIndex', 'dropIndex',
+			'dropPrimaryKey', 'getPrimaryKey', 'hasPrimaryKey', 'setPrimaryKey',
+			'addUniqueIndex', 'hasUniqueConstraint', 'removeUniqueConstraint',
+			'dropColumn', 'hasColumn', 'renameColumn',
+			'hasForeignKey', 'removeForeignKey',
 			'getName', 'addOption', 'getOption',
 		];
 
@@ -701,6 +702,15 @@ class TableTest extends \PHPUnit\Framework\TestCase
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameIndex( 'idx_test' ) );
+	}
+
+
+	public function testRenameColumn()
+	{
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->dbmock->expects( $this->once() )->method( 'renameColumn' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameColumn( 'test' ) );
 	}
 
 
