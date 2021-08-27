@@ -403,6 +403,41 @@ class DB
 
 
 	/**
+	 * Renames a table or a list of tables which belong to the current schema
+	 *
+	 * @param array|string $from Table name or array of old/new table names
+	 * @param string|null $to New table name or ignored if first parameter is an array
+	 * @return self Same object for fluid method calls
+	 */
+	public function renameTable( $from, string $to = null ) : self
+	{
+		$this->up();
+
+		if( !is_array( $from ) ) {
+			$from = [$from => $to];
+		}
+
+		$manager = $this->getSchemaManager();
+
+		foreach( $from as $name => $to )
+		{
+			if( $this->hasTable( $name ) )
+			{
+				if( !$to )
+				{
+					$msg = sprintf( 'Renaming table "%1$s" requires a non-empty new name', $name );
+					throw new \RuntimeException( $msg );
+				}
+
+				$manager->renameTable( $name, $to );
+			}
+		}
+
+		return $this->setup();
+	}
+
+
+	/**
 	 * Returns the records from the given table
 	 *
 	 * Warning: The condition values are escaped but the table name and condition

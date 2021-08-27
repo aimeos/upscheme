@@ -357,6 +357,33 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testRenameTable()
+	{
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->smmock->expects( $this->once() )->method( 'renameTable' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameTable( 'unit', 'test' ) );
+	}
+
+
+	public function testRenameTableMultiple()
+	{
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->smmock->expects( $this->exactly( 2 ) )->method( 'renameTable' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameTable( ['test', 'test2'] ) );
+	}
+
+
+	public function testRenameTableException()
+	{
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+
+		$this->expectException( \RuntimeException::class );
+		$this->object->renameTable( 'unit' );
+	}
+
+
 	public function testSequence()
 	{
 		$seqmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Sequence' )
