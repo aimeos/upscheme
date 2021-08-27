@@ -124,7 +124,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 			return \Doctrine\DBAL\DriverManager::getConnection( ['driver' => 'pdo_sqlite', 'path' => 'up.test'] );
 		} );
 
-		$result = (new \Aimeos\Upscheme\Up( ['driver' => 'pdo_mysql'], 'testpath' ))->db();
+		$result = ( new \Aimeos\Upscheme\Up( ['driver' => 'pdo_mysql'], 'testpath' ) )->db();
 		\Aimeos\Upscheme\Up::reset( 'connect' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $result );

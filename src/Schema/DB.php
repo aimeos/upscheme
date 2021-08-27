@@ -353,8 +353,6 @@ class DB
 			$from = [$from => $to];
 		}
 
-		$qtable = $this->conn->quoteIdentifier( $table );
-
 		foreach( $from as $name => $to )
 		{
 			if( $this->hasColumn( $table, $name ) )
@@ -365,23 +363,7 @@ class DB
 					throw new \RuntimeException( $msg );
 				}
 
-				$qname = $this->conn->quoteIdentifier( $name );
-				$qto = $this->conn->quoteIdentifier( $to );
-
-				switch( $this->type() )
-				{
-					case 'mssql':
-						$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
-						break;
-					case 'mysql':
-						$sql = $this->getColumnSQL( $table, $name, $to );
-						$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
-						break;
-					default:
-						$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $qto );
-				}
-
-				$this->conn->executeStatement( $sql );
+				$this->conn->executeStatement( $this->getColumnSQL( $table, $name, $to ) );
 			}
 		}
 
@@ -620,8 +602,25 @@ class DB
 	 */
 	protected function getColumnSQL( string $table, string $name, string $to ) : string
 	{
-		$col = $this->to->getTable( $table )->getColumn( $name );
-		return $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
+		$qtable = $this->conn->quoteIdentifier( $table );
+		$qname = $this->conn->quoteIdentifier( $name );
+		$qto = $this->conn->quoteIdentifier( $to );
+
+		switch( $this->type() )
+		{
+			case 'mssql':
+				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+				break;
+			case 'mysql':
+				$col = $this->to->getTable( $table )->getColumn( $name );
+				$sql = $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
+				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
+				break;
+			default:
+				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $qto );
+		}
+
+		return $sql;
 	}
 
 

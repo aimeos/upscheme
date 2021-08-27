@@ -443,7 +443,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$object =  new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
+		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
 		$this->schemamock->expects( $this->once() )->method( 'getTable' )->will( $this->returnValue( $tablemock ) );
@@ -458,7 +458,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$object =  new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
+		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
 		$this->schemamock->expects( $this->once() )->method( 'createTable' )->will( $this->returnValue( $tablemock ) );

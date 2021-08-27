@@ -629,7 +629,7 @@ class Table
 			$this->table->dropPrimaryKey();
 		}
 
-		$name = $name ?: $this->nameIndex( $this->name(),  $columns, 'pk' );
+		$name = $name ?: $this->nameIndex( $this->name(), $columns, 'pk' );
 		$this->table->setPrimaryKey( $columns, $name );
 		return $this;
 	}
