@@ -2165,9 +2165,9 @@ $table->up();
 
 The column schema object you get by calling `$table->col( '<name>', '<type>' )`
 in your migration task gives you access to all column properties. There are also
-shortcuts available for column type supported by all supported databases types.
-Each column can be changed by one or more modifier methods and you can also add
-indexes to single columns, e.g.:
+shortcuts available for column types supported by all databases. Each column can
+be changed by one or more modifier methods and you can also add indexes to single
+columns, e.g.:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -2288,14 +2288,14 @@ if( $this->db()->hasColumn ( 'users', ['name', 'status'] ) ) {
 }
 ```
 
-If you already have a table object, you can use [`hasColumn()`](#tablehascolumn) too:
+If you already have a table object, you can use [`hasColumn()`](#tablehascolumn) as well:
 
 ```php
 if( $table->hasColumn ( 'name' ) ) {
     // The "name" column in the table exists
 }
 
-if( $table->hasColumn ( 'users', ['name', 'status'] ) ) {
+if( $table->hasColumn ( ['name', 'status'] ) ) {
     // The "name" and "status" columns in the table exists
 }
 ```
@@ -2308,7 +2308,7 @@ if( $table->string( 'code' )->null() ) {
 }
 ```
 
-It's possible to check for all column modifiers using these methods:
+Retrieving the current column modifier values is possible using these methods:
 
 | Column modifier | Description |
 |-----------------|-------------|
@@ -2317,13 +2317,13 @@ It's possible to check for all column modifiers using these methods:
 | [collation()](#columncollation) | Used collation (MySQL/PostgreSQL/Sqlite/SQLServer but not compatible) |
 | [comment()](#columncomment) | Comment associated to the column (MySQL/PostgreSQL/Oracle/SQLServer) |
 | [default()](#columndefault) | Default value of the column |
-| [fixed()](#columnfixed) | If the string or binary column has a fixed length |
+| [fixed()](#columnfixed) | TRUE if the string or binary column has a fixed length |
 | [length()](#columnlength) | The maximum length of the string or binary column |
-| [null()](#columnnull) | If NULL values are allowed |
+| [null()](#columnnull) | TRUE if NULL values are allowed |
 | [precision()](#columnlength) | The maximum number of digits stored in DECIMAL and FLOAT columns incl. decimal digits |
 | [scale()](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
 | [seq()](#columnseq) | TRUE if the column is auto-incrementing |
-| [unsigned()](#columnunsigned) | If only unsigned INTEGER values are allowed (MySQL) |
+| [unsigned()](#columnunsigned) | TRUE if only unsigned INTEGER values are allowed (MySQL) |
 
 To check for non-standard column modifiers, use the [`opt()`](#columnopt) method
 without second parameter. Then, it will return the current value of the column modifier:
@@ -2364,7 +2364,7 @@ $this->db()->table( 'test', function( $table ) {
 ```
 
 Changing the column type is possible by using the new method for the appropriate
-type or the [`type()`](#columntype) method:
+type or the [`col()`](#tablecol) method:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -2381,7 +2381,7 @@ to change a VARCHAR column (string) into an INTEGER column.
 
 ### Dropping columns
 
-To drop columns , use the [`dropColumn()`](#dbdropcolumn) method:
+To drop columns , use the [`dropColumn()`](#dbdropcolumn) method from the DB schema object:
 
 ```php
 $this->db()->dropColumn( 'users', 'name' );
@@ -2401,6 +2401,9 @@ $table->dropColumn( 'name' );
 $table->dropColumn( ['name', 'status'] );
 ```
 
+In all cases, columns are only removed if they exist and no error is reported if one
+or more columns doesn't exist in the table.
+
 ### Column methods
 
 <nav>
@@ -2410,6 +2413,8 @@ $table->dropColumn( ['name', 'status'] );
 	<li><a href="#column__get">__get()</a></li>
 	<li><a href="#column__set">__set()</a></li>
 	<li><a href="#columnautoincrement">autoincrement()</a></li>
+	<li><a href="#columncharset">charset()</a></li>
+	<li><a href="#columncollation">collation()</a></li>
 	<li><a href="#columncomment">comment()</a></li>
 	<li><a href="#columndefault">default()</a></li>
 	<li><a href="#columnfixed">fixed()</a></li>
