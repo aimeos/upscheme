@@ -35,6 +35,13 @@ class CrudTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testRename()
+	{
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/rename' )->up();
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
+	}
+
+
 	public function testDelete()
 	{
 		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/delete' )->up();

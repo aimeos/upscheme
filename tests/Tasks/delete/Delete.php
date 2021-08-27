@@ -12,6 +12,6 @@ class Delete extends Base
 	{
 		$this->info( 'Removing test tables' );
 
-		$this->delete( 'test' )->dropTable( 'testref' )->dropTable( 'test' );
+		$this->delete( 'test2' )->dropTable( 'testref2' )->dropTable( 'test2' );
 	}
 }
