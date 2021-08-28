@@ -1198,17 +1198,16 @@ To create a *temporary* table, use:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
-	$table->engine = true;
+	$table->temporary = true;
 } );
 ```
-
 
 It's also possible to set the default *charset* and *collation* for string and text columns:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
-    $table->charset = 'utf8mb4';
-    $table->collation = 'utf8mb4_unicode_ci';
+	$table->charset = 'utf8mb4';
+	$table->collation = 'utf8mb4_unicode_ci';
 } );
 ```
 
@@ -1219,13 +1218,31 @@ server type as third parameter:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
-    $table->opt( 'charset', 'utf8mb4', 'mysql' );
-    $table->opt( 'collation', 'utf8mb4_unicode_ci', 'mysql' );
+	$table->opt( 'charset', 'utf8mb4', 'mysql' );
+	$table->opt( 'collation', 'utf8mb4_unicode_ci', 'mysql' );
 } );
 ```
 
 Now, the default *charset* and *collation* will be only set for MySQL database servers
 (or MariaDB and similar forks).
+
+In case you need to know the current values of the table options:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	// return the used table engine (only MySQL, MariaDB, etc.)
+	$engine = $table->engine;
+
+	// returns TRUE if it's a temporary table
+	$isTemp = $table->temporary;
+
+	// return the current charset
+	$charset = $table->charset;
+
+	// return the current collation
+	$collation = $table->collation;
+} );
+```
 
 ### Checking table existence
 
