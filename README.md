@@ -632,7 +632,7 @@ $db->dropColumn( 'test', 'oldcol' );
 $db->dropColumn( 'test', ['oldcol', 'oldcol2'] );
 ```
 
-If the column or one of the columns doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the column or one of the columns doesn't exist, it will be silently ignored.
 
 
 #### DB::dropForeign()
@@ -654,7 +654,7 @@ $db->dropForeign( 'test', 'fk_old' );
 $db->dropForeign( 'test', ['fk_old', 'fk_old2'] );
 ```
 
-If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored.
 
 
 #### DB::dropIndex()
@@ -676,7 +676,7 @@ $db->dropIndex( 'test', 'idx_old' );
 $db->dropIndex( 'test', ['idx_old', 'idx_old2'] );
 ```
 
-If the index or one of the indexes doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the index or one of the indexes doesn't exist, it will be silently ignored.
 
 
 #### DB::dropSequence()
@@ -697,7 +697,7 @@ $db->dropSequence( 'seq_old' );
 $db->dropSequence( ['seq_old', 'seq_old2'] );
 ```
 
-If the sequence or one of the sequences doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the sequence or one of the sequences doesn't exist, it will be silently ignored.
 
 
 #### DB::dropTable()
@@ -718,7 +718,7 @@ $db->dropTable( 'test' );
 $db->dropTable( ['test', 'test2'] );
 ```
 
-If the table or one of the tables doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the table or one of the tables doesn't exist, it will be silently ignored.
 
 
 #### DB::for()
@@ -3115,7 +3115,8 @@ $this->db()->table( 'users_address', function( $table ) {
 
 **Note:** The column (`parentid`) will and must have the same data type and column
 modifiers as the referenced column (`id`). The [`foreign()`](#tableforeign) method
-ensures that automatically.
+ensures that and will create a new index with the same name as the foreign key
+constraint automatically.
 
 If the ID column in the `users` table is named differently, pass its name as third
 parameter to the [`foreign()`](#tableforeign) method:
@@ -3491,7 +3492,7 @@ method:
 $this->db()->sequence( 'seq_test' );
 ```
 
-To use a different start value and step width than `1`, call the [`start()`](#sequencesstart)
+To use a different start value and step width than `1`, call the [`start()`](#sequencestart)
 and [`step()`](#sequencestep) methods:
 
 ```php
