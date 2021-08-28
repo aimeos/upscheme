@@ -3070,19 +3070,160 @@ $column->up();
 
 
 
-## Foreign keys
+## Foreign key constraints
 
-The foreign key scheme object you get by calling `$table->foreign( '<col>', '<table>' )` in your migration task gives you access to the foreign key properties, e.g.:
+### Creating foreign keys
+
+Upscheme offers support for foreign key constraints, which enforce the integrity
+of data between two tables. For example, if the `parentid` column of the `users_address`
+table references the `id` column of the `users` table, there can be no rows in
+the `users_address` table without a matching row in the `users` table. Calling
+the [`foreign()`](#tableforeign) method will create such a constraint:
 
 ```php
-$this->db()->table( 'testref', function( $table ) {
+$this->db()->table( 'users', function( $table ) {
 	$table->id();
-	$table->foreign( 'parentid', 'test' )->onDelete( 'SET NULL' );
+} );
+
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( 'parentid', 'users' );
 } );
 ```
 
+**Note:** The column (`parentid`) will and must have the same data type and column
+modifiers as the referenced column (`id`). The [`foreign()`](#tableforeign) method
+ensures that automatically.
 
-### Foreign Key methods
+If the ID column in the `users` table is named differently, pass its name as third
+parameter to the [`foreign()`](#tableforeign) method:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( 'parentid', 'users', 'uid' );
+} );
+```
+
+It's recommended to pass the name of the foreign key constraint as forth parameter
+so it's easier to change or drop constraints later:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( 'parentid', 'users', 'id', 'fk_test_pid' );
+} );
+```
+
+In case there's more than one column required to get the unique values required
+by foreign keys, pass the column names as array:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( ['parentid', 'siteid'], 'users_address', ['id', 'siteid'] );
+} );
+```
+
+Foreign key constraints can perform different actions if the referenced column
+in the foreign table is deleted of updated. The standard action is to restrict
+deleting the row or updating the referenced ID value. To change the behaviour,
+use the [`onDelete()`](#foreignondelete) and [`onUpdate()`](#foreignonupdate)
+methods:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( 'parentid', 'users' )->onDelete( 'SET NULL' )->onUpdate( 'CASCADE' );
+} );
+```
+
+Possible values for both methods are:
+
+* CASCADE : Update referenced value
+* NO ACTION : No change in referenced value (same as RESTRICT)
+* RESTRICT : Forbid changing values
+* SET DEFAULT : Set referenced value to the default value
+* SET NULL : Set referenced value to NULL
+
+### Checking foreign key existence
+
+To check if a foreign key already exists, use the [`hasForeign()`](#dbhasforeign) method:
+
+```php
+if( $this->db()->hasForeign ( 'users_address', 'fk_usrad_parentid' ) ) {
+    // The "fk_usrad_parentid" foreign key in the "users_address" table exists
+}
+```
+
+It's also possible checking for several foreign key constraints at once. Then, the
+[`hasForeign()`](#dbhasforeign) method will only return TRUE if all constraints
+exist in the tables passed as first argument:
+
+```php
+if( $this->db()->hasForeign ( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
+    // The "fk_usrad_parentid" and "fk_usrad_siteid" foreign keys exist in the "users_address" table
+}
+```
+
+If a table object available, the [`hasForeign()`](#tablehasforeign) method of the
+table can be used instead:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->hasForeign ( 'fk_usrad_parentid' ) ) {
+	    // The "fk_usrad_parentid" foreign key in the "users_address" table exists
+	}
+} );
+
+$this->db()->table( 'users_address', function( $table ) {
+	$table->hasForeign ( ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
+	    // The "fk_usrad_parentid" and "fk_usrad_siteid" foreign keys exist in the "users_address" table
+	}
+} );
+```
+
+In case you need the current values of an existing constraint:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$fk = $table->foreign( 'parentid', 'users' );
+
+	// returns the name of the constraint
+	$name = $fk->name()
+
+	// returns the action when deleting rows
+	$action = $fk->onDelete;
+
+	// returns the action when updating the foreign ID
+	$action = $fk->onUpdate;
+} );
+```
+
+### Dropping foreign keys
+
+To remove a foreign key constraint from a table, use the [`dropForeign()`](#dbdropforeign)
+method and pass the name of the table and foreign key name as arguments:
+
+```php
+$this->db()->dropForeign ( 'users_address', 'fk_usrad_parentid' );
+```
+
+You can also pass several foreign key names to drop them at once:
+
+```php
+$this->db()->dropForeign ( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] );
+```
+
+Within the anonymous function passed to the [`table()`](#dbtable) method, you
+can also use the [`dropForeign()`](#tabledropforeign) method:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->dropForeign ( 'fk_usrad_parentid' );
+} );
+
+$this->db()->table( 'users_address', function( $table ) {
+	$table->dropForeign ( ['fk_usrad_parentid', 'fk_usrad_siteid'] );
+} );
+```
+
+### Foreign key methods
 
 <nav>
 <div class="method-header"><a href="#foreign-keys">Foreign keys</a></div>
@@ -3165,7 +3306,7 @@ The list of available foreign key options are:
 Possible values for both options are:
 
 * CASCADE : Update referenced value
-* NO ACTION : No change in referenced value
+* NO ACTION : No change in referenced value (same as RESTRICT)
 * RESTRICT : Forbid changing values
 * SET DEFAULT : Set referenced value to the default value
 * SET NULL : Set referenced value to NULL
@@ -3198,7 +3339,7 @@ The list of available Foreign key options are:
 Possible values for both options are:
 
 * CASCADE : Update referenced value
-* NO ACTION : No change in referenced value
+* NO ACTION : No change in referenced value (same as RESTRICT)
 * RESTRICT : Forbid changing values
 * SET DEFAULT : Set referenced value to the default value
 * SET NULL : Set referenced value to NULL
