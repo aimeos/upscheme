@@ -1279,13 +1279,15 @@ column types and options, refer to the [columns section](#columns).
 The database object returned by `$this->db()` can rename tables when using the [`renameTable()`](#dbrenametable) method:
 
 ```php
-$db = $this->db();
-
 // Renames the table "users" to "accounts"
-$db->renameTable( 'users', 'account' );
+$this->db()->renameTable( 'users', 'account' );
+```
 
+It's also possible to rename several tables at once if you pass an associative array which old and new names as key/value pairs:
+
+```php
 // Renames the table "users" to "accounts" and "blog" to "posts"
-$db->renameTable( ['users' => 'account', 'blog' => 'posts'] );
+$this->db()->renameTable( ['users' => 'account', 'blog' => 'posts'] );
 ```
 
 ### Dropping tables
