@@ -215,7 +215,7 @@ class DB
 			}
 		}
 
-		return $this->up();
+		return $this;
 	}
 
 
