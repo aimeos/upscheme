@@ -50,7 +50,10 @@ composer req aimeos/upscheme
   * [Dropping foreign keys](#dropping-foreign-keys)
   * [Foreign key methods](#foreign-key-methods)
 * [Sequences](#sequences)
-  * [Methods](#sequence-methods)
+  * [Adding sequences](#adding-sequences)
+  * [Checking sequence existence](#checking-sequence-existence)
+  * [Dropping sequences](#dropping-sequences)
+  * [Sequence methods](#sequence-methods)
 
 
 ## Why Upscheme
@@ -3476,18 +3479,75 @@ $foreign->up();
 
 ## Sequences
 
-The Sequence scheme object you get by calling `$db->sequence( '<name>' )` in your migration task gives you access to the sequence properties, e.g.:
+### Adding sequences
+
+A few database implementations offer sequences instead of auto-increment/identity
+columns, namely Oracle and PostgreSQL. Sequences are functions which create
+sequentially increasing numbers that are applied to a table column when inserting
+new rows. To create a new sequence named `seq_test` use the [`sequence()`](#dbsequence)
+method:
 
 ```php
-$this->db()->sequence( 'seq_test' )->start( 1000 )->step( 2 );
+$this->db()->sequence( 'seq_test' );
+```
 
-// same as
+To use a different start value and step width than `1`, call the [`start()`](#sequencesstart)
+and [`step()`](#sequencestep) methods:
+
+```php
 $this->db()->sequence( 'seq_test', function( $seq ) {
-	$seq->start( 1000 );
-	$seq->step( 2 );
+	$seq->start( 1000 )->step( 2 );
 } );
 ```
 
+### Checking sequence existence
+
+To check if a sequence already exists, use the [`hasSequence()`](#dbhassequence) method:
+
+```php
+if( $this->db()->hasSequence( 'seq_test' ) ) {
+    // The "seq_test" sequence exists
+}
+```
+
+It's also possible checking for several sequences at once. Then, the
+[`hasSequence()`](#dbhassequence) method will only return TRUE if all sequences exist:
+
+```php
+if( $this->db()->hasSequence( ['seq_id', 'seq_test'] ) ) {
+    // The "seq_id" and "seq_test" sequences exist
+}
+```
+
+In case you need to know the current values of the table options:
+
+```php
+$this->db()->sequence( 'seq_test', function( $seq ) {
+	// returns how many generated numbers are cached
+	$cache = $seq->cache;
+
+	// returns the number the sequence has started from
+	$start = $seq->start;
+
+	// returns the step width for newly generated numbers
+	$step = $seq->step;
+} );
+```
+
+### Dropping sequences
+
+To remove a sequence, use the [`dropSequence()`](#dbdropsequence) method and
+pass the name of the sequence as argument:
+
+```php
+$this->db()->dropSequence( 'seq_id' );
+```
+
+You can also pass several sequence names to drop them at once:
+
+```php
+$this->db()->dropSequence( ['seq_id', 'seq_test'] );
+```
 
 ### Sequence methods
 
