@@ -45,7 +45,10 @@ composer req aimeos/upscheme
   * [Dropping columns](#dropping-columns)
   * [Column methods](#column-methods)
 * [Foreign keys](#foreign-keys)
-  * [Methods](#foreign-key-methods)
+  * [Creating foreign keys](#creating-foreign-keys)
+  * [Checking foreign key existence](#checking-foreign-key-existence)
+  * [Dropping foreign keys](#dropping-foreign-keys)
+  * [Foreign key methods](#foreign-key-methods)
 * [Sequences](#sequences)
   * [Methods](#sequence-methods)
 
@@ -3070,7 +3073,7 @@ $column->up();
 
 
 
-## Foreign key constraints
+## Foreign keys
 
 ### Creating foreign keys
 
