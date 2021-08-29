@@ -59,6 +59,7 @@ composer req aimeos/upscheme
   * [Checking index existence](#checking-index-existence)
   * [Renaming indexes](#renaming-indexes)
   * [Dropping indexes](#dropping-indexes)
+  * [Custom index naming](#custom-index-naming)
 
 
 ## Why Upscheme
@@ -3900,3 +3901,38 @@ $table->dropIndex( ['idx_test_name', 'idx_test_status'] );
 
 In all cases, indexes are only removed if they exist. No error is reported if one
 or more indexes doesn't exist in the table.
+
+### Custom index naming
+
+It's not necessary to pass a custom index name when creating new indexes. Then,
+the index name is generated automatically but their name will consist of a hash
+that is hard to read. Also, you don't know which columns the indexes span from the
+index name.
+
+Upscheme allows you to add your own naming function for indexes which is used if
+not index name is passed to the methods for creating indexes. Before running the
+migrations, register your nameing function using the [`macro()`](#macro)
+method in the table objects:
+
+```php
+use \Aimeos\Upscheme\Schema\Table;
+
+Table::marco( 'nameIndex', function( string $table, array $columns, string $type ) {
+	return $type . '_' . $table . '_' . join( '_', $columns );
+} );
+
+\Aimeos\Upscheme\Up::use( $config, './migrations/' )->up()
+```
+
+For a table "testtable", a column "label" and the type "idx", this will return
+`idx_testtable_label` instead of a hash.
+
+Available index types are:
+
+* idx : Regular and spatial indexes
+* fk : Foreign key index
+* pk : Primary key index
+* unq : Unique index
+
+**Note:** For compatibility to all supported database types, the maximum length
+of the index names must be not longer than 30 characters!
