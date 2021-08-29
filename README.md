@@ -60,6 +60,10 @@ composer req aimeos/upscheme
   * [Renaming indexes](#renaming-indexes)
   * [Dropping indexes](#dropping-indexes)
   * [Custom index naming](#custom-index-naming)
+* [Customizing Upscheme](#customizing-upscheme)
+  * [Adding custom methods](#adding-custom-methods)
+  * [Implementing custom columns](#implementing-custom-columns)
+
 
 
 ## Why Upscheme
@@ -4066,3 +4070,123 @@ Available index types are:
 **Note:** For compatibility to all supported database types, the maximum length
 of the index names must be not longer than 30 characters!
 
+
+
+## Customizing Upscheme
+
+### Adding custom methods
+
+You can add new methods to all Upscheme objects using the `macro()` method. Each
+custom method has access to the class properties and methods of the class it's
+registered for including the Doctrine DBAL objects.
+
+To register a method named `test()` in the DB schema object with two parameters
+`$arg1` and `$arg2` which has access to the same class properties as the DB
+[`__call()](#db__call) method use:
+
+```php
+\Aimeos\Upscheme\Schema\DB::marco( 'test', function( $arg1, $arg2 ) {
+	// $this->conn : Doctrine connection
+	// $this->from : Doctrine start schema
+	// $this->to : Doctrine current schema
+	// $this->up : Upscheme object
+	// return $this or a value
+} );
+
+$db->test( 'key', 'value' );
+```
+
+Registering a method `test()` in the Table schema object with one parameter `$arg1`
+which has access to the same class properties as the Table [`__call()](#table__call)
+method use:
+
+```php
+\Aimeos\Upscheme\Schema\Table::marco( 'test', function( $arg1 ) {
+	// $this->db : Upscheme DB object
+	// $this->table : Doctrine Table object
+	// return $this or a value
+} );
+
+$table->test( 'something' );
+```
+
+Same for a method `test()` in the Column schema object with an optional parameter
+`$value` which has access to the same class properties as the Column
+[`__call()](#column__call) method use:
+
+```php
+\Aimeos\Upscheme\Schema\Column::marco( 'test', function( $value = null ) {
+	// $this->db : Upscheme DB object
+	// $this->table : Upscheme Table object
+	// $this->column : Doctrine Column object
+	// return $this or a value
+} );
+
+$column->test();
+```
+
+To extend the Foreign object for foreign key constraints with a `test()` method
+with no parameter having access to the same class properties as the Foreign
+[`__call()](#foreign__call) method use:
+
+```php
+\Aimeos\Upscheme\Schema\Foreign::marco( 'test', function() {
+	// $this->table : Upscheme Table object
+	// $this->dbaltable : Doctrine Table object
+	// $this->localcol : Array of local column names
+	// $this->fktable : Foreign table name
+	// $this->fkcol : Foreign table column names
+	// $this->name : Foreign key name
+	// $this->opts : Array of foreign key options ("onDelete" and "onUpdate")
+	// return $this or a value
+} );
+
+$foreign->test();
+```
+
+Finally, extending the Sequence object with a `test()` method having no parameters
+and access to the same class properties as the Sequence [`__call()](#sequence__call)
+method use:
+
+```php
+\Aimeos\Upscheme\Schema\Sequence::marco( 'test', function() {
+	// $this->db : Upscheme DB object
+	// $this->sequence : Doctrine Sequence object
+	// return $this or a value
+} );
+
+$sequence->test();
+```
+
+### Implementing custom columns
+
+Instead of calling the [`col()`](#tablecol) method of the Table object with all
+parameters and modifiers each time, you can create your own shortcut methods, e.g.:
+
+```php
+\Aimeos\Upscheme\Schema\Table::marco( 'utinyint', function( string $name ) {
+	return $this->col( $name, 'tinyint' )->unsigned( true );
+} );
+```
+
+It's also possible to create several columns at once if you want to add them to
+several tables:
+
+```php
+\Aimeos\Upscheme\Schema\Table::marco( 'defaults', function() {
+	$this->id();
+	$this->datetime( 'ctime' );
+	$this->datetime( 'mtime' );
+	$this->string( 'editor' );
+	return $this;
+} );
+```
+
+Then, use your custom methods when creating or updating tables:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->defaults();
+	$table->utinyint( 'status' );
+} );
+```
