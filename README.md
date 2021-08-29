@@ -4082,7 +4082,7 @@ registered for including the Doctrine DBAL objects.
 
 To register a method named `test()` in the DB schema object with two parameters
 `$arg1` and `$arg2` which has access to the same class properties as the DB
-[`__call()](#db__call) method use:
+[`__call()`](#db__call) method use:
 
 ```php
 \Aimeos\Upscheme\Schema\DB::marco( 'test', function( $arg1, $arg2 ) {
@@ -4097,7 +4097,7 @@ $db->test( 'key', 'value' );
 ```
 
 Registering a method `test()` in the Table schema object with one parameter `$arg1`
-which has access to the same class properties as the Table [`__call()](#table__call)
+which has access to the same class properties as the Table [`__call()`](#table__call)
 method use:
 
 ```php
@@ -4112,7 +4112,7 @@ $table->test( 'something' );
 
 Same for a method `test()` in the Column schema object with an optional parameter
 `$value` which has access to the same class properties as the Column
-[`__call()](#column__call) method use:
+[`__call()`](#column__call) method use:
 
 ```php
 \Aimeos\Upscheme\Schema\Column::marco( 'test', function( $value = null ) {
@@ -4127,7 +4127,7 @@ $column->test();
 
 To extend the Foreign object for foreign key constraints with a `test()` method
 with no parameter having access to the same class properties as the Foreign
-[`__call()](#foreign__call) method use:
+[`__call()`](#foreign__call) method use:
 
 ```php
 \Aimeos\Upscheme\Schema\Foreign::marco( 'test', function() {
@@ -4145,7 +4145,7 @@ $foreign->test();
 ```
 
 Finally, extending the Sequence object with a `test()` method having no parameters
-and access to the same class properties as the Sequence [`__call()](#sequence__call)
+and access to the same class properties as the Sequence [`__call()`](#sequence__call)
 method use:
 
 ```php
