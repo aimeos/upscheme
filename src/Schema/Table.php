@@ -668,8 +668,9 @@ class Table
 			{
 				if( !$to )
 				{
-					$columns = $this->table->getIndex( $name )->getColumns();
-					$to = $this->nameIndex( $this->name(), $columns, 'idx' );
+					$index = $this->table->getIndex( $name );
+					$type = $index->isPrimary() ? 'pk' : ( $index->isUnique() ? 'unq' : 'idx' );
+					$to = $this->nameIndex( $this->name(), $index->getColumns(), $type );
 				}
 
 				$this->table->renameIndex( $name, $to );
@@ -773,7 +774,7 @@ class Table
 	 * Returns the name that should be used for the index
 	 *
 	 * Available types are:
-	 * - idx: Regular index
+	 * - idx: Regular and spatial indexes
 	 * - fk: Foreign key index
 	 * - pk: Primary key index
 	 * - unq: Unique index

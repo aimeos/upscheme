@@ -2412,7 +2412,7 @@ The available column modifier methods are:
 | [primary('pk_col')](#columnprimary) | Add a primary key to the column, primary key name is optional |
 | [scale(2)](#columnscale) | The exact number of decimal digits used in DECIMAL and FLOAT columns |
 | [seq(true)](#columnseq) | Set INTEGER columns as auto-incrementing if no value was specified |
-| [spatial('spt_col')](#columnspatial) | Add a spatial (geo) index to the column, index name is optional |
+| [spatial('idx_col')](#columnspatial) | Add a spatial (geo) index to the column, index name is optional |
 | [unique('unq_col')](#columnunique) | Add an unique index to the column, index name is optional |
 | [unsigned(true)](#columnunsigned) | Allow unsigned INTEGER values only (MySQL) |
 
@@ -3789,7 +3789,7 @@ $this->db()->table( 'test', function( $table ) {
 
 	// spatial index
 	$table->col( 'location', 'point' )->spatial();
-	$table->col( 'location', 'point' )->spatial( 'spt_test_location' );
+	$table->col( 'location', 'point' )->spatial( 'idx_test_location' );
 } );
 ```
 
