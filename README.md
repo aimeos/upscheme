@@ -54,6 +54,11 @@ composer req aimeos/upscheme
   * [Checking sequence existence](#checking-sequence-existence)
   * [Dropping sequences](#dropping-sequences)
   * [Sequence methods](#sequence-methods)
+* [Indexes](#indexes)
+  * [Adding indexes](#adding-indexes)
+  * [Checking index existence](#checking-index-existence)
+  * [Renaming indexes](#renaming-indexes)
+  * [Dropping indexes](#dropping-indexes)
 
 
 ## Why Upscheme
@@ -3730,3 +3735,168 @@ public function up() : self
 ```php
 $sequence->up();
 ```
+
+
+
+## Indexes
+
+Indexes speed up database queries and the time a query needs can drop from several
+minutes to milliseconds if used correctly. There are several index types available:
+
+* primary : All values must be unique, no NULL values and only one index per table is allowed
+* unique : Values must be unique but NULL values are allowed (and more than once)
+* index : Standard index with no restrictions
+* spatial : Fast lookup in coordinates systems like geographic maps
+
+All indexes can consist of one or more columns but the order of the columns has a
+great impact if indexes are used for a query or not.
+
+### Adding indexes
+
+All indexes are bound to the table which contains the columns the index covers. The
+simplest way to create an index over a single column is to use the [`index()`](#colindex)
+method of the column object:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'label' )->index();
+} );
+```
+
+The second parameter of the [`index()`](#colindex) method allows you to set
+a custom name for the index:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->string( 'label' )->index( 'idx_test_label' );
+} );
+```
+
+**Note:** For a maximum compatibility between different database types, the
+length of the index names should be 30 characters or less.
+
+The same is possible for primary, unique and spatial indexes:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	// primary key
+	$table->int( 'id' )->primary();
+	$table->int( 'id' )->primary( 'pk_test_id' ); // ignored by MySQL, MariaDB, etc.
+
+	// unique key
+	$table->string( 'code' )->unique();
+	$table->string( 'code' )->unique( 'unq_test_code' );
+
+	// spatial index
+	$table->col( 'location', 'point' )->spatial();
+	$table->col( 'location', 'point' )->spatial( 'spt_test_location' );
+} );
+```
+
+For multi-column indexes, the [`primary()`](#tableprimary), [`unique()`](#tableunique)
+and [`index()`](#tableindex) methods are available in the table object:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	// primary composite index
+	$table->primary( ['siteid', 'code'] );
+
+	// unique composite index
+	$table->unique( ['parentid', 'type'] );
+
+	// regular composite index
+	$table->index( ['label', 'status'] );
+} );
+```
+
+Spatial indexes can NOT span multiple columns but creating them is also possible
+using the [`spatial()`](#tablespatial) method of the table object:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->spatial( 'location' );
+} );
+```
+
+### Checking index existence
+
+To check if an index already exists, use the [`hasIndex()`](#dbhasindex) method:
+
+```php
+if( $this->db()->hasIndex( 'users', 'idx_users_name' ) ) {
+    // The "idx_users_name" index in the "users" table exists
+}
+```
+
+You can check for several indexes at once too. In that case, the [`hasIndex()`](#dbhasindex)
+method will only return `TRUE` if all indexes exist:
+
+```php
+if( $this->db()->hasIndex( 'users', ['idx_users_name', 'idx_users_status'] ) ) {
+    // The "idx_users_name" and "idx_users_status" indexes in the "users" table exists
+}
+```
+
+If you already have a table object, you can use [`hasIndex()`](#tablehasindex) as well:
+
+```php
+if( $table->hasIndex( 'idx_users_name' ) ) {
+    // The "idx_users_name" index in the table exists
+}
+
+if( $table->hasIndex( ['idx_users_name', 'idx_users_status'] ) ) {
+    // The "idx_users_name" and "idx_users_status" indexes in the table exists
+}
+```
+
+### Renaming indexes
+
+If a table object is already available, you can use its [`renameIndex()`](#tablerenameindex)
+method to rename one or more indexes:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	$table->renameIndex( 'idx_test_label', 'idx_test_name' );
+	// or multiple indexes
+	$table->renameIndex( ['idx_test_label' => 'idx_test_name', 'idx_text_stat' => 'idx_test_status'] );
+} );
+```
+
+It's also possible to rename indexes directly, using the [`renameIndex()`](#dbrenameindex)
+method of the DB schema:
+
+```php
+// single index
+$this->db()->renameIndex( 'testtable', 'idx_test_label', 'idx_test_name' );
+
+// multiple indexes
+$this->db()->renameIndex( 'testtable', ['idx_test_label' => 'idx_test_name', 'idx_text_stat' => 'idx_test_status'] );
+```
+
+### Dropping indexes
+
+To drop indexes, use the [`dropIndex()`](#dbdropindex) method from the DB schema object:
+
+```php
+$this->db()->dropIndex( 'users', 'idx_test_name' );
+```
+
+You can drop several indexes at once if you pass the name of all indexes you want
+to drop as array:
+
+```php
+$this->db()->dropIndex( 'users', ['idx_test_name', 'idx_test_status'] );
+```
+
+If you already have a table object, you can use [`dropIndex()`](#tabledropindex) too:
+
+```php
+// single index
+$table->dropIndex( 'idx_test_name' );
+
+// multiple indexes
+$table->dropIndex( ['idx_test_name', 'idx_test_status'] );
+```
+
+In all cases, indexes are only removed if they exist. No error is reported if one
+or more indexes doesn't exist in the table.
