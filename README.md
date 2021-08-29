@@ -373,7 +373,7 @@ if( $db->hasTable( 'users' ) ) {
     // The "users" table exists
 }
 
-if( $db->hasColumn ( 'users', 'name' ) ) {
+if( $db->hasColumn( 'users', 'name' ) ) {
     // The "name" column in the "users" table exists
 }
 
@@ -404,7 +404,7 @@ $db->renameTable( 'users', 'account' );
 $db->renameColumn( 'users', 'label', 'name' );
 
 // Renames the column "idx_label" to "idx_name" in the "users" table
-$db->renameIndex ( 'users', 'idx_label', 'idx_name' );
+$db->renameIndex( 'users', 'idx_label', 'idx_name' );
 ```
 
 ### Removing objects
@@ -421,7 +421,7 @@ $db->dropForeign( 'users_address', 'fk_users_id' );
 $db->dropIndex( 'users', 'idx_name' );
 
 // Drops the "name" column from the "users" table
-$db->dropColumn ( 'users', 'name' );
+$db->dropColumn( 'users', 'name' );
 
 // Drops the "seq_users" sequence
 $db->dropSequence( 'seq_users' );
@@ -1142,7 +1142,9 @@ Several conditions passed in the second parameter are combined by "AND". If you 
 
 ### Creating tables
 
-The table scheme object you get by calling `$db->table( '<table name>' )` in your migration task gives you full access to the table and you can add, change or remove columns, indexes and foreign keys, e.g.:
+The table scheme object you get by calling [`table()`](#dbtable) in your migration
+task gives you full access to the table and you can add, change or remove columns,
+indexes and foreign keys, e.g.:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -1152,7 +1154,8 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-Besides the [`col()`](#tablecol) method which can add columns of arbitrary types, there are some shortcut methods for types available in all database server implementations:
+Besides the [`col()`](#tablecol) method which can add columns of arbitrary types,
+there are some shortcut methods for types available in all database server implementations:
 
 | Column type | Description |
 |-------------|-------------|
@@ -2320,11 +2323,10 @@ $table->up();
 
 ### Adding columns
 
-The column schema object you get by calling `$table->col( '<name>', '<type>' )`
-in your migration task gives you access to all column properties. There are also
-shortcuts available for column types supported by all databases. Each column can
-be changed by one or more modifier methods and you can also add indexes to single
-columns, e.g.:
+The column schema object you get by calling [`col()`](#tablecol) in your migration
+task gives you access to all column properties. There are also shortcuts available
+for column types supported by all databases. Each column can be changed by one or
+more modifier methods and you can also add indexes to single columns, e.g.:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -2431,7 +2433,7 @@ $this->db()->table( 'test', function( $table ) {
 To check if a column already exists, use the [`hasColumn()`](#dbhascolumn) method:
 
 ```php
-if( $this->db()->hasColumn ( 'users', 'name' ) ) {
+if( $this->db()->hasColumn( 'users', 'name' ) ) {
     // The "name" column in the "users" table exists
 }
 ```
@@ -2440,7 +2442,7 @@ You can check for several columns at once too. In that case, the [`hasColumn()`]
 method will only return `TRUE` if all columns exist:
 
 ```php
-if( $this->db()->hasColumn ( 'users', ['name', 'status'] ) ) {
+if( $this->db()->hasColumn( 'users', ['name', 'status'] ) ) {
     // The "name" and "status" columns in the "users" table exists
 }
 ```
@@ -2448,11 +2450,11 @@ if( $this->db()->hasColumn ( 'users', ['name', 'status'] ) ) {
 If you already have a table object, you can use [`hasColumn()`](#tablehascolumn) as well:
 
 ```php
-if( $table->hasColumn ( 'name' ) ) {
+if( $table->hasColumn( 'name' ) ) {
     // The "name" column in the table exists
 }
 
-if( $table->hasColumn ( ['name', 'status'] ) ) {
+if( $table->hasColumn( ['name', 'status'] ) ) {
     // The "name" and "status" columns in the table exists
 }
 ```
@@ -2543,8 +2545,10 @@ method to rename one or more columns:
 
 ```php
 $this->db()->table( 'testtable', function( $table ) {
+	// single column
 	$table->renameColumn( 'label', 'name' );
-	// or multiple columns
+
+	// multiple columns
 	$table->renameColumn( ['label' => 'name', 'stat' => 'status'] );
 } );
 ```
@@ -2553,14 +2557,16 @@ It's also possible to rename columns directly, using the [`renameColumn()`](#dbr
 method of the DB schema:
 
 ```php
+// single column
 $this->db()->renameColumn( 'testtable', 'label', 'name' );
-// or multiple columns
+
+// multiple columns
 $this->db()->renameColumn( 'testtable', ['label' => 'name', 'stat' => 'status'] );
 ```
 
 ### Dropping columns
 
-To drop columns , use the [`dropColumn()`](#dbdropcolumn) method from the DB schema object:
+To drop columns, use the [`dropColumn()`](#dbdropcolumn) method from the DB schema object:
 
 ```php
 $this->db()->dropColumn( 'users', 'name' );
@@ -2576,11 +2582,14 @@ $this->db()->dropColumn( 'users', ['name', 'status'] );
 If you already have a table object, you can use [`dropColumn()`](#tabledropcolumn) too:
 
 ```php
+// single column
 $table->dropColumn( 'name' );
+
+// multiple columns
 $table->dropColumn( ['name', 'status'] );
 ```
 
-In all cases, columns are only removed if they exist and no error is reported if one
+In all cases, columns are only removed if they exist. No error is reported if one
 or more columns doesn't exist in the table.
 
 ### Column methods
@@ -3170,7 +3179,7 @@ Possible values for both methods are:
 To check if a foreign key already exists, use the [`hasForeign()`](#dbhasforeign) method:
 
 ```php
-if( $this->db()->hasForeign ( 'users_address', 'fk_usrad_parentid' ) ) {
+if( $this->db()->hasForeign( 'users_address', 'fk_usrad_parentid' ) ) {
     // The "fk_usrad_parentid" foreign key in the "users_address" table exists
 }
 ```
@@ -3180,7 +3189,7 @@ It's also possible checking for several foreign key constraints at once. Then, t
 exist in the tables passed as first argument:
 
 ```php
-if( $this->db()->hasForeign ( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
+if( $this->db()->hasForeign( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
     // The "fk_usrad_parentid" and "fk_usrad_siteid" foreign keys exist in the "users_address" table
 }
 ```
@@ -3190,13 +3199,13 @@ table can be used instead:
 
 ```php
 $this->db()->table( 'users_address', function( $table ) {
-	$table->hasForeign ( 'fk_usrad_parentid' ) ) {
+	$table->hasForeign( 'fk_usrad_parentid' ) ) {
 	    // The "fk_usrad_parentid" foreign key in the "users_address" table exists
 	}
 } );
 
 $this->db()->table( 'users_address', function( $table ) {
-	$table->hasForeign ( ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
+	$table->hasForeign( ['fk_usrad_parentid', 'fk_usrad_siteid'] ) ) {
 	    // The "fk_usrad_parentid" and "fk_usrad_siteid" foreign keys exist in the "users_address" table
 	}
 } );
@@ -3225,13 +3234,13 @@ To remove a foreign key constraint from a table, use the [`dropForeign()`](#dbdr
 method and pass the name of the table and foreign key name as arguments:
 
 ```php
-$this->db()->dropForeign ( 'users_address', 'fk_usrad_parentid' );
+$this->db()->dropForeign( 'users_address', 'fk_usrad_parentid' );
 ```
 
 You can also pass several foreign key names to drop them at once:
 
 ```php
-$this->db()->dropForeign ( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] );
+$this->db()->dropForeign( 'users_address', ['fk_usrad_parentid', 'fk_usrad_siteid'] );
 ```
 
 Within the anonymous function passed to the [`table()`](#dbtable) method, you
@@ -3239,11 +3248,11 @@ can also use the [`dropForeign()`](#tabledropforeign) method:
 
 ```php
 $this->db()->table( 'users_address', function( $table ) {
-	$table->dropForeign ( 'fk_usrad_parentid' );
+	$table->dropForeign( 'fk_usrad_parentid' );
 } );
 
 $this->db()->table( 'users_address', function( $table ) {
-	$table->dropForeign ( ['fk_usrad_parentid', 'fk_usrad_siteid'] );
+	$table->dropForeign( ['fk_usrad_parentid', 'fk_usrad_siteid'] );
 } );
 ```
 
