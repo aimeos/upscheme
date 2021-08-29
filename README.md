@@ -64,13 +64,23 @@ composer req aimeos/upscheme
 
 ## Why Upscheme
 
-Migrations are like version control for your database. They allow you to record all changes and share them with others so they get the exact same state in their installation.
+Migrations are like version control for your database. They allow you to record
+all changes and share them with others so they get the exact same state in their
+installation.
 
-For upgrading relational database schemas, two packages are currently used most often: Doctrine DBAL and Doctrine migrations. While Doctrine DBAL does a good job in abstracting the differences of several database implementations, it's API requires writing a lot of code. Doctrine migrations on the other site has some drawbacks which make it hard to use in all applications that support 3rd party extensions.
+For upgrading relational database schemas, two packages are currently used most
+often: Doctrine DBAL and Doctrine migrations. While Doctrine DBAL does a good job
+in abstracting the differences of several database implementations, it's API
+requires writing a lot of code. Doctrine migrations on the other site has some
+drawbacks which make it hard to use in all applications that support 3rd party
+extensions.
 
 ### Doctrine DBAL drawbacks
 
-The API of DBAL is very verbose and you need to write lots of code even for simple things. Upscheme uses Doctrine DBAL to offer an easy to use API for upgrading the database schema of your application with minimal code. Let's compare some example code you have to write for DBAL and for Upscheme in a migration.
+The API of DBAL is very verbose and you need to write lots of code even for simple
+things. Upscheme uses Doctrine DBAL to offer an easy to use API for upgrading the
+database schema of your application with minimal code. Let's compare some example
+code you have to write for DBAL and for Upscheme in a migration.
 
 #### DBAL
 
@@ -133,18 +143,36 @@ $this->db()->table( 'test', function( $t ) {
 
 ### Doctrine Migration drawbacks
 
-Doctrine Migration relies on migration classes that are named by the time they have been created to ensure a certain order. Furthermore, it stores which migrations has been executed in a table of your database. There are two major problems that arise from that.
+Doctrine Migration relies on migration classes that are named by the time they
+have been created to ensure a certain order. Furthermore, it stores which migrations
+has been executed in a table of your database. There are two major problems that
+arise from that.
 
-If your application supports 3rd party extensions, these extensions are likely to add columns to existing tables and migrate data themselves. As there's no way to define dependencies between migrations, it can get almost impossible to run migrations in an application with several 3rd party extensions without conflicts. To avoid that, Upscheme offers easy to use `before()` and `after()` methods in each migration task where the tasks can define its dependencies to other tasks.
+If your application supports 3rd party extensions, these extensions are likely to
+add columns to existing tables and migrate data themselves. As there's no way to
+define dependencies between migrations, it can get almost impossible to run
+migrations in an application with several 3rd party extensions without conflicts.
+To avoid that, Upscheme offers easy to use `before()` and `after()` methods in
+each migration task where the tasks can define its dependencies to other tasks.
 
-Because Doctrine Migrations uses a database table to record which migration already has been executed, these records can get easily out of sync in case of problems. Contrary, Upscheme only relies on the actual schema so it's possible to upgrade from any state, regardless of what has happend before.
+Because Doctrine Migrations uses a database table to record which migration
+already has been executed, these records can get easily out of sync in case of
+problems. Contrary, Upscheme only relies on the actual schema so it's possible
+to upgrade from any state, regardless of what has happend before.
 
-Doctrine Migrations also supports the reverse operations in `down()` methods so you can roll back migrations which Upscheme does not. Experience has shown that it's often impossible to roll back migrations, e.g. after adding a new colum, migrating the data of an existing column and dropping the old column afterwards. If the migration of the data was lossy, you can't recreate the same state in a `down()` method. The same is the case if you've dropped a table. Thus, Upscheme only offers scheme upgrading but no downgrading to avoid implicit data loss.
+Doctrine Migrations also supports the reverse operations in `down()` methods so
+you can roll back migrations which Upscheme does not. Experience has shown that
+it's often impossible to roll back migrations, e.g. after adding a new colum,
+migrating the data of an existing column and dropping the old column afterwards.
+If the migration of the data was lossy, you can't recreate the same state in a
+`down()` method. The same is the case if you've dropped a table. Thus, Upscheme
+only offers scheme upgrading but no downgrading to avoid implicit data loss.
 
 
 ## Integrating Upscheme
 
-After you've installed the `aimeos/upscheme` package using composer, you can use the `Up` class to execute your migration tasks:
+After you've installed the `aimeos/upscheme` package using composer, you can use
+the `Up` class to execute your migration tasks:
 
 ```php
 $config = [
@@ -158,7 +186,9 @@ $config = [
 \Aimeos\Upscheme\Up::use( $config, 'src/migrations' )->up();
 ```
 
-The `Up::use()` method requires two parameters: The database configuration and the path(s) to the migration tasks. For the config, the array keys and the values for `driver` must be supported by Doctrine DBAL. Available drivers are:
+The `Up::use()` method requires two parameters: The database configuration and
+the path(s) to the migration tasks. For the config, the array keys and the values
+for *driver* must be supported by Doctrine DBAL. Available drivers are:
 
 - pdo_mysql
 - pdo_sqlite
@@ -172,7 +202,10 @@ The `Up::use()` method requires two parameters: The database configuration and t
 - sqlanywhere
 - sqlsrv
 
-If you didn't use Doctrine DBAL before, your database configuration may have a different structure and/or use different values for the database type. Upscheme allows you to register a custom method that transforms your configration into valid DBAL settings, e.g.:
+If you didn't use Doctrine DBAL before, your database configuration may have a
+different structure and/or use different values for the database type. Upscheme
+allows you to register a custom method that transforms your configration into
+valid DBAL settings, e.g.:
 
 ```php
 \Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
@@ -186,7 +219,8 @@ If you didn't use Doctrine DBAL before, your database configuration may have a d
 } );
 ```
 
-Upscheme also supports several database connections which you can distinguish by their key name:
+Upscheme also supports several database connections which you can distinguish
+by their key name:
 
 ```php
 $config = [
@@ -223,7 +257,8 @@ To enable (debugging) output, use the verbose() method:
 
 ## Writing migrations
 
-A migration task only requires implementing the `up()` method and must be stored in one of the directories passed to the `Up` class:
+A migration task only requires implementing the `up()` method and must be stored
+in one of the directories passed to the `Up` class:
 
 ```php
 <?php
@@ -245,13 +280,18 @@ class TestTable extends Base
 }
 ```
 
-The file your class is stored in must have the same name (case sensitive) as the class itself and the `.php` suffix, e.g:
+The file your class is stored in must have the same name (case sensitive) as
+the class itself and the `.php` suffix, e.g:
 
 ```
 class TestTable -> TestTable.php
 ```
 
-There's no strict convention how to name migration task classes. You can either name them by what they do (e.g. "CreateTestTable"), what they operate on (e.g. "TestTable") or even use a timestamp (e.g. "20201231_Test"). If the tasks doesn't contain dependencies, they are sorted and executed in in alphabethical order and the sorting would be:
+There's no strict convention how to name migration task classes. You can either
+name them by what they do (e.g. "CreateTestTable"), what they operate on (e.g.
+"TestTable") or even use a timestamp (e.g. "20201231_Test"). If the tasks doesn't
+contain dependencies, they are sorted and executed in in alphabethical order and
+the sorting would be:
 
 ```
 20201231_Test
@@ -259,11 +299,16 @@ CreateTestTable
 TestTable
 ```
 
-In your PHP file, always include the `namespace` statement first. The `use` statement is optional and only needed as shortcut for the type hint for the closure function argument. Your class also has to extend from the "Base" class or implement the ["Iface" interface](https://github.com/aimeos/upscheme/blob/master/src/Task/Iface.php).
+In your PHP file, always include the `namespace` statement first. The `use`
+statement is optional and only needed as shortcut for the type hint for the
+closure function argument. Your class also has to extend from the "Base" task
+class or implement the ["Iface" task interface](https://github.com/aimeos/upscheme/blob/master/src/Task/Iface.php).
 
 ### Dependencies
 
-To specify dependencies to other migration tasks, use the `after()` and `before()` methods. Your task is executed after the tasks returned by `after()` and before the tasks returned by `before()`:
+To specify dependencies to other migration tasks, use the `after()` and `before()`
+methods. Your task is executed after the tasks returned by `after()` and before
+the tasks returned by `before()`:
 
 ```php
 class TestTable extends Base
@@ -296,7 +341,9 @@ $this->info( 'more verbose message', 'vv' );
 $this->info( 'very verbose debug message', 'vvv' );
 ```
 
-The second parameter is the verbosity level and none or `v` are standard messages, `vv` are messages that are only displayed if more verbosity is wanted while `vvv` is for debugging messages. There's also a third parameter for indenting the messages:
+The second parameter is the verbosity level and none or `v` are standard messages,
+`vv` are messages that are only displayed if more verbosity is wanted while `vvv` is
+for debugging messages. There's also a third parameter for indenting the messages:
 
 ```php
 $this->info( 'some message' );
@@ -320,7 +367,9 @@ Prerequisite is that the `verbose()` method of the `Up` class has been called be
 
 ### Schemas
 
-In the `up()` method, you have access to the database schema using the `db()` method. In case you've passed more than one database configuration to `Up::use()`, you can access the different schemas by their configuration key:
+In the `up()` method, you have access to the database schema using the `db()`
+method. In case you've passed more than one database configuration to `Up::use()`,
+you can access the different schemas by their configuration key:
 
 ```php
 // $config = ['db' => [...], 'temp' => [...]];
@@ -331,11 +380,22 @@ $this->db( 'db' );
 $this->db( 'temp' );
 ```
 
-If you pass no config key or one that doesn't exist, the first configuration is returned ("db" in this case). By using the available methods of the database schema object, you can add, update or drop tables, columns, indexes and other database objects. Also, you can use [insert()](#dbinsert), [select()](#dbselect), [update()](#dbupdate), [delete()](#dbdelete) and [stmt()](#dbstmt) to manipulate the records of the tables.
+If you pass no config key or one that doesn't exist, the first configuration is
+returned ("db" in this case). By using the available methods of the database schema
+object, you can add, update or drop tables, columns, indexes and other database
+objects. Also, you can use [`insert()`](#dbinsert), [`select()`](#dbselect),
+[`update()`](#dbupdate), [`delete()`](#dbdelete) and [`stmt()`](#dbstmt) to
+manipulate the records of the tables.
 
-After each migration task, the schema updates made in the task are automatically applied to the database. If you need to persist a change immediately because you want to insert data, call `$this->db()->up()` yourself. The `up()` method is also available in any table, sequence, and column object so you can call `up()` everywhere.
+After each migration task, the schema updates made in the task are automatically
+applied to the database. If you need to persist a change immediately because you
+want to insert data, call `$this->db()->up()` yourself. The `up()` method is also
+available in any table, sequence, and column object so you can call `up()`
+everywhere.
 
-In cases you need two different database connections because you want to execute SELECT and INSERT/UPDATE/DELETE statements at the same time, pass `true` as second parameter to `db()` to get the database schema including a new connection:
+In cases you need two different database connections because you want to execute
+SELECT and INSERT/UPDATE/DELETE statements at the same time, pass TRUE as second
+parameter to `db()` to get the database schema including a new connection:
 
 ```php
 $db1 = $this->db();
@@ -348,7 +408,10 @@ foreach( $db1->select( 'users', ['status' => false] ) as $row ) {
 $db2->delete( 'users', ['status' => false] );
 ```
 
-All schema changes made are applied to the database before the schema with the new connection is returned. To avoid database connections to pile up until the database server rejects new connections, always calll `close()` for new connections created by `db( '<name>', true )`:
+All schema changes made are applied to the database before the schema with the
+new connection is returned. To avoid database connections to pile up until the
+database server rejects new connections, always calll [`close()`](#dbclose) for
+new connections created by `db( '<name>', true )`:
 
 ```php
 $db2->close();
@@ -359,18 +422,23 @@ $db2->close();
 
 ### Accessing objects
 
-You get the database schema object in your task by calling `$this->db()` as described in the [schema section](#schemas). It gives you full access to the database schema including all tables, sequences and other schema objects:
+You get the database schema object in your task by calling `$this->db()` as
+described in the [schema section](#schemas). It gives you full access to the
+database schema including all tables, sequences and other schema objects:
 
 ```php
 $table = $this->db()->table( 'users' );
 $seq = $this->db()->sequence( 'seq_users' );
 ```
 
-If the table or seqence doesn't exist, it will be created. Otherwise, the existing table or sequence object is returned. In both cases, you can modify the objects afterwards and add e.g. new columns to the table.
+If the table or seqence doesn't exist, it will be created. Otherwise, the existing
+table or sequence object is returned. In both cases, you can modify the objects
+afterwards and add e.g. new columns to the table.
 
 ### Checking existence
 
-You can test for tables, columns, indexes, foreign keys and sequences using the database schema returned by `$this->db()`:
+You can test for tables, columns, indexes, foreign keys and sequences using the
+database schema returned by `$this->db()`:
 
 ```php
 $db = $this->db();
@@ -398,7 +466,9 @@ if( $db->hasSequence( 'seq_users' ) ) {
 
 ### Renaming objects
 
-The database object returned by `$this->db()` offers the possibility to rename tables, columns and indexes using the [`renameTable()`](#dbrenametable), [`renameColumn()`](#dbrenamecolumn) and [`renameIndex()`](#dbrenameindex):
+The database object returned by `$this->db()` offers the possibility to rename
+tables, columns and indexes using the [`renameTable()`](#dbrenametable),
+[`renameColumn()`](#dbrenamecolumn) and [`renameIndex()`](#dbrenameindex):
 
 ```php
 $db = $this->db();
@@ -415,7 +485,8 @@ $db->renameIndex( 'users', 'idx_label', 'idx_name' );
 
 ### Removing objects
 
-The database object returned by `$this->db()` also has methods for dropping tables, columns, indexes, foreign keys and sequences:
+The database object returned by `$this->db()` also has methods for dropping tables,
+columns, indexes, foreign keys and sequences:
 
 ```php
 $db = $this->db();
@@ -436,11 +507,17 @@ $db->dropSequence( 'seq_users' );
 $db->dropTable( 'users' );
 ```
 
-If the table, column, index, foreign key or sequence doesn't exist, it is silently ignored. For cases where you need to know if they exist, use the [hasTable()](#dbhastable), [hasColumn()](#dbhascolumn), [hasIndex()](#dbhasindex), [hasForeign()](#dbhasforeign) and [hasSeqence()](#dbhassequence) methods before like described in the ["Checking for existence"](#checking-for-existence) section.
+If the table, column, index, foreign key or sequence doesn't exist, it is silently
+ignored. For cases where you need to know if they exist, use the
+[`hasTable()`](#dbhastable), [`hasColumn()`](#dbhascolumn), [`hasIndex()`](#dbhasindex),
+[`hasForeign()`](#dbhasforeign) and [`hasSeqence()`](#dbhassequence) methods before
+like described in the ["Checking for existence"](#checking-for-existence) section.
 
 ### Query and modify table rows
 
-The [insert()](#dbinsert), [select()](#dbselect), [update()](#dbupdate) and [delete()](#dbdelete) methods are an easy way to add, retrieve, modify and remove rows in any table:
+The [`insert()`](#dbinsert), [`select()`](#dbselect), [`update()`](#dbupdate) and
+[`delete()`](#dbdelete) methods are an easy way to add, retrieve, modify and
+remove rows in any table:
 
 ```php
 $db1 = $this->db();
@@ -456,9 +533,15 @@ $db2->delete( 'newusers', ['status' => false] );
 $db2->close();
 ```
 
-If you use `select()` simultaniously with `insert()`, `update()` or `delete()`, you must create a second database connection because the `select()` statement will return rows while you send new commands to the database server. This only works on separate connections, not on the same.
+If you use [`select()`](#dbselect) simultaniously with [`insert()`](#dbinsert),
+[`update()`](#dbupdate) or [`delete()`](#dbdelete), you must create a second
+database connection because the [`select()`](#dbselect) statement will return
+rows while you send new commands to the database server. This only works on
+separate connections, not on the same.
 
-You can only pass simple key/value pairs for conditions to the methods which are combined by AND. If you need more complex queries, use the [stmt()](#dbstmt) instead:
+You can only pass simple key/value pairs for conditions to the methods which are
+combined by AND. If you need more complex queries, use the [`stmt()`](#dbstmt)
+instead:
 
 ```php
 $db = $this->db();
@@ -478,11 +561,18 @@ $db->stmt()->update( 'users' )
 	->setParameters( [true, false] );
 ```
 
-The `stmt()` method returns a `Doctrine\DBAL\Query\QueryBuilder` object which enables you to build more advanced statement. Please have a look into the [Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html) documentation for more details.
+The [`stmt()`](#dbstmt) method returns a `Doctrine\DBAL\Query\QueryBuilder` object
+which enables you to build more advanced statement. Please have a look into the
+[Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html)
+documentation for more details.
 
 ### Executing custom SQL
 
-Doctrine only supports a common subset of SQL statements and not all possibilities the database vendors have implemented. To remove that limit, Upscheme offers the [for()](#dbfor) method to execute custom SQL statements not supported by Doctrine DBAL. The method will execute the statement only for the database platform or platforms named in the first parameter:
+Doctrine only supports a common subset of SQL statements and not all possibilities
+the database vendors have implemented. To remove that limit, Upscheme offers the
+[`for()`](#dbfor) method to execute custom SQL statements not supported by
+Doctrine DBAL. The method will execute the statement only for the database platform
+or platforms named in the first parameter:
 
 ```php
 $db = $this->db();
@@ -492,7 +582,8 @@ if( !$db->hasIndex( 'product', 'idx_text' ) ) {
 }
 ```
 
-This is especially useful for creating special types of indexes where the syntax differs between the database implementations.
+This is especially useful for creating special types of indexes where the syntax
+differs between the database implementations.
 
 ### Database methods
 
@@ -543,7 +634,8 @@ public function __call( string $method, array $args )
 
 **Examples:**
 
-You can register custom methods that have access to the class properties of the Upscheme DB object:
+You can register custom methods that have access to the class properties of the
+Upscheme DB object:
 
 ```php
 \Aimeos\Upscheme\Schema\DB::macro( 'hasFkIndexes', function( $val ) {
@@ -567,7 +659,8 @@ Available class properties are:
 `$this->up`
 : Upscheme object
 
-Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Schema.php) method directly, e.g.:
+Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Schema.php)
+method directly, e.g.:
 
 ```php
 $db->hasExplicitForeignKeyIndexes();
@@ -582,7 +675,9 @@ Closes the database connection
 public function close()
 ```
 
-Call `close()` only for DB schema objects created with `$this->db( '...', true )`. Otherwise, you will close the main connection and DBAL has to reconnect to the server which will degrade performance!
+Call `close()` only for DB schema objects created with `$this->db( '...', true )`.
+Otherwise, you will close the main connection and DBAL has to reconnect to the
+server which will degrade performance!
 
 **Examples:**
 
@@ -616,7 +711,8 @@ $db->delete( 'test', ['status' => false, 'type' => 'old'] );
 $db->delete( 'test' );
 ```
 
-Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+Several conditions passed in the second parameter are combined by "AND". If you
+need more complex statements, use the [`stmt()`](#dbstmt) method instead.
 
 
 #### DB::dropColumn()
@@ -660,7 +756,8 @@ $db->dropForeign( 'test', 'fk_old' );
 $db->dropForeign( 'test', ['fk_old', 'fk_old2'] );
 ```
 
-If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored.
+If the foreign key constraint or one of the constraints doesn't exist, it will be
+silently ignored.
 
 
 #### DB::dropIndex()
@@ -714,7 +811,7 @@ Drops the table given by its name if it exists
 public function dropTable( $name ) : self
 ```
 
-* @param array&#124;string $name Name of the table or tables
+* @param array&#124;string `$name` Name of the table or tables
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -997,7 +1094,8 @@ $db->select( 'test', ['status' => false, 'type' => 'old'] );
 $db->select( 'test' );
 ```
 
-Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+Several conditions passed in the second parameter are combined by "AND". If you
+need more complex statements, use the [`stmt()`](#dbstmt) method instead.
 
 
 #### DB::sequence()
@@ -1012,7 +1110,8 @@ public function sequence( string $name, \Closure $fcn = null ) : Sequence
 * @param \Closure&#124;null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 
-If the sequence doesn't exist yet, it will be created. Passing a closure to modify the sequence will also persist the changes in the database automatically.
+If the sequence doesn't exist yet, it will be created. Passing a closure to modify
+the sequence will also persist the changes in the database automatically.
 
 **Examples:**
 
@@ -1043,7 +1142,8 @@ $db->stmt()->select( 'id', 'label' )->from( 'test' );
 $db->stmt()->update( 'test' )->set( 'status', '?' )->setParameter( 0, true );
 ```
 
-For more details about the available Doctrine QueryBuilder methods, please have a look at the [Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#building-a-query).
+For more details about the available Doctrine QueryBuilder methods, please have
+a look at the [Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#building-a-query).
 
 
 #### DB::table()
@@ -1058,7 +1158,8 @@ public function table( string $name, \Closure $fcn = null ) : Table
 * @param \Closure&#124;null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
 * @return \Aimeos\Upscheme\Schema\Table Table object
 
-If the table doesn't exist yet, it will be created. Passing a closure to modify the table will also persist the changes in the database automatically.
+If the table doesn't exist yet, it will be created. Passing a closure to modify
+the table will also persist the changes in the database automatically.
 
 **Examples:**
 
@@ -1140,7 +1241,8 @@ $db->update( 'test', ['status' => true] );
 $db->update( 'test', ['status' => true], ['status' => false, 'type' => 'new'] );
 ```
 
-Several conditions passed in the second parameter are combined by "AND". If you need more complex statements, use the [stmt()](#DB::stmt()) method instead.
+Several conditions passed in the second parameter are combined by "AND". If you
+need more complex statements, use the [`stmt()`](#dbstmt) method instead.
 
 
 
@@ -1274,7 +1376,7 @@ if( $this->db()->hasTable( ['users', 'addresses'] ) ) {
 }
 ```
 
-The [`hasTable()`](#dbhastable) method will only return `TRUE` if all tables exist.
+The [`hasTable()`](#dbhastable) method will only return TRUE if all tables exist.
 
 ### Changing tables
 
@@ -1308,14 +1410,16 @@ column types and options, refer to the [columns section](#columns).
 
 ### Renaming tables
 
-The database object returned by `$this->db()` can rename tables when using the [`renameTable()`](#dbrenametable) method:
+The database object returned by `$this->db()` can rename tables when using the
+[`renameTable()`](#dbrenametable) method:
 
 ```php
 // Renames the table "users" to "accounts"
 $this->db()->renameTable( 'users', 'account' );
 ```
 
-It's also possible to rename several tables at once if you pass an associative array which old and new names as key/value pairs:
+It's also possible to rename several tables at once if you pass an associative
+array which old and new names as key/value pairs:
 
 ```php
 // Renames the table "users" to "accounts" and "blog" to "posts"
@@ -1324,7 +1428,8 @@ $this->db()->renameTable( ['users' => 'account', 'blog' => 'posts'] );
 
 ### Dropping tables
 
-To remove a table, you should use the [`dropTable()`](#dbdroptable) method from the database schema:
+To remove a table, you should use the [`dropTable()`](#dbdroptable) method from
+the database schema:
 
 ```php
 $this->db()->dropTable( 'users' );
@@ -1336,7 +1441,8 @@ You can also drop several tables at once by passing the list as array:
 $this->db()->dropTable( ['users', 'addresses'] );
 ```
 
-Tables are only removed if they exist. If a table doesn't exist any more, no error is reported:
+Tables are only removed if they exist. If a table doesn't exist any more, no error
+is reported:
 
 ```php
 $this->db()->dropTable( 'notexist' );
@@ -1409,7 +1515,8 @@ public function __call( string $method, array $args )
 
 **Examples:**
 
-You can register custom methods that have access to the class properties of the Upscheme Table object:
+You can register custom methods that have access to the class properties of the
+Upscheme Table object:
 
 ```php
 \Aimeos\Upscheme\Schema\Table::macro( 'addConstraint', function( array $columns ) {
@@ -1427,7 +1534,8 @@ Available class properties are:
 `$this->up`
 : Upscheme object
 
-Furthermore, you can call any [Doctrine table](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Table.php) method directly, e.g.:
+Furthermore, you can call any [Doctrine table](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Table.php)
+method directly, e.g.:
 
 ```php
 $table->addUniqueConstraint( ['col1', 'col2'] );
@@ -1732,7 +1840,8 @@ public function dropColumn( $name ) : self
 * @param array&#124;string `$name` Name of the column or columns
 * @return self Same object for fluid method calls
 
-If the column or one of the columns doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the column or one of the columns doesn't exist, it will be silently ignored.
+The change won't be applied until the migration task finishes or `up()` is called.
 
 **Examples:**
 
@@ -1753,7 +1862,8 @@ public function dropIndex( $name ) : self
 * @param array&#124;string `$name` Name of the index or indexes
 * @return self Same object for fluid method calls
 
-If the index or one of the indexes doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the index or one of the indexes doesn't exist, it will be silently ignored.
+The change won't be applied until the migration task finishes or `up()` is called.
 
 **Examples:**
 
@@ -1774,7 +1884,9 @@ public function dropForeign( $name ) : self
 * @param array&#124;string `$name` Name of the foreign key constraint or constraints
 * @return self Same object for fluid method calls
 
-If the foreign key constraint or one of the constraints doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the foreign key constraint or one of the constraints doesn't exist, it will be
+silently ignored. The change won't be applied until the migration task finishes
+or `up()` is called.
 
 **Examples:**
 
@@ -1794,7 +1906,8 @@ public function dropPrimary() : self
 
 * @return self Same object for fluid method calls
 
-If the primary key doesn't exist, it will be silently ignored. The change won't be applied until the migration task finishes or `up()` is called.
+If the primary key doesn't exist, it will be silently ignored. The change won't
+be applied until the migration task finishes or `up()` is called.
 
 **Examples:**
 
@@ -1831,13 +1944,14 @@ Creates a new foreign key or returns the existing one
 public function foreign( $localcolumn, string $foreigntable, $foreigncolumn = 'id', string $name = null ) : Foreign
 ```
 
-* @param array&#124;string $localcolumn Name of the local column or columns
-* @param string $foreigntable Name of the referenced table
-* @param array&#124;string $localcolumn Name of the referenced column or columns
+* @param array&#124;string `$localcolumn` Name of the local column or columns
+* @param string `$foreigntable` Name of the referenced table
+* @param array&#124;string `$localcolumn` Name of the referenced column or columns
 * @param string&#124;null Name of the foreign key constraint and foreign key index or NULL for autogenerated name
 * @return \Aimeos\Upscheme\Schema\Foreign Foreign key constraint object
 
-The length of the foreign key name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the foreign key name shouldn't be longer than 30 characters for
+maximum compatibility.
 
 **Examples:**
 
@@ -1956,11 +2070,12 @@ Creates a new index or replaces an existing one
 public function index( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string $columns Name of the columns or columns spawning the index
-* @param string&#124;null $name Index name or NULL for autogenerated name
+* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
-The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the index name shouldn't be longer than 30 characters for maximum
+compatibility.
 
 **Examples:**
 
@@ -2057,8 +2172,8 @@ Sets a custom schema option or returns the current value
 public function opt( string $name, $value = null )
 ```
 
-* @param string $name Name of the table-related custom schema option
-* @param mixed $value Value of the custom schema option
+* @param string `$name` Name of the table-related custom schema option
+* @param mixed `$value` Value of the custom schema option
 * @return self&#124;mixed Same object for setting value, current value without second parameter
 
 Available custom schema options are:
@@ -2088,11 +2203,12 @@ Creates a new primary index or replaces an existing one
 public function primary( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string $columns Name of the columns or columns spawning the index
-* @param string&#124;null $name Index name or NULL for autogenerated name
+* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
-The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the index name shouldn't be longer than 30 characters for maximum
+compatibility.
 
 **Examples:**
 
@@ -2138,7 +2254,8 @@ public function renameIndex( $from, string $to = null ) : self
 * @param string&#124;null `$to` New index name or NULL for autogenerated name (ignored if first parameter is an array)
 * @return self Same object for fluid method calls
 
-The length of the indexes name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the indexes name shouldn't be longer than 30 characters for maximum
+compatibility.
 
 **Examples:**
 
@@ -2182,11 +2299,12 @@ Creates a new spatial index or replaces an existing one
 public function spatial( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string $columns Name of the columns or columns spawning the index
-* @param string&#124;null $name Index name or NULL for autogenerated name
+* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
-The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the index name shouldn't be longer than 30 characters for maximum
+compatibility.
 
 **Examples:**
 
@@ -2209,8 +2327,8 @@ public function string( string $name, int $length = 255 ) : Column
 * @param int `$length` Length of the column in characters
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
-This type should be used for up to 255 characters. For more characters, use the "text" type.
-If the column doesn't exist yet, it will be created.
+This type should be used for up to 255 characters. For more characters, use the
+"text" type. If the column doesn't exist yet, it will be created.
 
 **Examples:**
 
@@ -2271,11 +2389,12 @@ Creates a new unique index or replaces an existing one
 public function unique( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string $columns Name of the columns or columns spawning the index
-* @param string&#124;null $name Index name or NULL for autogenerated name
+* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
-The length of the index name shouldn't be longer than 30 characters for maximum compatibility.
+The length of the index name shouldn't be longer than 30 characters for maximum
+compatibility.
 
 **Examples:**
 
@@ -2445,7 +2564,7 @@ if( $this->db()->hasColumn( 'users', 'name' ) ) {
 ```
 
 You can check for several columns at once too. In that case, the [`hasColumn()`](#dbhascolumn)
-method will only return `TRUE` if all columns exist:
+method will only return TRUE if all columns exist:
 
 ```php
 if( $this->db()->hasColumn( 'users', ['name', 'status'] ) ) {
@@ -2453,7 +2572,8 @@ if( $this->db()->hasColumn( 'users', ['name', 'status'] ) ) {
 }
 ```
 
-If you already have a table object, you can use [`hasColumn()`](#tablehascolumn) as well:
+If you already have a table object, you can use [`hasColumn()`](#tablehascolumn)
+as well:
 
 ```php
 if( $table->hasColumn( 'name' ) ) {
@@ -2465,7 +2585,8 @@ if( $table->hasColumn( ['name', 'status'] ) ) {
 }
 ```
 
-Besides columns, you can also check if column modifiers are set and which value they have:
+Besides columns, you can also check if column modifiers are set and which value
+they have:
 
 ```php
 if( $table->string( 'code' )->null() ) {
@@ -2572,7 +2693,8 @@ $this->db()->renameColumn( 'testtable', ['label' => 'name', 'stat' => 'status'] 
 
 ### Dropping columns
 
-To drop columns, use the [`dropColumn()`](#dbdropcolumn) method from the DB schema object:
+To drop columns, use the [`dropColumn()`](#dbdropcolumn) method from the DB schema
+object:
 
 ```php
 $this->db()->dropColumn( 'users', 'name' );
@@ -2585,7 +2707,8 @@ to drop as array:
 $this->db()->dropColumn( 'users', ['name', 'status'] );
 ```
 
-If you already have a table object, you can use [`dropColumn()`](#tabledropcolumn) too:
+If you already have a table object, you can use [`dropColumn()`](#tabledropcolumn)
+too:
 
 ```php
 // single column
@@ -2644,7 +2767,8 @@ public function __call( string $method, array $args )
 
 **Examples:**
 
-You can register custom methods that have access to the class properties of the Upscheme Column object:
+You can register custom methods that have access to the class properties of the
+Upscheme Column object:
 
 ```php
 \Aimeos\Upscheme\Schema\Column::macro( 'platform', function( array $options ) {
@@ -2665,7 +2789,8 @@ Available class properties are:
 `$this->column`
 : Doctrine column schema
 
-Furthermore, you can call any [Doctrine column](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Column.php) method directly, e.g.:
+Furthermore, you can call any [Doctrine column](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Column.php)
+method directly, e.g.:
 
 ```php
 $column->setPlatformOptions( ['option' => 'value'] );
@@ -2735,10 +2860,10 @@ Sets the column as autoincrement or returns the current value
 public function autoincrement( bool $value = null )
 ```
 
-* @param bool&#124;null $value New autoincrement flag or NULL to return current value
+* @param bool&#124;null `$value` New autoincrement flag or NULL to return current value
 * @return self&#124;bool Same object for setting the value, current value without parameter
 
-This method is an alias for the [`seq()` method](#columnseq).
+This method is an alias for the [`seq()`](#columnseq) method.
 
 **Examples:**
 
@@ -2756,7 +2881,7 @@ Sets the column charset or returns the current value
 public function charset( string $value = null )
 ```
 
-* @param string&#124;null $value New column charset or NULL to return current value
+* @param string&#124;null `$value` New column charset or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2775,7 +2900,7 @@ Sets the column collation or returns the current value
 public function collation( string $value = null )
 ```
 
-* @param string&#124;null $value New column collation or NULL to return current value
+* @param string&#124;null `$value` New column collation or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2794,7 +2919,7 @@ Sets the column comment or returns the current value
 public function comment( string $value = null )
 ```
 
-* @param string&#124;null $value New column comment or NULL to return current value
+* @param string&#124;null `$value` New column comment or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2813,7 +2938,7 @@ Sets the column default value or returns the current value
 public function default( $value = null )
 ```
 
-* @param mixed $value New column default value or NULL to return current value
+* @param mixed `$value` New column default value or NULL to return current value
 * @return self&#124;mixed Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2832,7 +2957,7 @@ Sets the column fixed flag or returns the current value
 public function fixed( bool $value = null )
 ```
 
-* @param string&#124;null $value New column fixed flag or NULL to return current value
+* @param string&#124;null `$value` New column fixed flag or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2851,7 +2976,7 @@ Creates a regular index for the column
 public function index( string $name = null ) : self
 ```
 
-* @param string&#124;null Name of the index or NULL to generate automatically
+* @param string&#124;null `$name` Name of the index or NULL to generate automatically
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -2870,7 +2995,7 @@ Sets the column length or returns the current value
 public function length( int $value = null )
 ```
 
-* @param string&#124;null $value New column length or NULL to return current value
+* @param string&#124;null `$value` New column length or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2906,7 +3031,7 @@ Sets the column null flag or returns the current value
 public function null( bool $value = null )
 ```
 
-* @param string&#124;null $value New column null flag or NULL to return current value
+* @param string&#124;null `$value` New column null flag or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2925,9 +3050,9 @@ Sets the column option value or returns the current value
 public function opt( string $option, $value = null, $for = null )
 ```
 
-* @param string $option Column option name
-* @param mixed $value New column option value or NULL to return current value
-* @param array&#124;string&#124;null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param string `$option` Column option name
+* @param mixed `$value` New column option value or NULL to return current value
+* @param array&#124;string&#124;null `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 * @return self&#124;mixed Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2946,7 +3071,7 @@ Sets the column precision or returns the current value
 public function precision( int $value = null )
 ```
 
-* @param string&#124;null $value New column precision value or NULL to return current value
+* @param string&#124;null `$value` New column precision value or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -2965,7 +3090,7 @@ Creates a primary index for the column
 public function primary( string $name = null ) : self
 ```
 
-* @param string&#124;null Name of the index or NULL to generate automatically
+* @param string&#124;null `$name` Name of the index or NULL to generate automatically
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -2984,7 +3109,7 @@ Sets the column scale or returns the current value
 public function scale( int $value = null )
 ```
 
-* @param string&#124;null $value New column scale value or NULL to return current value
+* @param string&#124;null `$value` New column scale value or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -3003,7 +3128,7 @@ Sets the column as autoincrement or returns the current value
 public function seq( bool $value = null )
 ```
 
-* @param bool&#124;null $value New autoincrement flag or NULL to return current value
+* @param bool&#124;null `$value` New autoincrement flag or NULL to return current value
 * @return self&#124;bool Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -3022,7 +3147,7 @@ Creates a spatial index for the column
 public function spatial( string $name = null ) : self
 ```
 
-* @param string&#124;null Name of the index or NULL to generate automatically
+* @param string&#124;null `$name` Name of the index or NULL to generate automatically
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -3041,7 +3166,7 @@ Sets the column type or returns the current value
 public function type( string $value = null )
 ```
 
-* @param string&#124;null $value New column type or NULL to return current value
+* @param string&#124;null `$value` New column type or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -3060,7 +3185,7 @@ Creates an unique index for the column
 public function unique( string $name = null ) : self
 ```
 
-* @param string&#124;null Name of the index or NULL to generate automatically
+* @param string&#124;null `$name` Name of the index or NULL to generate automatically
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -3079,7 +3204,7 @@ Sets the column unsigned flag or returns the current value
 public function unsigned( bool $value = null )
 ```
 
-* @param bool&#124;null $value New column unsigned flag or NULL to return current value
+* @param bool&#124;null `$value` New column unsigned flag or NULL to return current value
 * @return self&#124;bool Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -3113,10 +3238,11 @@ $column->up();
 ### Creating foreign keys
 
 Upscheme offers support for foreign key constraints, which enforce the integrity
-of data between two tables. For example, if the `parentid` column of the `users_address`
-table references the `id` column of the `users` table, there can be no rows in
-the `users_address` table without a matching row in the `users` table. Calling
-the [`foreign()`](#tableforeign) method will create such a constraint:
+of data between two tables. For example, if the `parentid` column of the
+`users_address` table references the `id` column of the `users` table, there can
+be no rows in the `users_address` table without a matching row in the `users`
+table. Calling the [`foreign()`](#tableforeign) method will create such a
+constraint:
 
 ```php
 $this->db()->table( 'users', function( $table ) {
@@ -3401,7 +3527,7 @@ $foreign->opt( 'onDelete', 'SET NULL' );
 public function name( string $value = null )
 ```
 
-* @param string&#124;null $value New name of the constraint or NULL to return current value
+* @param string&#124;null `$value` New name of the constraint or NULL to return current value
 * @return self&#124;string Same object for setting the name, current name without parameter
 
 **Examples:**
@@ -3419,7 +3545,7 @@ $fkname = $foreign->name();
 public function onDelete( string $value = null )
 ```
 
-* @param string&#124;null $value Performed action or NULL to return current value
+* @param string&#124;null `$value` Performed action or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 * Available actions are:
@@ -3451,7 +3577,7 @@ $foreign->onDelete( 'SET NULL' )->onUpdate( 'SET NULL' );
 public function onUpdate( string $value = null )
 ```
 
-* @param string&#124;null $value Performed action or NULL to return current value
+* @param string&#124;null `$value` Performed action or NULL to return current value
 * @return self&#124;string Same object for setting the value, current value without parameter
 
 * Available actions are:
@@ -3500,7 +3626,7 @@ $foreign->up();
 A few database implementations offer sequences instead of auto-increment/identity
 columns, namely Oracle and PostgreSQL. Sequences are functions which create
 sequentially increasing numbers that are applied to a table column when inserting
-new rows. To create a new sequence named `seq_test` use the [`sequence()`](#dbsequence)
+new rows. To create a new sequence named *seq_test* use the [`sequence()`](#dbsequence)
 method:
 
 ```php
@@ -3596,7 +3722,8 @@ public function __call( string $method, array $args )
 
 **Examples:**
 
-You can register custom methods that have access to the class properties of the Upscheme Sequence object:
+You can register custom methods that have access to the class properties of the
+Upscheme Sequence object:
 
 ```php
 \Aimeos\Upscheme\Schema\Sequence::macro( 'default', function() {
@@ -3663,7 +3790,7 @@ Sets the cached size of the sequence or returns the current value
 public function cache( int $value = null )
 ```
 
-* @param int $value New number of sequence IDs cached by the client or NULL to return current value
+* @param int `$value` New number of sequence IDs cached by the client or NULL to return current value
 * @return self&#124;int Same object for setting value, current value without parameter
 
 **Examples:**
@@ -3697,7 +3824,7 @@ Sets the new start value of the sequence or returns the current value
 public function start( int $value = null )
 ```
 
-* @param int $value New start value of the sequence or NULL to return current value
+* @param int `$value` New start value of the sequence or NULL to return current value
 * @return self&#124;int Same object for setting value, current value without parameter
 
 ```php
@@ -3714,7 +3841,7 @@ Sets the step size of new sequence values or returns the current value
 public function step( string $value = null )
 ```
 
-* @param int $value New step size the sequence is incremented or decremented by or NULL to return current value
+* @param int `$value` New step size the sequence is incremented or decremented by or NULL to return current value
 * @return self&#124;int Same object for setting value, current value without parameter
 
 ```php
@@ -3754,9 +3881,9 @@ great impact if indexes are used for a query or not.
 
 ### Adding indexes
 
-All indexes are bound to the table which contains the columns the index covers. The
-simplest way to create an index over a single column is to use the [`index()`](#colindex)
-method of the column object:
+All indexes are bound to the table which contains the columns the index covers.
+The simplest way to create an index over a single column is to use the
+[`index()`](#columnindex) method of the column object:
 
 ```php
 $this->db()->table( 'test', function( $table ) {
@@ -3764,7 +3891,7 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-The second parameter of the [`index()`](#colindex) method allows you to set
+The second parameter of the [`index()`](#columnindex) method allows you to set
 a custom name for the index:
 
 ```php
@@ -3829,8 +3956,8 @@ if( $this->db()->hasIndex( 'users', 'idx_users_name' ) ) {
 }
 ```
 
-You can check for several indexes at once too. In that case, the [`hasIndex()`](#dbhasindex)
-method will only return `TRUE` if all indexes exist:
+You can check for several indexes at once too. In that case, the
+[`hasIndex()`](#dbhasindex) method will only return TRUE if all indexes exist:
 
 ```php
 if( $this->db()->hasIndex( 'users', ['idx_users_name', 'idx_users_status'] ) ) {
@@ -3852,19 +3979,8 @@ if( $table->hasIndex( ['idx_users_name', 'idx_users_status'] ) ) {
 
 ### Renaming indexes
 
-If a table object is already available, you can use its [`renameIndex()`](#tablerenameindex)
-method to rename one or more indexes:
-
-```php
-$this->db()->table( 'test', function( $table ) {
-	$table->renameIndex( 'idx_test_label', 'idx_test_name' );
-	// or multiple indexes
-	$table->renameIndex( ['idx_test_label' => 'idx_test_name', 'idx_text_stat' => 'idx_test_status'] );
-} );
-```
-
-It's also possible to rename indexes directly, using the [`renameIndex()`](#dbrenameindex)
-method of the DB schema:
+To rename indexes directly, using the [`renameIndex()`](#dbrenameindex) method
+of the DB schema:
 
 ```php
 // single index
@@ -3872,6 +3988,19 @@ $this->db()->renameIndex( 'testtable', 'idx_test_label', 'idx_test_name' );
 
 // multiple indexes
 $this->db()->renameIndex( 'testtable', ['idx_test_label' => 'idx_test_name', 'idx_text_stat' => 'idx_test_status'] );
+```
+
+If a table object is already available, you can use its [`renameIndex()`](#tablerenameindex)
+method to rename one or more indexes:
+
+```php
+$this->db()->table( 'test', function( $table ) {
+	// single index
+	$table->renameIndex( 'idx_test_label', 'idx_test_name' );
+
+	// multiple indexes
+	$table->renameIndex( ['idx_test_label' => 'idx_test_name', 'idx_text_stat' => 'idx_test_status'] );
+} );
 ```
 
 ### Dropping indexes
@@ -3925,7 +4054,7 @@ Table::marco( 'nameIndex', function( string $table, array $columns, string $type
 ```
 
 For a table "testtable", a column "label" and the type "idx", this will return
-`idx_testtable_label` instead of a hash.
+*idx_testtable_label* instead of a hash.
 
 Available index types are:
 
@@ -3936,3 +4065,4 @@ Available index types are:
 
 **Note:** For compatibility to all supported database types, the maximum length
 of the index names must be not longer than 30 characters!
+

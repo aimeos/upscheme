@@ -322,7 +322,7 @@ class Column
 	/**
 	 * Creates a regular index for the column
 	 *
-	 * @param string|null Name of the index or NULL to generate automatically
+	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
 	public function index( string $name = null ) : self
@@ -335,7 +335,7 @@ class Column
 	/**
 	 * Creates a primary index for the column
 	 *
-	 * @param string|null Name of the index or NULL to generate automatically
+	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
 	public function primary( string $name = null ) : self
@@ -348,7 +348,7 @@ class Column
 	/**
 	 * Creates a spatial index for the column
 	 *
-	 * @param string|null Name of the index or NULL to generate automatically
+	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
 	public function spatial( string $name = null ) : self
@@ -361,7 +361,7 @@ class Column
 	/**
 	 * Creates an unique index for the column
 	 *
-	 * @param string|null Name of the index or NULL to generate automatically
+	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
 	public function unique( string $name = null ) : self
