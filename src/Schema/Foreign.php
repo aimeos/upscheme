@@ -103,6 +103,28 @@ class Foreign
 
 
 	/**
+	 * Sets the action if referenced rows are deleted or updated
+	 *
+	 * Available actions are:
+	 * - CASCADE : Delete or update referenced value
+	 * - NO ACTION : No change in referenced value
+	 * - RESTRICT : Forbid changing values
+	 * - SET DEFAULT : Set referenced value to the default value
+	 * - SET NULL : Set referenced value to NULL
+	 *
+	 * @param string $action Performed action
+	 * @return self Same object for fluid method calls
+	 */
+	public function do( string $action ) : self
+	{
+		$this->opts['onDelete'] = $action;
+		$this->opts['onUpdate'] = $action;
+
+		return $this->replace();
+	}
+
+
+	/**
 	 * Returns the current name of the foreign key constraint
 	 *
 	 * @return string Name of the foreign key constraint
@@ -120,6 +142,7 @@ class Foreign
 	 * - CASCADE : Delete referenced value
 	 * - NO ACTION : No change in referenced value
 	 * - RESTRICT : Forbid changing values
+	 * - SET DEFAULT : Set referenced value to the default value
 	 * - SET NULL : Set referenced value to NULL
 	 *
 	 * @param string|null $value Performed action or NULL to return current value
@@ -143,6 +166,7 @@ class Foreign
 	 * - CASCADE : Update referenced value
 	 * - NO ACTION : No change in referenced value
 	 * - RESTRICT : Forbid changing values
+	 * - SET DEFAULT : Set referenced value to the default value
 	 * - SET NULL : Set referenced value to NULL
 	 *
 	 * @param string|null $value Performed action or NULL to return current value
