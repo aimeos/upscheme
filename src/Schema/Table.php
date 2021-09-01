@@ -156,6 +156,19 @@ class Table
 
 
 	/**
+	 * Creates a new column of type "char" with a fixed length or returns the existing one
+	 *
+	 * @param string $name Name of the column
+	 * @param int $length Length of the column in characters
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function char( string $name, int $length ) : Column
+	{
+		return $this->col( $name, 'string' )->length( $length )->fixed( true );
+	}
+
+
+	/**
 	 * Creates a new column or returns the existing one
 	 *
 	 * If the column doesn't exist yet, it will be created.

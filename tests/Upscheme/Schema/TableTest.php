@@ -169,12 +169,24 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testBoolean()
 	{
-		$col = $this->object->bool( 'unittest' );
+		$col = $this->object->boolean( 'unittest' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
 		$this->assertEquals( 'unittest', $col->name() );
 		$this->assertEquals( 'boolean', $col->type() );
 		$this->assertEquals( false, $col->default() );
+	}
+
+
+	public function testChar()
+	{
+		$col = $this->object->char( 'unittest', 3 );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
+		$this->assertEquals( 'unittest', $col->name() );
+		$this->assertEquals( 'string', $col->type() );
+		$this->assertEquals( true, $col->fixed() );
+		$this->assertEquals( 3, $col->length() );
 	}
 
 
