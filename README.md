@@ -3322,7 +3322,15 @@ methods:
 
 ```php
 $this->db()->table( 'users_address', function( $table ) {
-	$table->foreign( 'parentid', 'users' )->onDelete( 'SET NULL' )->onUpdate( 'CASCADE' );
+	$table->foreign( 'parentid', 'users' )->onDelete( 'SET NULL' )->onUpdate( 'RESTRICT' );
+} );
+```
+
+There's a shortcut if you want to set both values to the same value:
+
+```php
+$this->db()->table( 'users_address', function( $table ) {
+	$table->foreign( 'parentid', 'users' )->do( 'SET NULL' );
 } );
 ```
 
@@ -3333,6 +3341,9 @@ Possible values for both methods are:
 * RESTRICT : Forbid changing values
 * SET DEFAULT : Set referenced value to the default value
 * SET NULL : Set referenced value to NULL
+
+The default action when deleting or updating rows is *CASCADE* so the values of
+the foreign key column are updated to the same values as in the foreign table.
 
 ### Checking foreign key existence
 
@@ -3547,6 +3558,32 @@ $foreign->opt( 'onDelete', 'SET NULL' );
 ```
 
 
+#### Foreign::do()
+
+Sets the new value for the given Foreign key option
+
+```php
+public function do( string $action ) : self
+```
+
+* @param string `$action` Performed action
+* @return self Same object for fluid method calls
+
+Possible actions are:
+
+* CASCADE : Delete or update referenced value
+* NO ACTION : No change in referenced value (same as RESTRICT)
+* RESTRICT : Forbid changing values
+* SET DEFAULT : Set referenced value to the default value
+* SET NULL : Set referenced value to NULL
+
+**Examples:**
+
+```php
+$foreign->do( 'RESTRICT' );
+```
+
+
 #### Foreign::name()
 
 * Sets the name of the constraint or returns the current name
@@ -3591,6 +3628,7 @@ $value = $foreign->onDelete();
 $foreign->onDelete( 'SET NULL' );
 // same as
 $foreign->onDelete = 'SET NULL';
+// same as
 $foreign->opt( 'onDelete', 'SET NULL' );
 
 $foreign->onDelete( 'SET NULL' )->onUpdate( 'SET NULL' );
@@ -3623,6 +3661,7 @@ $value = $foreign->onUpdate();
 $foreign->onUpdate( 'SET NULL' );
 // same as
 $foreign->onUpdate = 'SET NULL';
+// same as
 $foreign->opt( 'onUpdate', 'SET NULL' );
 
 $foreign->onUpdate( 'SET NULL' )->onDelete( 'SET NULL' );
