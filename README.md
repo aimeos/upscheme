@@ -1277,6 +1277,7 @@ there are some shortcut methods for types available in all database server imple
 | [blob](#tableblob) | BLOB column with up to 2GB |
 | [bool](#tablebool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
 | [boolean](#tableboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
+| [char](#tablechar) | CHAR column with a fixed number of characters |
 | [date](#tabledate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
 | [datetime](#tabledatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
 | [tablesdatetimetz](#tabledatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
@@ -1468,6 +1469,7 @@ In that case, the method call will succeed but nothing will happen.
 	<li><a href="#tableblob">blob()</a></li>
 	<li><a href="#tablebool">bool()</a></li>
 	<li><a href="#tableboolean">boolean()</a></li>
+	<li><a href="#tablechar">char()</a></li>
 	<li><a href="#tablecol">col()</a></li>
 	<li><a href="#tabledate">date()</a></li>
 	<li><a href="#tabledatetime">datetime()</a></li>
@@ -1726,6 +1728,27 @@ If the column doesn't exist yet, it will be created.
 
 ```php
 $table->boolean( 'testcol' );
+```
+
+
+#### Table::char()
+
+Creates a new column of type "char" with a fixed type or returns the existing one
+
+```php
+public function char( string $name, int $length ) : Column
+```
+
+* @param string `$name` Name of the column
+* @param int `$length` Length of the column in characters
+* @return \Aimeos\Upscheme\Schema\Column Column object
+
+If the column doesn't exist yet, it will be created.
+
+**Examples:**
+
+```php
+$table->char( 'testcol', 3 );
 ```
 
 
@@ -2484,6 +2507,7 @@ implementations:
 | [blob](#tableblob) | BLOB column with up to 2GB |
 | [bool](#tablebool) | BOOLEAN/BIT/NUMBER colum, alias for "boolean" |
 | [boolean](#tableboolean) | BOOLEAN/BIT/NUMBER colum for TRUE/FALSE resp. 0/1 values |
+| [char](#tablechar) | CHAR column with a fixed number of characters |
 | [date](#tabledate) | DATE column in ISO date format ("YYYY-MM-DD) without time and timezone |
 | [datetime](#tabledatetime) | DATETIME column in ISO date/time format ("YYYY-MM-DD HH:mm:ss" ) |
 | [tablesdatetimetz](#tabledatetimetz) | DATETIMETZ column in ISO date/time format but with varying timezone format |
