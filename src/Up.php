@@ -60,7 +60,7 @@ class Up
 	 */
 	public static function autoload( string $classname ) : bool
 	{
-		if( $fcn = self::macro( 'autoload' ) ) {
+		if( $fcn = static::macro( 'autoload' ) ) {
 			return $fcn( $classname );
 		}
 
@@ -91,7 +91,7 @@ class Up
 	 */
 	public static function use( array $config, $paths )
 	{
-		return new self( $config, $paths );
+		return new static( $config, $paths );
 	}
 
 
@@ -127,7 +127,7 @@ class Up
 	 */
 	public function info( string $msg, $level = 'v' ) : self
 	{
-		if( self::macro( 'info' ) )
+		if( static::macro( 'info' ) )
 		{
 			$this->call( 'info', [$msg, $level] );
 			return $this;
@@ -179,7 +179,7 @@ class Up
 	 */
 	public function verbose( $level = 'v' ) : self
 	{
-		$this->verbose = ( self::macro( 'verbose' ) ) ? $this->call( 'verbose', [$level] ) : strlen( (string) $level );
+		$this->verbose = ( static::macro( 'verbose' ) ) ? $this->call( 'verbose', [$level] ) : strlen( (string) $level );
 		return $this;
 	}
 
@@ -197,7 +197,7 @@ class Up
 		$cfg['driverOptions'][\PDO::ATTR_ORACLE_NULLS] = \PDO::NULL_NATURAL;
 		$cfg['driverOptions'][\PDO::ATTR_STRINGIFY_FETCHES] = false;
 
-		if( self::macro( 'connect' ) ) {
+		if( static::macro( 'connect' ) ) {
 			return $this->call( 'connect', [$cfg] );
 		}
 
@@ -231,7 +231,7 @@ class Up
 				}
 
 				$interface = \Aimeos\Upscheme\Task\Iface::class;
-				$task = ( $fcn = self::macro( 'createTask' ) ) ? $fcn( $classname ) : new $classname( $this );
+				$task = ( $fcn = static::macro( 'createTask' ) ) ? $fcn( $classname ) : new $classname( $this );
 
 				if( ( $task instanceof $interface ) === false ) {
 					throw new \RuntimeException( sprintf( 'Class "%1$s" doesn\'t implement "%2$s"', $classname, $interface ) );
