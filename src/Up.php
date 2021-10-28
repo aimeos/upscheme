@@ -111,6 +111,17 @@ class Up
 
 
 	/**
+	 * Returns the paths for the setup tasks
+	 *
+	 * @return array List of absolute paths
+	 */
+	public function paths() : array
+	{
+		return $this->paths;
+	}
+
+
+	/**
 	 * Executes the tasks to update the database
 	 *
 	 * @return self Same object for fluid method calls

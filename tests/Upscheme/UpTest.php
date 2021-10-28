@@ -151,6 +151,12 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testPaths()
+	{
+		$this->assertEquals( ['test'], $this->object->paths() );
+	}
+
+
 	public function testUse()
 	{
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, \Aimeos\Upscheme\Up::use( ['driver' => ''], 'test' ) );
