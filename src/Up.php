@@ -111,13 +111,26 @@ class Up
 
 
 	/**
-	 * Returns the paths for the setup tasks
+	 * Returns the paths for the setup tasks including the given relative paths
 	 *
-	 * @return array List of absolute paths
+	 * @param string $relpath Relative path to add to the base paths
+	 * @return array List of absolute paths which really exist
 	 */
-	public function paths() : array
+	public function paths( string $relpath = '' ) : array
 	{
-		return $this->paths;
+		$list = [];
+		$relpath = DIRECTORY_SEPARATOR . trim( $relpath, DIRECTORY_SEPARATOR );
+
+		foreach( $this->paths as $path )
+		{
+			$abspath = $path . $relpath;
+
+			if( file_exists( $abspath ) ) {
+				$list[] = $abspath;
+			}
+		}
+
+		return $list;
 	}
 
 
@@ -130,7 +143,7 @@ class Up
 	{
 		$this->tasksDone = [];
 		$this->dependencies = [];
-		$this->tasks = $this->createTasks( $this->paths );
+		$this->tasks = $this->createTasks( $this->paths() );
 
 		foreach( $this->tasks as $name => $task )
 		{
@@ -176,7 +189,7 @@ class Up
 		{
 			$fileName = substr( $classname, 21 ) . '.php';
 
-			foreach( $this->paths as $path )
+			foreach( $this->paths() as $path )
 			{
 				$file = $path . '/' . $fileName;
 

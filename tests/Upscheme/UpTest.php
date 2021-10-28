@@ -16,7 +16,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	protected function setUp() : void
 	{
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Up' )
-			->setConstructorArgs( [['driver' => 'sqlite'], 'test'] )
+			->setConstructorArgs( [['driver' => 'sqlite'], dirname( __DIR__ ) . '/Tasks/test'] )
 			->setMethods( ['test'] )
 			->getMock();
 	}
@@ -153,7 +153,9 @@ class UpTest extends \PHPUnit\Framework\TestCase
 
 	public function testPaths()
 	{
-		$this->assertEquals( ['test'], $this->object->paths() );
+		$this->assertEquals( '/test/', substr( current( $this->object->paths() ), -6 ) );
+		$this->assertEquals( '/test/../class', substr( current( $this->object->paths( '../class' ) ), -14 ) );
+		$this->assertEquals( [], $this->object->paths( 'invalid' ) );
 	}
 
 
