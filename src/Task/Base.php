@@ -73,6 +73,19 @@ abstract class Base implements Iface
 
 
 	/**
+	 * Returns the database schema for the given connection name
+	 *
+	 * @param string $name Name of the connection from the configuration or empty string for first one
+	 * @param bool $new If a new connection should be created instead of reusing an existing one
+	 * @return \Aimeos\Upscheme\Schema\DB DB schema object
+	 */
+	protected function db( string $name = '', bool $new = false ) : \Aimeos\Upscheme\Schema\DB
+	{
+		return $this->up->db( $name, $new );
+	}
+
+
+	/**
 	 * Outputs the message depending on the verbosity
 	 *
 	 * @param string $msg Message to display
@@ -88,14 +101,13 @@ abstract class Base implements Iface
 
 
 	/**
-	 * Returns the database schema for the given connection name
+	 * Returns the paths for the setup tasks including the given relative paths
 	 *
-	 * @param string $name Name of the connection from the configuration or empty string for first one
-	 * @param bool $new If a new connection should be created instead of reusing an existing one
-	 * @return \Aimeos\Upscheme\Schema\DB DB schema object
+	 * @param string $relpath Relative path to add to the base paths
+	 * @return array List of absolute paths which really exist
 	 */
-	protected function db( string $name = '', bool $new = false ) : \Aimeos\Upscheme\Schema\DB
+	protected function paths( string $relpath = '' ) : array
 	{
-		return $this->up->db( $name, $new );
+		return $this->up->paths( $relpath );
 	}
 }

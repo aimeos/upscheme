@@ -67,6 +67,16 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testDb()
+	{
+		$this->upmock->expects( $this->once() )->method( 'db' )->will( $this->returnValue( $this->dbmock ) );
+
+		$result = $this->access( 'db' )->invokeArgs( $this->object, ['unittest', true] );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $result );
+	}
+
+
 	public function testInfo()
 	{
 		$this->upmock->expects( $this->once() )->method( 'info' );
@@ -77,13 +87,13 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testDb()
+	public function testPaths()
 	{
-		$this->upmock->expects( $this->once() )->method( 'db' )->will( $this->returnValue( $this->dbmock ) );
+		$this->upmock->expects( $this->once() )->method( 'paths' );
 
-		$result = $this->access( 'db' )->invokeArgs( $this->object, ['unittest', true] );
+		$result = $this->access( 'paths' )->invokeArgs( $this->object, ['test'] );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $result );
+		$this->assertEquals( [], $result );
 	}
 
 
