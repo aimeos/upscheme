@@ -17,14 +17,13 @@ class Up
 	use Macro;
 
 
-	private static $paths = [];
-
-	private $verbose = 0;
 	private $config;
-	private $db = [];
 	private $tasks;
 	private $tasksDone;
 	private $dependencies;
+	private $verbose = 0;
+	private $paths = [];
+	private $db = [];
 
 
 	/**
@@ -35,10 +34,6 @@ class Up
 	 */
 	public function __construct( array $config, $paths )
 	{
-		if( spl_autoload_register( 'Aimeos\Upscheme\Up::autoload' ) === false ) {
-			throw new \RuntimeException( 'Unable to register Aimeos\Upscheme\Up::autoload' );
-		}
-
 		if( empty( $config ) ) {
 			throw new \RuntimeException( 'No database configuration passed' );
 		}
@@ -47,38 +42,12 @@ class Up
 			throw new \RuntimeException( 'No path for the tasks passed' );
 		}
 
+		if( spl_autoload_register( static::macro( 'autoload' ) ?: [$this, 'autoload'] ) === false ) {
+			throw new \RuntimeException( 'Unable to register autoloader' );
+		}
+
 		$this->config = $config;
-		self::$paths = (array) $paths;
-	}
-
-
-	/**
-	 * Autoloader for setup tasks.
-	 *
-	 * @param string $classname Name of the class to load
-	 * @return bool True if class was found, false if not
-	 */
-	public static function autoload( string $classname ) : bool
-	{
-		if( $fcn = static::macro( 'autoload' ) ) {
-			return $fcn( $classname );
-		}
-
-		if( !strncmp( $classname, 'Aimeos\Upscheme\Task\\', 21 ) )
-		{
-			$fileName = substr( $classname, 21 ) . '.php';
-
-			foreach( self::$paths as $path )
-			{
-				$file = $path . '/' . $fileName;
-
-				if( file_exists( $file ) === true && ( include_once $file ) !== false ) {
-					return true;
-				}
-			}
-		}
-
-		return false;
+		$this->paths = (array) $paths;
 	}
 
 
@@ -150,7 +119,7 @@ class Up
 	{
 		$this->tasksDone = [];
 		$this->dependencies = [];
-		$this->tasks = $this->createTasks( self::$paths );
+		$this->tasks = $this->createTasks( $this->paths );
 
 		foreach( $this->tasks as $name => $task )
 		{
@@ -181,6 +150,32 @@ class Up
 	{
 		$this->verbose = ( static::macro( 'verbose' ) ) ? $this->call( 'verbose', [$level] ) : strlen( (string) $level );
 		return $this;
+	}
+
+
+	/**
+	 * Autoloader for setup tasks.
+	 *
+	 * @param string $classname Name of the class to load
+	 * @return bool True if class was found, false if not
+	 */
+	protected function autoload( string $classname ) : bool
+	{
+		if( !strncmp( $classname, 'Aimeos\Upscheme\Task\\', 21 ) )
+		{
+			$fileName = substr( $classname, 21 ) . '.php';
+
+			foreach( $this->paths as $path )
+			{
+				$file = $path . '/' . $fileName;
+
+				if( file_exists( $file ) === true && ( include_once $file ) !== false ) {
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 

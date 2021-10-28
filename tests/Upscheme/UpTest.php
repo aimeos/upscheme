@@ -51,22 +51,17 @@ class UpTest extends \PHPUnit\Framework\TestCase
 
 	public function testAutoload()
 	{
-		$object = new \Aimeos\Upscheme\Up( ['driver' => ''], dirname( __DIR__ ) . '/Tasks/conn' );
-		$this->assertTrue( \Aimeos\Upscheme\Up::autoload( 'Aimeos\Upscheme\Task\Conn' ) );
-	}
-
-
-	public function testAutoloadFalse()
-	{
-		$object = new \Aimeos\Upscheme\Up( ['driver' => ''], dirname( __DIR__ ) . '/Tasks' );
-		$this->assertFalse( \Aimeos\Upscheme\Up::autoload( 'Aimeos\Upscheme\Task\Conn' ) );
+		$object = new \Aimeos\Upscheme\Up( ['driver' => 'pdo_sqlite'], dirname( __DIR__ ) . '/Tasks/test' );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object->up() );
 	}
 
 
 	public function testAutoloadCustom()
 	{
 		\Aimeos\Upscheme\Up::macro( 'autoload', function( $class ) { return true; } );
-		$this->assertTrue( \Aimeos\Upscheme\Up::autoload( 'Invalid' ) );
+
+		$object = new \Aimeos\Upscheme\Up( ['driver' => 'pdo_sqlite'], dirname( __DIR__ ) . '/Tasks/test' );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object->up() );
 	}
 
 
