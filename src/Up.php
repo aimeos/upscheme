@@ -134,11 +134,11 @@ class Up
 
 		foreach( $this->tasks as $name => $task )
 		{
-			foreach( (array) $task->after() as $taskname ) {
+			foreach( (array) $task->before() as $taskname ) {
 				$this->dependencies[$taskname][] = $name;
 			}
 
-			foreach( (array) $task->before() as $taskname ) {
+			foreach( (array) $task->after() as $taskname ) {
 				$this->dependencies[$name][] = $taskname;
 			}
 		}
@@ -257,7 +257,7 @@ class Up
 	 * Executes each task depending of the task dependencies
 	 *
 	 * @param string[] $tasknames List of task names
-	 * @param string[] $stack List of task names that are sheduled after this task
+	 * @param string[] $stack List of task names that are scheduled after this task
 	 */
 	protected function runTasks( array $tasknames, array $stack = [] )
 	{
