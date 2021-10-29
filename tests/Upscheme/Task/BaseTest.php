@@ -89,11 +89,11 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
 	public function testPaths()
 	{
-		$this->upmock->expects( $this->once() )->method( 'paths' );
+		$this->upmock->expects( $this->once() )->method( 'paths' )->will( $this->returnValue( [dirname( __DIR__, 2 ) . '/Tasks'] ) );
 
 		$result = $this->access( 'paths' )->invokeArgs( $this->object, ['test'] );
 
-		$this->assertEquals( [], $result );
+		$this->assertEquals( '/test', substr( current( $result ), -5 ) );
 	}
 
 

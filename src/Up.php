@@ -111,26 +111,13 @@ class Up
 
 
 	/**
-	 * Returns the paths for the setup tasks including the given relative paths
+	 * Returns the paths for the setup tasks
 	 *
-	 * @param string $relpath Relative path to add to the base paths
-	 * @return array List of absolute paths which really exist
+	 * @return array List of paths
 	 */
-	public function paths( string $relpath = '' ) : array
+	public function paths() : array
 	{
-		$list = [];
-		$relpath = DIRECTORY_SEPARATOR . trim( $relpath, DIRECTORY_SEPARATOR );
-
-		foreach( $this->paths as $path )
-		{
-			$abspath = $path . $relpath;
-
-			if( file_exists( $abspath ) ) {
-				$list[] = $abspath;
-			}
-		}
-
-		return $list;
+		return $this->paths;
 	}
 
 

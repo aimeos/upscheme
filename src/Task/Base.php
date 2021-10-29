@@ -104,10 +104,22 @@ abstract class Base implements Iface
 	 * Returns the paths for the setup tasks including the given relative paths
 	 *
 	 * @param string $relpath Relative path to add to the base paths
-	 * @return array List of absolute paths which really exist
+	 * @return array List of paths which really exist
 	 */
 	protected function paths( string $relpath = '' ) : array
 	{
-		return $this->up->paths( $relpath );
+		$list = [];
+		$relpath = DIRECTORY_SEPARATOR . trim( $relpath, DIRECTORY_SEPARATOR );
+
+		foreach( $this->up->paths() as $path )
+		{
+			$abspath = $path . $relpath;
+
+			if( file_exists( $abspath ) ) {
+				$list[] = $abspath;
+			}
+		}
+
+		return $list;
 	}
 }
