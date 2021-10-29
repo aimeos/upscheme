@@ -8,7 +8,7 @@ use Aimeos\Upscheme\Schema\Table;
 
 class Dep2 extends Base
 {
-	public function after() : array
+	public function before() : array
 	{
 		return ['Dep1'];
 	}
