@@ -483,10 +483,8 @@ class DB
 
 		$sequence = new Sequence( $this, $seq );
 
-		if( $fcn )
-		{
+		if( $fcn ) {
 			$fcn( $sequence );
-			$this->up();
 		}
 
 		return $sequence;
@@ -524,10 +522,8 @@ class DB
 
 		$table = new Table( $this, $dt );
 
-		if( $fcn )
-		{
+		if( $fcn ) {
 			$fcn( $table );
-			$this->up();
 		}
 
 		return $table;

@@ -1115,8 +1115,8 @@ public function sequence( string $name, \Closure $fcn = null ) : Sequence
 * @param \Closure&#124;null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 
-If the sequence doesn't exist yet, it will be created. Passing a closure to modify
-the sequence will also persist the changes in the database automatically.
+If the sequence doesn't exist yet, it will be created. To persist the changes in the
+database, you have to call `up()`.
 
 **Examples:**
 
@@ -1125,7 +1125,7 @@ $sequence = $db->sequence( 'seq_test' );
 
 $sequence = $db->sequence( 'seq_test', function( $seq ) {
 	$seq->start( 1000 )->step( 2 )->cache( 100 );
-} );
+} )->up();
 ```
 
 
@@ -1163,8 +1163,8 @@ public function table( string $name, \Closure $fcn = null ) : Table
 * @param \Closure&#124;null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
 * @return \Aimeos\Upscheme\Schema\Table Table object
 
-If the table doesn't exist yet, it will be created. Passing a closure to modify
-the table will also persist the changes in the database automatically.
+If the table doesn't exist yet, it will be created. To persist the changes in the
+database, you have to call `up()`.
 
 **Examples:**
 
@@ -1175,7 +1175,7 @@ $table = $db->table( 'test', function( $t ) {
 	$t->id();
 	$t->string( 'label' );
 	$t->bool( 'status' );
-} );
+} )->up();
 ```
 
 

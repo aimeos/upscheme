@@ -41,7 +41,7 @@ class Create extends Base
 			$t->index( ['status', 'pos'], 'idx_status_type' );
 			$t->index( 'uuid' );
 
-		} );
+		} )->up();
 
 
 		$db->table( 'testref', function( Table $t ) {
@@ -52,7 +52,7 @@ class Create extends Base
 			$t->foreign( 'parentid', 'test' );
 			$t->string( 'label' );
 
-		} );
+		} )->up();
 
 		$db->insert( 'test', [
 //			'hex' => '0xff', 'image' => 'svg+xml:',
