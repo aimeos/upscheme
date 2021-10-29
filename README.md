@@ -212,14 +212,15 @@ allows you to register a custom method that transforms your configration into
 valid DBAL settings, e.g.:
 
 ```php
-\Aimeos\Upscheme\Up::macro( 'createConnection', function( array $cfg ) {
-	return [
-		'driver' => $config['adapter'] !== 'mysql' ? $config['adapter'] : 'pdo_mysql',
-		'host' => $config['host'],
-		'dbname' => $config['database'],
-		'user' => $config['username'],
-		'password' => $config['secret']
-	];
+\Aimeos\Upscheme\Up::macro( 'connect', function( array $cfg ) {
+
+	return \Doctrine\DBAL\DriverManager::getConnection( [
+		'driver' => $cfg['adapter'],
+		'host' => $cfg['host'],
+		'dbname' => $cfg['database'],
+		'user' => $cfg['username'],
+		'password' => $cfg['password']
+	] );
 } );
 ```
 
