@@ -281,7 +281,7 @@ class Up
 
 			if( isset( $this->tasks[$taskname] ) )
 			{
-				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename, 'vv' );
+				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename, 'vvv' );
 				$this->tasks[$taskname]->up();
 
 				foreach( $this->db as $db ) {
