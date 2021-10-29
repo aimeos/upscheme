@@ -611,6 +611,7 @@ differs between the database implementations.
 	<li><a href="#dbhastable">hasTable()</a></li>
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
+	<li><a href="#dbname">name()</a></li>
 	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
 	<li><a href="#dbrenameindex">renameIndex()</a></li>
 	<li><a href="#dbrenametable">renameTable()</a></li>
@@ -1002,6 +1003,23 @@ public function lastId( string $seq = null ) : string
 ```php
 $db->lastId();
 $db->lastId( 'seq_test' );
+```
+
+
+#### DB::name()
+
+Returns the name of the database
+
+```php
+public function name() : string
+```
+
+* @return string Database name
+
+**Examples:**
+
+```php
+$db->name();
 ```
 
 

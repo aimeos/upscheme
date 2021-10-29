@@ -338,6 +338,17 @@ class DB
 
 
 	/**
+	 * Returns the name of the database
+	 *
+	 * @return string Database name
+	 */
+	public function name() : string
+	{
+		return $this->to->getName();
+	}
+
+
+	/**
 	 * Renames a column or a list of column which belong to the given table
 	 *
 	 * @param string $table Name of the table

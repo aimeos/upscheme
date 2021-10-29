@@ -313,6 +313,13 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testName()
+	{
+		$this->schemamock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'testdb' ) );
+		$this->assertEquals( 'testdb', $this->object->name() );
+	}
+
+
 	public function testRenameColumn()
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
