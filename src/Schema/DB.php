@@ -367,6 +367,31 @@ class DB
 
 
 	/**
+	 * Quotes a value
+	 *
+	 * @param mixed $value Value to use in a non-prepared SQL query
+	 * @param mixed $type DBAL parameter type
+	 * @return string Quoted value
+	 */
+	public function q( $value, $type = \Doctrine\DBAL\ParameterType::STRING ) : string
+	{
+		return $this->conn->quote( $value, $type );
+	}
+
+
+	/**
+	 * Quotes a database identifier
+	 *
+	 * @param string $identifier Identifier like table or column name
+	 * @return string Quoted identifier
+	 */
+	public function qi( string $identifier ) : string
+	{
+		return $this->conn->quoteIdentifier( $identifier );
+	}
+
+
+	/**
 	 * Executes a custom SQL query
 	 *
 	 * @param string $sql Custom SQL statement

@@ -574,6 +574,26 @@ which enables you to build more advanced statement. Please have a look into the
 [Doctrine Query Builder](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html)
 documentation for more details.
 
+If you want to use values directly in a SQL statement (use prepared statements for
+security reasons whenever possible!), you have to quote the values using the
+[`q()](#dbq) method:
+
+```php
+$db = $this->db();
+
+$result = $db->stmt()->select( '*' )->from( 'products' )
+	->where( 'status = ' . $db->q( $_GET['status'] ) )->execute();
+```
+
+Similarly, if your schema contains reserved keywords, e.g. as column names, you
+have to quote them as well using the [`qi()`](#dbqi) method:
+
+```php
+$db = $this->db();
+
+$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->execute();
+```
+
 ### Executing custom SQL
 
 Doctrine only supports a common subset of SQL statements and not all possibilities
@@ -634,6 +654,8 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
 	<li><a href="#dbname">name()</a></li>
+	<li><a href="#dbq">q()</a></li>
+	<li><a href="#dbqi">qi()</a></li>
 	<li><a href="#dbquery">query()</a></li>
 	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
 	<li><a href="#dbrenameindex">renameIndex()</a></li>
@@ -1068,6 +1090,44 @@ public function name() : string
 
 ```php
 $db->name();
+```
+
+
+#### DB::q()
+
+Quotes a value
+
+```php
+public function q( $value, $type = \Doctrine\DBAL\ParameterType::STRING ) : string
+```
+
+* @param mixed $value Value to use in a non-prepared SQL query
+* @param mixed $type DBAL parameter type
+* @return string Quoted value
+
+**Examples:**
+
+```php
+$result = $db->stmt()->select( '*' )->from( 'products' )
+	->where( 'status = ' . $db->q( $_GET['status'] ) )->execute();
+```
+
+
+#### DB::qi()
+
+Quotes a database identifier
+
+```php
+public function qi( string $identifier ) : string
+```
+
+* @param string $identifier Identifier like table or column name
+* @return string Quoted identifier
+
+**Examples:**
+
+```php
+$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->execute();
 ```
 
 

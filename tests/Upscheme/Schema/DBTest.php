@@ -306,6 +306,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+
 	public function testInsert()
 	{
 		$this->connmock->expects( $this->once() )->method( 'insert' );
@@ -324,6 +325,20 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->schemamock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'testdb' ) );
 		$this->assertEquals( 'testdb', $this->object->name() );
+	}
+
+
+	public function testQ()
+	{
+		$this->connmock->expects( $this->once() )->method( 'quote' )->will( $this->returnValue( '123' ) );
+		$this->assertEquals( '123', $this->object->q( 123 ) );
+	}
+
+
+	public function testQi()
+	{
+		$this->connmock->expects( $this->once() )->method( 'quoteIdentifier' )->will( $this->returnValue( '"key"' ) );
+		$this->assertEquals( '"key"', $this->object->qi( 'key' ) );
 	}
 
 
