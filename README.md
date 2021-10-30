@@ -551,19 +551,22 @@ instead:
 ```php
 $db = $this->db();
 
-$db->stmt()->select( 'id', 'name' )
+$result = $db->stmt()->select( 'id', 'name' )
 	->from( 'users' )
 	->where( 'status != ?' )
-	->setParameter( 0, false );
+	->setParameter( 0, false )
+	->execute();
 
 $db->stmt()->delete( 'users' )
 	->where( 'status != ?' )
-	->setParameter( 0, false );
+	->setParameter( 0, false )
+	->execute();
 
 $db->stmt()->update( 'users' )
 	->set( 'status', '?' )
 	->where( 'status != ?' )
-	->setParameters( [true, false] );
+	->setParameters( [true, false] )
+	->execute();
 ```
 
 The [`stmt()`](#dbstmt) method returns a `Doctrine\DBAL\Query\QueryBuilder` object
@@ -1160,9 +1163,9 @@ public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
 **Examples:**
 
 ```php
-$db->stmt()->delete( 'test' )->where( 'status = ?' )->setParameter( 0, false );
-$db->stmt()->select( 'id', 'label' )->from( 'test' );
-$db->stmt()->update( 'test' )->set( 'status', '?' )->setParameter( 0, true );
+$db->stmt()->delete( 'test' )->where( 'status = ?' )->setParameter( 0, false )->execute();
+$db->stmt()->update( 'test' )->set( 'status', '?' )->setParameter( 0, true )->execute();
+$result = $db->stmt()->select( 'id', 'label' )->from( 'test' )->execute();
 ```
 
 For more details about the available Doctrine QueryBuilder methods, please have
