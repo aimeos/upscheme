@@ -196,19 +196,19 @@ class DB
 
 
 	/**
-	 * Executes a custom SQL statement if the database is of the given type
+	 * Executes a custom SQL statement
 	 *
 	 * The database changes are not applied immediately so always call up()
 	 * before executing custom statements to make sure that the tables you want
 	 * to use has been created before!
 	 *
-	 * @param array|string $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @param array|string $sql Custom SQL statement or statements
+	 * @param array|string|null $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2") or NULL for all
 	 * @return self Same object for fluid method calls
 	 */
-	public function for( $for, $sql ) : self
+	public function exec( $sql, $for = null ) : self
 	{
-		if( in_array( $this->type(), (array) $for ) )
+		if( $for === null || in_array( $this->type(), (array) $for ) )
 		{
 			foreach( (array) $sql as $entry ) {
 				$this->conn->executeStatement( $entry );

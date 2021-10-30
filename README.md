@@ -578,20 +578,19 @@ documentation for more details.
 
 Doctrine only supports a common subset of SQL statements and not all possibilities
 the database vendors have implemented. To remove that limit, Upscheme offers the
-[`for()`](#dbfor) method to execute custom SQL statements not supported by
-Doctrine DBAL. The method will execute the statement only for the database platform
-or platforms named in the first parameter:
+[`exec()`](#dbexec) method to execute custom SQL statements not supported by
+Doctrine DBAL. Also, the method can execute the statements for the database platform
+or platforms only named in the second parameter:
 
 ```php
 $db = $this->db();
 
-if( !$db->hasIndex( 'product', 'idx_text' ) ) {
-	$db->for( 'mysql', 'CREATE FULLTEXT INDEX idx_text ON product (text)' );
-}
+$db->exec( 'CREATE INDEX idx_label ON product (label)' );
+$db->exec( 'CREATE FULLTEXT INDEX idx_text ON product (text)', 'mysql' );
 ```
 
-This is especially useful for creating special types of indexes where the syntax
-differs between the database implementations.
+Specifying the database platform is especially useful for creating special types
+of indexes where the syntax differs between the database implementations.
 
 ### Database methods
 
@@ -606,7 +605,7 @@ differs between the database implementations.
 	<li><a href="#dbdropindex">dropIndex()</a></li>
 	<li><a href="#dbdropsequence">dropSequence()</a></li>
 	<li><a href="#dbdroptable">dropTable()</a></li>
-	<li><a href="#dbfor">for()</a></li>
+	<li><a href="#dbexec">exec()</a></li>
 	<li><a href="#dbhascolumn">hasColumn()</a></li>
 	<li><a href="#dbhasforeign">hasForeign()</a></li>
 	<li><a href="#dbhasindex">hasIndex()</a></li>
@@ -833,16 +832,16 @@ $db->dropTable( ['test', 'test2'] );
 If the table or one of the tables doesn't exist, it will be silently ignored.
 
 
-#### DB::for()
+#### DB::exec()
 
-Executes a custom SQL statement if the database is of the given database platform type
+Executes a custom SQL statement
 
 ```php
-public function for( $for, $sql ) : self
+public function exec( $sql, $for = null ) : self
 ```
 
-* @param array&#124;string `$type` Database type the statement should be executed for
 * @param array&#124;string `$sql` Custom SQL statement or statements
+* @param array&#124;string&#124;null `$type` Database type the statement should be executed for or NULL for all
 * @return self Same object for fluid method calls
 
 Available database platform types are:
@@ -861,12 +860,12 @@ to use has been created before!
 **Examples:**
 
 ```php
-$db->for( 'mysql', 'CREATE INDEX idx_test_label ON test (label(16))' );
+$db->exec( 'CREATE INDEX idx_test_label ON test (label(16))', 'mysql' );
 
-$db->for( ['mysql', 'sqlite'], [
+$db->exec( [
 	'DROP INDEX unq_test_status',
 	'UPDATE test SET status = 0 WHERE status IS NULL',
-] );
+], ['mysql', 'sqlite'] );
 ```
 
 

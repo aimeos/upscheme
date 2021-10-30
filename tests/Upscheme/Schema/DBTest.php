@@ -196,30 +196,29 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
-	public function testFor()
+	public function testExec()
 	{
-		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mysql' ) );
 		$this->connmock->expects( $this->once() )->method( 'executeStatement' );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', 'test' ) );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->exec( 'test' ) );
 	}
 
 
-	public function testForMultiple()
+	public function testExecMultiple()
 	{
 		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mysql' ) );
 		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', ['test', 'test2'] ) );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->exec( ['test', 'test2'], 'mysql' ) );
 	}
 
 
-	public function testForMismatch()
+	public function testExecMismatch()
 	{
 		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'pgsql' ) );
 		$this->connmock->expects( $this->never() )->method( 'executeStatement' );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', 'test' ) );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->exec( 'test', 'mysql' ) );
 	}
 
 
