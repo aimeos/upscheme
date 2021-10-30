@@ -202,13 +202,31 @@ class DB
 	 * before executing custom statements to make sure that the tables you want
 	 * to use has been created before!
 	 *
+	 * @param string $sql Custom SQL statement
+	 * @param array $params List of positional parameters or associative list of placeholders and parameters
+	 * @param array $types List of DBAL data types for the positional or associative placeholder parameters
+	 * @return int Number of affected rows
+	 */
+	public function exec( string $sql, array $params = [], array $types = [] ) : int
+	{
+		return $this->conn->executeStatement( $sql, $params, $types );
+	}
+
+
+	/**
+	 * Executes a custom SQL statement if the database is of the given type
+	 *
+	 * The database changes are not applied immediately so always call up()
+	 * before executing custom statements to make sure that the tables you want
+	 * to use has been created before!
+	 *
+	 * @param array|string $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @param array|string $sql Custom SQL statement or statements
-	 * @param array|string|null $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2") or NULL for all
 	 * @return self Same object for fluid method calls
 	 */
-	public function exec( $sql, $for = null ) : self
+	public function for( $for, $sql ) : self
 	{
-		if( $for === null || in_array( $this->type(), (array) $for ) )
+		if( in_array( $this->type(), (array) $for ) )
 		{
 			foreach( (array) $sql as $entry ) {
 				$this->conn->executeStatement( $entry );

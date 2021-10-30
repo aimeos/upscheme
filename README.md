@@ -578,31 +578,38 @@ documentation for more details.
 
 Doctrine only supports a common subset of SQL statements and not all possibilities
 the database vendors have implemented. To remove that limit, Upscheme offers the
-[`exec()`](#dbexec) method to execute custom SQL statements not supported by
-Doctrine DBAL. Also, the method can execute the statements for the database platform
-or platforms only named in the second parameter:
+[`exec()`](#dbexec), [`for()`](#dbfor) and [`query()`](#dbquery) methods to execute
+custom SQL statements not supported by Doctrine DBAL.
+
+To execute custom SQL queries use the [`query()`](#dbquery) method which returns a
+result set you can iterate over:
 
 ```php
-$db = $this->db();
-
-$db->exec( 'CREATE INDEX idx_label ON product (label)' );
-$db->exec( 'CREATE FULLTEXT INDEX idx_text ON product (text)', 'mysql' );
-```
-
-Specifying the database platform is especially useful for creating special types
-of indexes where the syntax differs between the database implementations.
-
-You can also execute custom SQL queries using the [`query()`](#dbquery) method:
-
-```php
-$db = $this->db();
-
-$result = $db->query( 'SELECT id, label, status FROM product WHERE label LIKE ?', ['test%'] );
+$sql = 'SELECT id, label, status FROM product WHERE label LIKE ?';
+$result = $this->db()->query( $sql, ['test%'] );
 
 foreach( $result->iterateKeyValue() as $key => $row ) {
 	// ...
 }
 ```
+
+For all other SQL statements use the [`exec()`](#dbexec) method wich returns the
+number of affected rows:
+
+```php
+$sql = 'UPDATE product SET status=? WHERE status=?';
+$num = $this->db()->exec( $sql, [1, 0] );
+```
+
+Using the [`for()`](#dbfor) method, you can also execute statements depending on
+the database platform:
+
+```php
+$this->db()->for( 'mysql', 'CREATE FULLTEXT INDEX idx_text ON product (text)' );
+```
+
+Specifying the database platform is very useful for creating special types
+of indexes where the syntax differs between the database implementations.
 
 ### Database methods
 
@@ -618,6 +625,7 @@ foreach( $result->iterateKeyValue() as $key => $row ) {
 	<li><a href="#dbdropsequence">dropSequence()</a></li>
 	<li><a href="#dbdroptable">dropTable()</a></li>
 	<li><a href="#dbexec">exec()</a></li>
+	<li><a href="#dbfor">for()</a></li>
 	<li><a href="#dbhascolumn">hasColumn()</a></li>
 	<li><a href="#dbhasforeign">hasForeign()</a></li>
 	<li><a href="#dbhasindex">hasIndex()</a></li>
@@ -850,11 +858,36 @@ If the table or one of the tables doesn't exist, it will be silently ignored.
 Executes a custom SQL statement
 
 ```php
-public function exec( $sql, $for = null ) : self
+public function exec( string $sql, array $params = [], array $types = [] ) : int
 ```
 
+* @param string $sql Custom SQL statement
+* @param array $params List of positional parameters or associative list of placeholders and parameters
+* @param array $types List of DBAL data types for the positional or associative placeholder parameters
+* @return int Number of affected rows
+
+The database changes are not applied immediately so always call up()
+before executing custom statements to make sure that the tables you want
+to use has been created before!
+
+**Examples:**
+
+```php
+$sql = 'UPDATE product SET status=? WHERE status=?';
+$num = $this->db()->exec( $sql, [1, 0] );
+```
+
+
+#### DB::for()
+
+Executes a custom SQL statement if the database is of the given type
+
+```php
+public function for( $type, $sql ) : self
+```
+
+* @param array&#124;string `$type` Database type the statement should be executed for
 * @param array&#124;string `$sql` Custom SQL statement or statements
-* @param array&#124;string&#124;null `$type` Database type the statement should be executed for or NULL for all
 * @return self Same object for fluid method calls
 
 Available database platform types are:
@@ -873,12 +906,12 @@ to use has been created before!
 **Examples:**
 
 ```php
-$db->exec( 'CREATE INDEX idx_test_label ON test (label(16))', 'mysql' );
+$db->for( 'mysql', 'CREATE INDEX idx_test_label ON test (label(16))' );
 
-$db->exec( [
+$db->for( ['mysql', 'sqlite'], [
 	'DROP INDEX unq_test_status',
 	'UPDATE test SET status = 0 WHERE status IS NULL',
-], ['mysql', 'sqlite'] );
+] );
 ```
 
 
