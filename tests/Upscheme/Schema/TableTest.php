@@ -201,6 +201,15 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
 
+		$col = $this->object->col( 'unittest' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );
+		$this->assertEquals( 'unittest', $col->name() );
+		$this->assertEquals( 'integer', $col->type() );
+
+
+		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+
 		$col = $this->object->col( 'unittest', 'bigint' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $col );

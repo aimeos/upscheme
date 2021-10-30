@@ -1776,11 +1776,11 @@ $table->char( 'testcol', 3 );
 Creates a new column or returns the existing one
 
 ```php
-public function col( string $name, string $type ) : Column
+public function col( string $name, string $type = null ) : Column
 ```
 
 * @param string `$name` Name of the column
-* @param string `$type` Type of the column
+* @param string|null `$type` Type of the column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 If the column doesn't exist yet, it will be created.
@@ -1788,6 +1788,7 @@ If the column doesn't exist yet, it will be created.
 **Examples:**
 
 ```php
+$table->col( 'testcol' );
 $table->col( 'testcol', 'tinyint' );
 ```
 

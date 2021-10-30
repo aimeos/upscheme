@@ -174,15 +174,19 @@ class Table
 	 * If the column doesn't exist yet, it will be created.
 	 *
 	 * @param string $name Name of the column
-	 * @param string $type Type of the column
+	 * @param string $type|null Type of the column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function col( string $name, string $type ) : Column
+	public function col( string $name, string $type = null ) : Column
 	{
 		if( $this->table->hasColumn( $name ) ) {
-			$col = $this->table->getColumn( $name )->setType( \Doctrine\DBAL\Types\Type::getType( $type ) );
+			$col = $this->table->getColumn( $name );
 		} else {
-			$col = $this->table->addColumn( $name, $type );
+			$col = $this->table->addColumn( $name, $type ?: 'string' );
+		}
+
+		if( $type ) {
+			$col->setType( \Doctrine\DBAL\Types\Type::getType( $type ) );
 		}
 
 		return new Column( $this->db, $this, $col );

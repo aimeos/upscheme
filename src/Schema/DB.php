@@ -477,11 +477,11 @@ class DB
 	/**
 	 * Returns the sequence object for the given name
 	 *
-	 * If the sequence doesn't exist yet, it will be created. Passing a closure
-	 * to modify the sequence will also persist the changes in the database automatically.
+	 * If the sequence doesn't exist yet, it will be created. To persist the changes
+	 * in the database, you have to call up() at the end.
 	 *
 	 * @param string $name Name of the sequence
-	 * @param \Closure|null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
+	 * @param \Closure|null $fcn Anonymous function with ($sequence) parameter creating or updating the sequence definition
 	 * @return \Aimeos\Upscheme\Schema\Sequence Sequence object
 	 */
 	public function sequence( string $name, \Closure $fcn = null ) : Sequence
@@ -516,8 +516,8 @@ class DB
 	/**
 	 * Returns the table object for the given name
 	 *
-	 * If the table doesn't exist yet, it will be created. Passing a closure to
-	 * modify the sequence will also persist the changes in the database automatically.
+	 * If the table doesn't exist yet, it will be created. To persist the changes
+	 * in the database, you have to call up() at the end.
 	 *
 	 * @param string $name Name of the table
 	 * @param \Closure|null $fcn Anonymous function with ($table) parameter creating or updating the table definition
