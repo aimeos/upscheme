@@ -329,7 +329,9 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testQuery()
 	{
-		$mock = $this->getMockBuilder( '\Doctrine\DBAL\Result' )->getMock();
+		$mock = $this->getMockBuilder( '\Doctrine\DBAL\Result' )
+			->disableOriginalConstructor()
+			->getMock();
 
 		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->will( $this->returnValue( $mock ) );
 
