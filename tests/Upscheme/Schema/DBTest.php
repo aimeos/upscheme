@@ -319,6 +319,16 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testQuery()
+	{
+		$mock = $this->getMockBuilder( '\Doctrine\DBAL\Result' )->getMock();
+
+		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->will( $this->returnValue( $mock ) );
+
+		$this->assertInstanceOf( \Doctrine\DBAL\Result::class, $this->object->query( 'test' ) );
+	}
+
+
 	public function testRenameColumn()
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );

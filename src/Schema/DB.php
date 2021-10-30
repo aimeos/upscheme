@@ -349,6 +349,20 @@ class DB
 
 
 	/**
+	 * Executes a custom SQL query
+	 *
+	 * @param string $sql Custom SQL statement
+	 * @param array $params List of positional parameters or associative list of placeholders and parameters
+	 * @param array $types List of DBAL data types for the positional or associative placeholder parameters
+	 * @return \Doctrine\DBAL\Result DBAL result set object
+	 */
+	public function query( string $sql, array $params = [], array $types = [] ) : \Doctrine\DBAL\Result
+	{
+		return $this->conn->executeQuery( $sql, $params, $types );
+	}
+
+
+	/**
 	 * Renames a column or a list of column which belong to the given table
 	 *
 	 * @param string $table Name of the table

@@ -592,6 +592,18 @@ $db->exec( 'CREATE FULLTEXT INDEX idx_text ON product (text)', 'mysql' );
 Specifying the database platform is especially useful for creating special types
 of indexes where the syntax differs between the database implementations.
 
+You can also execute custom SQL queries using the [`query()`](#dbquery) method:
+
+```php
+$db = $this->db();
+
+$result = $db->query( 'SELECT id, label, status FROM product WHERE label LIKE ?', ['test%'] );
+
+foreach( $result->iterateKeyValue() as $key => $row ) {
+	// ...
+}
+```
+
 ### Database methods
 
 <nav>
@@ -614,6 +626,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
 	<li><a href="#dbname">name()</a></li>
+	<li><a href="#dbquery">query()</a></li>
 	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
 	<li><a href="#dbrenameindex">renameIndex()</a></li>
 	<li><a href="#dbrenametable">renameTable()</a></li>
@@ -1022,6 +1035,30 @@ public function name() : string
 
 ```php
 $db->name();
+```
+
+
+#### DB::query()
+
+Executes a custom SQL query
+
+```php
+public function query( string $sql, array $params = [], array $types = [] ) : \Doctrine\DBAL\Result
+```
+
+* @param string $sql Custom SQL statement
+* @param array $params List of positional parameters or associative list of placeholders and parameters
+* @param array $types List of DBAL data types for the positional or associative placeholder parameters
+* @return \Doctrine\DBAL\Result DBAL result set object
+
+**Examples:**
+
+```php
+$result = $db->query( 'SELECT id, label, status FROM product WHERE label LIKE ?', ['test%'] );
+
+foreach( $result->iterateKeyValue() as $key => $row ) {
+	// ...
+}
 ```
 
 
