@@ -30,8 +30,6 @@ interface Iface
 
 	/**
 	 * Executes the tasks to update the database
-	 *
-	 * @return self Same object for fluid method calls
 	 */
 	public function up();
 }
