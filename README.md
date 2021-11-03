@@ -1,4 +1,4 @@
-<a class="badge" href="https://github.com/aimeos/upscheme"><img src="https://circleci.com/gh/aimeos/aimeos-core.svg?style=shield" alt="Build Status" height="20"></a>
+<a class="badge" href="https://circleci.com/gh/aimeos/upscheme"><img src="https://circleci.com/gh/aimeos/upscheme.svg?style=shield" alt="Build Status" height="20"></a>
 <a class="badge" href="https://coveralls.io/github/aimeos/upscheme"><img src="https://coveralls.io/repos/github/aimeos/upscheme/badge.svg" alt="Coverage Status" height="20"></a>
 <a class="badge" href="https://packagist.org/packages/aimeos/upscheme"><img src="https://poser.pugx.org/aimeos/upscheme/license.svg" alt="License" height="20"></a>
 
