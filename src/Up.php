@@ -60,7 +60,7 @@ class Up
 	 */
 	public static function use( array $config, $paths )
 	{
-		return new static( $config, $paths );
+		return new self( $config, $paths );
 	}
 
 

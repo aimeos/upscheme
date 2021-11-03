@@ -11,9 +11,11 @@ namespace Aimeos\Upscheme\Schema;
 class DBTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
-	private $dbmock;
+	private $connmock;
+	private $schemamock;
 	private $smmock;
 	private $tablemock;
+	private $upmock;
 
 
 	protected function setUp() : void

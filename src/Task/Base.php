@@ -16,9 +16,6 @@ abstract class Base implements Iface
 {
 	use \Aimeos\Upscheme\Macro;
 
-
-	private static $methods = [];
-
 	private $up;
 
 

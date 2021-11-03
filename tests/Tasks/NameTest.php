@@ -31,7 +31,7 @@ class NameTest extends \PHPUnit\Framework\TestCase
 
 			foreach( $columns as $idx => $name )
 			{
-				$num = floor( $max / $count-- );
+				$num = (int) floor( $max / $count-- );
 				$parts = explode( '_', $name );
 				$name = array_pop( $parts );
 

@@ -16,9 +16,9 @@ class Create extends Base
 
 		$db->table( 'test', function( Table $t ) {
 
-			$this->info( 'Create test table', 1 );
+			$this->info( 'Create test table', 'v', 1 );
 
-			$t->bigint( 'id' )->seq( true )->primary( true );
+			$t->bigint( 'id' )->seq( true )->primary();
 //			$t->binary( 'hex' );
 //			$t->blob( 'image' );
 			$t->bool( 'status' );
@@ -46,7 +46,7 @@ class Create extends Base
 
 		$db->table( 'testref', function( Table $t ) {
 
-			$this->info( 'Create testref table', 1 );
+			$this->info( 'Create testref table', 'v', 1 );
 
 			$t->id();
 			$t->foreign( 'parentid', 'test' );

@@ -10,7 +10,7 @@ class Update extends Base
 {
 	public function up()
 	{
-		$this->info( 'Change test table', 1 );
+		$this->info( 'Change test table', 'v', 1 );
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 

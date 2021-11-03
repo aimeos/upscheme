@@ -18,9 +18,9 @@ class CrudTest extends \PHPUnit\Framework\TestCase
 
 	public function testCreate()
 	{
-		Aimeos\Upscheme\Schema\Table::macro( 'default', function() {
-			$this->opt( 'engine', 'InnoDB' );
-			$this->string( 'editor' )->null( true );
+		Aimeos\Upscheme\Schema\Table::macro( 'default', function( $table ) {
+			$table->opt( 'engine', 'InnoDB' );
+			$table->string( 'editor' )->null( true );
 		} );
 
 		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->up();
