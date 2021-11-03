@@ -947,7 +947,7 @@ public function hasColumn( string $table, $name ) : bool
 
 * @param string `$table` Name of the table the column belongs to
 * @param array&#124;string `$name` Name of the column or columns
-* @return TRUE if the columns exists, FALSE if not
+* @return bool TRUE if the columns exists, FALSE if not
 
 **Examples:**
 
@@ -967,7 +967,7 @@ public function hasForeign( string $table, $name ) : bool
 
 * @param string `$table` Name of the table the foreign key constraint belongs to
 * @param array&#124;string `$name` Name of the foreign key constraint or constraints
-* @return TRUE if the foreign key constraint exists, FALSE if not
+* @return bool TRUE if the foreign key constraint exists, FALSE if not
 
 **Examples:**
 
@@ -987,7 +987,7 @@ public function hasIndex( string $table, $name ) : bool
 
 * @param string `$table` Name of the table the index belongs to
 * @param array&#124;string `$name` Name of the index or indexes
-* @return TRUE if the index exists, FALSE if not
+* @return bool TRUE if the index exists, FALSE if not
 
 **Examples:**
 
@@ -1006,7 +1006,7 @@ public function hasSequence( $name ) : bool
 ```
 
 * @param array&#124;string `$name` Name of the sequence or sequences
-* @return TRUE if the sequence exists, FALSE if not
+* @return bool TRUE if the sequence exists, FALSE if not
 
 **Examples:**
 
@@ -1025,7 +1025,7 @@ public function hasTable( $name ) : bool
 ```
 
 * @param array&#124;string `$name` Name of the table or tables
-* @return TRUE if the table exists, FALSE if not
+* @return bool TRUE if the table exists, FALSE if not
 
 **Examples:**
 
@@ -2171,7 +2171,7 @@ public function hasColumn( $name ) : bool
 ```
 
 * @param array&#124;string `$name` Name of the column or columns
-* @return TRUE if the columns exists, FALSE if not
+* @return bool TRUE if the columns exists, FALSE if not
 
 **Examples:**
 
@@ -2190,7 +2190,7 @@ public function hasIndex( $name ) : bool
 ```
 
 * @param array&#124;string `$name` Name of the index or indexes
-* @return TRUE if the indexes exists, FALSE if not
+* @return bool TRUE if the indexes exists, FALSE if not
 
 **Examples:**
 
@@ -2209,7 +2209,7 @@ public function hasForeign( $name ) : bool
 ```
 
 * @param array&#124;string `$name` Name of the foreign key constraint or constraints
-* @return TRUE if the foreign key constraints exists, FALSE if not
+* @return bool TRUE if the foreign key constraints exists, FALSE if not
 
 **Examples:**
 

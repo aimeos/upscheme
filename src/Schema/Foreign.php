@@ -31,7 +31,7 @@ class Foreign
 	/**
 	 * Initializes the foreign key object
 	 *
-	 * @param Aimeos\Upscheme\Schema\Table $table Table schema object
+	 * @param \Aimeos\Upscheme\Schema\Table $table Table schema object
 	 * @param \Doctrine\DBAL\Schema\Table $table Doctrine table object
 	 * @param array $localcol List of columns from the current table spawning the foreign key constraint
 	 * @param string $fktable Name of the referenced table

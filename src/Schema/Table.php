@@ -464,7 +464,7 @@ class Table
 	 * Checks if the column exists
 	 *
 	 * @param array|string $name Name of the column or columns
-	 * @return TRUE if the columns exists, FALSE if not
+	 * @return bool TRUE if the columns exists, FALSE if not
 	 */
 	public function hasColumn( $name ) : bool
 	{
@@ -483,7 +483,7 @@ class Table
 	 * Checks if the index exists
 	 *
 	 * @param array|string $name Name of the index or indexes
-	 * @return TRUE if the indexes exists, FALSE if not
+	 * @return bool TRUE if the indexes exists, FALSE if not
 	 */
 	public function hasIndex( $name ) : bool
 	{
@@ -502,7 +502,7 @@ class Table
 	 * Checks if the foreign key constraint exists
 	 *
 	 * @param array|string $name Name of the foreign key constraint or constraints
-	 * @return TRUE if the foreign key constraints exists, FALSE if not
+	 * @return bool TRUE if the foreign key constraints exists, FALSE if not
 	 */
 	public function hasForeign( $name ) : bool
 	{

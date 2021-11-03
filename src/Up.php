@@ -30,7 +30,7 @@ class Up
 	 * Initializes the new object
 	 *
 	 * @param array $config One or more database configuration parameters
-	 * @param array|string One or more paths to the tasks which updates the database
+	 * @param array|string $paths One or more paths to the tasks which updates the database
 	 */
 	public function __construct( array $config, $paths )
 	{
@@ -55,7 +55,7 @@ class Up
 	 * Creates a new Upscheme object initialized with the given configuration and paths
 	 *
 	 * @param array $config One or more database configuration parameters
-	 * @param array|string One or more paths to the tasks which updates the database
+	 * @param array|string $paths One or more paths to the tasks which updates the database
 	 * @return \Aimeos\Upscheme\Up Upscheme object
 	 */
 	public static function use( array $config, $paths )

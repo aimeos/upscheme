@@ -242,7 +242,7 @@ class DB
 	 *
 	 * @param string $table Name of the table the column belongs to
 	 * @param array|string $name Name of the column or columns
-	 * @return TRUE if the columns exists, FALSE if not
+	 * @return bool TRUE if the columns exists, FALSE if not
 	 */
 	public function hasColumn( string $table, $name ) : bool
 	{
@@ -259,7 +259,7 @@ class DB
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
 	 * @param array|string $name Name of the foreign key constraint or constraints
-	 * @return TRUE if the foreign key constraint exists, FALSE if not
+	 * @return bool TRUE if the foreign key constraint exists, FALSE if not
 	 */
 	public function hasForeign( string $table, $name ) : bool
 	{
@@ -276,7 +276,7 @@ class DB
 	 *
 	 * @param string $table Name of the table the index belongs to
 	 * @param array|string $name Name of the index or indexes
-	 * @return TRUE if the index exists, FALSE if not
+	 * @return bool TRUE if the index exists, FALSE if not
 	 */
 	public function hasIndex( string $table, $name ) : bool
 	{
@@ -292,7 +292,7 @@ class DB
 	 * Checks if the sequences exists
 	 *
 	 * @param array|string $name Name of the sequence or sequences
-	 * @return TRUE if the sequence exists, FALSE if not
+	 * @return bool TRUE if the sequence exists, FALSE if not
 	 */
 	public function hasSequence( $name ) : bool
 	{
@@ -311,7 +311,7 @@ class DB
 	 * Checks if the tables exists
 	 *
 	 * @param array|string $name Name of the table or tables
-	 * @return TRUE if the table exists, FALSE if not
+	 * @return bool TRUE if the table exists, FALSE if not
 	 */
 	public function hasTable( $name ) : bool
 	{
