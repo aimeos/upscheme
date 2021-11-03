@@ -67,7 +67,7 @@ class Sequence
 	 * Sets the new value for the given sequence option
 	 *
 	 * @param string $name Sequence option name
-	 * @param mixed Sequence option value
+	 * @param mixed $value Sequence option value
 	 */
 	public function __set( string $name, $value )
 	{
@@ -126,7 +126,7 @@ class Sequence
 	 * @param int $value New step size the sequence is incremented or decremented by or NULL to return current value
 	 * @return self|int Same object for setting value, current value without parameter
 	 */
-	public function step( string $value = null )
+	public function step( int $value = null )
 	{
 		if( $value === null ) {
 			return $this->sequence->getAllocationSize();

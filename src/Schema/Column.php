@@ -70,7 +70,7 @@ class Column
 	 * Sets the new value for the given column option
 	 *
 	 * @param string $name Column option name
-	 * @param mixed Column option value
+	 * @param mixed $value Column option value
 	 */
 	public function __set( string $name, $value )
 	{
@@ -117,10 +117,10 @@ class Column
 	/**
 	 * Sets the column charset or returns the current value
 	 *
-	 * @param mixed $value New column charset or NULL to return current value
-	 * @return self|mixed Same object for setting the value, current value without parameter
+	 * @param string|null $value New column charset or NULL to return current value
+	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function charset( $value = null )
+	public function charset( string $value = null )
 	{
 		return $this->opt( 'charset', $value );
 	}
@@ -129,10 +129,10 @@ class Column
 	/**
 	 * Sets the column collation or returns the current value
 	 *
-	 * @param mixed $value New column collation or NULL to return current value
-	 * @return self|mixed Same object for setting the value, current value without parameter
+	 * @param string|null $value New column collation or NULL to return current value
+	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function collation( $value = null )
+	public function collation( string $value = null )
 	{
 		return $this->opt( 'collation', $value );
 	}
@@ -175,8 +175,8 @@ class Column
 	/**
 	 * Sets the column fixed flag or returns the current value
 	 *
-	 * @param string|null $value New column fixed flag or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param bool|null $value New column fixed flag or NULL to return current value
+	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
 	public function fixed( bool $value = null )
 	{
@@ -192,8 +192,8 @@ class Column
 	/**
 	 * Sets the column length or returns the current value
 	 *
-	 * @param string|null $value New column length or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param int|null $value New column length or NULL to return current value
+	 * @return self|int Same object for setting the value, current value without parameter
 	 */
 	public function length( int $value = null )
 	{
@@ -220,8 +220,8 @@ class Column
 	/**
 	 * Sets the column null flag or returns the current value
 	 *
-	 * @param string|null $value New column null flag or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param bool|null $value New column null flag or NULL to return current value
+	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
 	public function null( bool $value = null )
 	{
@@ -237,8 +237,8 @@ class Column
 	/**
 	 * Sets the column precision or returns the current value
 	 *
-	 * @param string|null $value New column precision value or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param int|null $value New column precision value or NULL to return current value
+	 * @return self|int Same object for setting the value, current value without parameter
 	 */
 	public function precision( int $value = null )
 	{
@@ -254,8 +254,8 @@ class Column
 	/**
 	 * Sets the column scale or returns the current value
 	 *
-	 * @param string|null $value New column scale value or NULL to return current value
-	 * @return self|string Same object for setting the value, current value without parameter
+	 * @param int|null $value New column scale value or NULL to return current value
+	 * @return self|int Same object for setting the value, current value without parameter
 	 */
 	public function scale( int $value = null )
 	{
