@@ -43,7 +43,7 @@ class Sequence
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( $fcn = self::macro( $method ) ) {
+		if( self::macro( $method ) ) {
 			return $this->call( $method, $args );
 		}
 

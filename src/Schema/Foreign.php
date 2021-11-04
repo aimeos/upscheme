@@ -51,11 +51,11 @@ class Foreign
 			'onUpdate' => 'CASCADE',
 		];
 
-		if( !$table->hasIndex( $name ) ) {
+		if( $name && !$table->hasIndex( $name ) ) {
 			$table->index( $localcol, $name );
 		}
 
-		if( !$table->hasForeign( $name ) ) {
+		if( $name && !$table->hasForeign( $name ) ) {
 			$dbaltable->addForeignKeyConstraint( $fktable, (array) $localcol, (array) $fkcol, $this->opts, $name );
 		}
 	}
@@ -70,7 +70,7 @@ class Foreign
 	 */
 	public function __call( string $method, array $args )
 	{
-		if( $fcn = self::macro( $method ) ) {
+		if( self::macro( $method ) ) {
 			return $this->call( $method, $args );
 		}
 
