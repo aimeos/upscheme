@@ -884,8 +884,8 @@ public function exec( string $sql, array $params = [], array $types = [] ) : int
 ```
 
 * @param string $sql Custom SQL statement
-* @param array&#60;int|string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
-* @param array&#60;int|string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
+* @param array&#60;int&#124;string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
+* @param array&#60;int&#124;string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
 * @return int Number of affected rows
 
 The database changes are not applied immediately so always call up()
@@ -1912,7 +1912,7 @@ public function col( string $name, string $type = null ) : Column
 ```
 
 * @param string `$name` Name of the column
-* @param string|null `$type` Type of the column
+* @param string&#124;null `$type` Type of the column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 If the column doesn't exist yet, it will be created.
