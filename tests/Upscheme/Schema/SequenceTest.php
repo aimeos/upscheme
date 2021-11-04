@@ -59,9 +59,9 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'cache' )
-			->will( $this->returnValue( false ) );
+			->will( $this->returnValue( 1000 ) );
 
-		$this->assertEquals( false, $object->cache );
+		$this->assertEquals( 1000, $object->cache );
 	}
 
 
@@ -74,7 +74,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 
 		$object->expects( $this->once() )->method( 'cache' );
 
-		$object->cache = true;
+		$object->cache = 100;
 	}
 
 
