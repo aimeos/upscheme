@@ -19,9 +19,24 @@ class DB
 	use \Aimeos\Upscheme\Macro;
 
 
+	/**
+	 * @var \Doctrine\DBAL\Connection
+	 */
 	private $conn;
+
+	/**
+	 * @var \Doctrine\DBAL\Schema\Schema
+	 */
 	private $from;
+
+	/**
+	 * @var \Doctrine\DBAL\Schema\Schema
+	 */
 	private $to;
+
+	/**
+	 * @var \Aimeos\Upscheme\Up
+	 */
 	private $up;
 
 
@@ -44,7 +59,7 @@ class DB
 	 * Calls custom methods or passes unknown method calls to the Doctrine schema object
 	 *
 	 * @param string $method Name of the method
-	 * @param array $args Method parameters
+	 * @param array<mixed> $args Method parameters
 	 * @return mixed Return value of the called method
 	 */
 	public function __call( string $method, array $args )
@@ -74,7 +89,7 @@ class DB
 	/**
 	 * Closes the database connection
 	 */
-	public function close()
+	public function close() : void
 	{
 		$this->up();
 		$this->conn->close();
@@ -89,7 +104,7 @@ class DB
 	 * column names but no external input!
 	 *
 	 * @param string $table Name of the table
-	 * @param array|null $conditions Key/value pairs of column names and value to compare with
+	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
 	 * @return self Same object for fluid method calls
 	 */
 	public function delete( string $table, array $conditions = null ) : self
@@ -103,7 +118,7 @@ class DB
 	 * Drops the column given by its name if it exists
 	 *
 	 * @param string $table Name of the table the column belongs to
-	 * @param array|string $name Name of the column or columns
+	 * @param array<string>|string $name Name of the column or columns
 	 * @return self Same object for fluid method calls
 	 */
 	public function dropColumn( string $table, $name ) : self
@@ -123,7 +138,7 @@ class DB
 	 * Drops the foreign key constraint given by its name if it exists
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
-	 * @param array|string $name Name of the foreign key constraint or constraints
+	 * @param array<string>|string $name Name of the foreign key constraint or constraints
 	 * @return self Same object for fluid method calls
 	 */
 	public function dropForeign( string $table, $name ) : self
@@ -143,7 +158,7 @@ class DB
 	 * Drops the index given by its name if it exists
 	 *
 	 * @param string $table Name of the table the index belongs to
-	 * @param array|string $name Name of the index or indexes
+	 * @param array<string>|string $name Name of the index or indexes
 	 * @return self Same object for fluid method calls
 	 */
 	public function dropIndex( string $table, $name ) : self
@@ -162,7 +177,7 @@ class DB
 	/**
 	 * Drops the sequence given by its name if it exists
 	 *
-	 * @param array|string $name Name of the sequence or sequences
+	 * @param array<string>|string $name Name of the sequence or sequences
 	 * @return self Same object for fluid method calls
 	 */
 	public function dropSequence( $name ) : self
@@ -181,7 +196,7 @@ class DB
 	/**
 	 * Drops the table given by its name if it exists
 	 *
-	 * @param array|string $name Name of the table or tables
+	 * @param array<string>|string $name Name of the table or tables
 	 * @return self Same object for fluid method calls
 	 */
 	public function dropTable( $name ) : self
@@ -205,8 +220,8 @@ class DB
 	 * to use has been created before!
 	 *
 	 * @param string $sql Custom SQL statement
-	 * @param array $params List of positional parameters or associative list of placeholders and parameters
-	 * @param array $types List of DBAL data types for the positional or associative placeholder parameters
+	 * @param array<int|string,mixed> $params List of positional parameters or associative list of placeholders and parameters
+	 * @param array<int|string,mixed> $types List of DBAL data types for the positional or associative placeholder parameters
 	 * @return int Number of affected rows
 	 */
 	public function exec( string $sql, array $params = [], array $types = [] ) : int
@@ -222,8 +237,8 @@ class DB
 	 * before executing custom statements to make sure that the tables you want
 	 * to use has been created before!
 	 *
-	 * @param array|string $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
-	 * @param array|string $sql Custom SQL statement or statements
+	 * @param array<string>|string $for Database type the statement should be executed for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+	 * @param array<string>|string $sql Custom SQL statement or statements
 	 * @return self Same object for fluid method calls
 	 */
 	public function for( $for, $sql ) : self
@@ -243,7 +258,7 @@ class DB
 	 * Checks if the columns exists
 	 *
 	 * @param string $table Name of the table the column belongs to
-	 * @param array|string $name Name of the column or columns
+	 * @param array<string>|string $name Name of the column or columns
 	 * @return bool TRUE if the columns exists, FALSE if not
 	 */
 	public function hasColumn( string $table, $name ) : bool
@@ -260,7 +275,7 @@ class DB
 	 * Checks if the foreign key constraints exists
 	 *
 	 * @param string $table Name of the table the foreign key constraint belongs to
-	 * @param array|string $name Name of the foreign key constraint or constraints
+	 * @param array<string>|string $name Name of the foreign key constraint or constraints
 	 * @return bool TRUE if the foreign key constraint exists, FALSE if not
 	 */
 	public function hasForeign( string $table, $name ) : bool
@@ -277,7 +292,7 @@ class DB
 	 * Checks if the indexes exists
 	 *
 	 * @param string $table Name of the table the index belongs to
-	 * @param array|string $name Name of the index or indexes
+	 * @param array<string>|string $name Name of the index or indexes
 	 * @return bool TRUE if the index exists, FALSE if not
 	 */
 	public function hasIndex( string $table, $name ) : bool
@@ -293,7 +308,7 @@ class DB
 	/**
 	 * Checks if the sequences exists
 	 *
-	 * @param array|string $name Name of the sequence or sequences
+	 * @param array<string>|string $name Name of the sequence or sequences
 	 * @return bool TRUE if the sequence exists, FALSE if not
 	 */
 	public function hasSequence( $name ) : bool
@@ -312,7 +327,7 @@ class DB
 	/**
 	 * Checks if the tables exists
 	 *
-	 * @param array|string $name Name of the table or tables
+	 * @param array<string>|string $name Name of the table or tables
 	 * @return bool TRUE if the table exists, FALSE if not
 	 */
 	public function hasTable( $name ) : bool
@@ -335,7 +350,7 @@ class DB
 	 * Only use fixed strings for table name and column names but no external input!
 	 *
 	 * @param string $table Name of the table
-	 * @param array $data Key/value pairs of column name/value to insert
+	 * @param array<string,mixed> $data Key/value pairs of column name/value to insert
 	 * @return self Same object for fluid method calls
 	 */
 	public function insert( string $table, array $data ) : self
@@ -397,8 +412,8 @@ class DB
 	 * Executes a custom SQL query
 	 *
 	 * @param string $sql Custom SQL statement
-	 * @param array $params List of positional parameters or associative list of placeholders and parameters
-	 * @param array $types List of DBAL data types for the positional or associative placeholder parameters
+	 * @param array<int|string,mixed> $params List of positional parameters or associative list of placeholders and parameters
+	 * @param array<int|string,mixed> $types List of DBAL data types for the positional or associative placeholder parameters
 	 * @return \Doctrine\DBAL\Result DBAL result set object
 	 */
 	public function query( string $sql, array $params = [], array $types = [] ) : \Doctrine\DBAL\Result
@@ -411,7 +426,7 @@ class DB
 	 * Renames a column or a list of column which belong to the given table
 	 *
 	 * @param string $table Name of the table
-	 * @param array|string $from Column name or array of old/new column names
+	 * @param array<string>|string $from Column name or array of old/new column names
 	 * @param string|null $to New column name or NULL if first parameter is an array
 	 * @return self Same object for fluid method calls
 	 */
@@ -444,7 +459,7 @@ class DB
 	/**
 	 * Renames an index or a list of indexes which belong to the given table
 	 *
-	 * @param array|string $from Index name or array of old/new index names (if new index name is NULL, it will be generated)
+	 * @param array<string>|string $from Index name or array of old/new index names (if new index name is NULL, it will be generated)
 	 * @param string|null $to New index name or NULL for autogenerated name (ignored if first parameter is an array)
 	 * @return self Same object for fluid method calls
 	 */
@@ -458,7 +473,7 @@ class DB
 	/**
 	 * Renames a table or a list of tables which belong to the current schema
 	 *
-	 * @param array|string $from Table name or array of old/new table names
+	 * @param array<string>|string $from Table name or array of old/new table names
 	 * @param string|null $to New table name or ignored if first parameter is an array
 	 * @return self Same object for fluid method calls
 	 */
@@ -501,8 +516,8 @@ class DB
 	 * from the stmt() method instead.
 	 *
 	 * @param string $table Name of the table
-	 * @param array|null $conditions Key/value pairs of column names and value to compare with
-	 * @return array List of associative arrays containing column name/value pairs
+	 * @param array<string>|null $conditions Key/value pairs of column names and value to compare with
+	 * @return array<int, array<string, mixed>> List of associative arrays containing column name/value pairs
 	 */
 	public function select( string $table, array $conditions = null ) : array
 	{
@@ -647,8 +662,8 @@ class DB
 	 * column names but no external input!
 	 *
 	 * @param string $table Name of the table
-	 * @param array $data Key/value pairs of column name/value to update
-	 * @param array|null $conditions Key/value pairs of column names and value to compare with
+	 * @param array<string,mixed> $data Key/value pairs of column name/value to update
+	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
 	 * @return self Same object for fluid method calls
 	 */
 	public function update( string $table, array $data, array $conditions = null ) : self

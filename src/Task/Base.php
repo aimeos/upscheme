@@ -18,6 +18,9 @@ abstract class Base implements Iface
 {
 	use \Aimeos\Upscheme\Macro;
 
+	/**
+	 * @var \Aimeos\Upscheme\Up
+	 */
 	private $up;
 
 
@@ -36,7 +39,7 @@ abstract class Base implements Iface
 	 * Passes unknown method calls to the database scheme object
 	 *
 	 * @param string $method Method name
-	 * @param array $args Method arguments
+	 * @param array<mixed> $args Method arguments
 	 * @return mixed Result or database schema object
 	 */
 	public function __call( string $method, array $args )
@@ -52,7 +55,7 @@ abstract class Base implements Iface
 	/**
 	 * Returns the list of task names which depends on this task
 	 *
-	 * @return string[] List of task names
+	 * @return array<string> List of task names
 	 */
 	public function after() : array
 	{
@@ -63,7 +66,7 @@ abstract class Base implements Iface
 	/**
 	 * Returns the list of task names which this task depends on
 	 *
-	 * @return string[] List of task names
+	 * @return array<string> List of task names
 	 */
 	public function before() : array
 	{
@@ -103,7 +106,7 @@ abstract class Base implements Iface
 	 * Returns the paths for the setup tasks including the given relative paths
 	 *
 	 * @param string $relpath Relative path to add to the base paths
-	 * @return array List of paths which really exist
+	 * @return array<string> List of paths which really exist
 	 */
 	protected function paths( string $relpath = '' ) : array
 	{

@@ -14,6 +14,9 @@ namespace Aimeos\Upscheme;
  */
 trait Macro
 {
+	/**
+	 * @var array<string, \Closure>
+	 */
 	private static $macros = [];
 
 
@@ -53,7 +56,7 @@ trait Macro
 	 * Passes unknown method calls to the custom methods
 	 *
 	 * @param string $method Method name
-	 * @param array $args Method arguments
+	 * @param array<mixed> $args Method arguments
 	 * @return mixed Result or method call
 	 */
 	public function __call( string $method, array $args )
@@ -66,7 +69,7 @@ trait Macro
 	 * Passes unknown method calls to the custom methods
 	 *
 	 * @param string $method Method name
-	 * @param array $args Method arguments
+	 * @param array<mixed> $args Method arguments
 	 * @return mixed Result or method call
 	 */
 	public function call( string $method, array $args )

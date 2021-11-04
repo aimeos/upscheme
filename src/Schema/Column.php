@@ -19,8 +19,19 @@ class Column
 	use \Aimeos\Upscheme\Macro;
 
 
+	/**
+	 * @var \Aimeos\Upscheme\Schema\DB
+	 */
 	private $db;
+
+	/**
+	 * @var \Aimeos\Upscheme\Schema\Table
+	 */
 	private $table;
+
+	/**
+	 * @var \Doctrine\DBAL\Schema\Column
+	 */
 	private $column;
 
 
@@ -43,7 +54,7 @@ class Column
 	 * Calls custom methods or passes unknown method calls to the Doctrine column object
 	 *
 	 * @param string $method Name of the method
-	 * @param array $args Method parameters
+	 * @param array<mixed> $args Method parameters
 	 * @return mixed Return value of the called method
 	 */
 	public function __call( string $method, array $args )
@@ -85,7 +96,7 @@ class Column
 	 *
 	 * @param string $option Column option name
 	 * @param mixed $value New column option value or NULL to return current value
-	 * @param array|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+	 * @param array<string>|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @return self|mixed Same object for setting the value, current value without parameter
 	 */
 	public function opt( string $option, $value = null, $for = null )

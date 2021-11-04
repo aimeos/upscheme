@@ -19,8 +19,14 @@ class Sequence
 {
 	use \Aimeos\Upscheme\Macro;
 
-
+	/**
+	 * @var \Aimeos\Upscheme\Schema\DB
+	 */
 	private $db;
+
+	/**
+	 * @var \Doctrine\DBAL\Schema\Sequence
+	 */
 	private $sequence;
 
 
@@ -41,7 +47,7 @@ class Sequence
 	 * Calls custom methods or passes unknown method calls to the Doctrine table object
 	 *
 	 * @param string $method Name of the method
-	 * @param array $args Method parameters
+	 * @param array<mixed> $args Method parameters
 	 * @return mixed Return value of the called method
 	 */
 	public function __call( string $method, array $args )

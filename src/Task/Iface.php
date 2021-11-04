@@ -17,14 +17,14 @@ interface Iface
 	/**
 	 * Returns the list of task names which depends on this task
 	 *
-	 * @return string[] List of task names
+	 * @return array<string> List of task names
 	 */
 	public function after() : array;
 
 	/**
 	 * Returns the list of task names which this task depends on
 	 *
-	 * @return string[] List of task names
+	 * @return array<string> List of task names
 	 */
 	public function before() : array;
 

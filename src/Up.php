@@ -17,20 +17,47 @@ class Up
 	use Macro;
 
 
+	/**
+	 * @var array<string,string|array<string,string>>
+	 */
 	private $config;
+
+	/**
+	 * @var array<string,\Aimeos\Upscheme\Task\Iface>
+	 */
 	private $tasks;
+
+	/**
+	 * @var array<string>
+	 */
 	private $tasksDone;
+
+	/**
+	 * @var array<string,array<string>>
+	 */
 	private $dependencies;
+
+	/**
+	 * @var int
+	 */
 	private $verbose = 0;
+
+	/**
+	 * @var array<string>
+	 */
 	private $paths = [];
+
+	/**
+	 * @var array<string,\Aimeos\Upscheme\Schema\DB>
+	 */
 	private $db = [];
 
 
 	/**
 	 * Initializes the new object
 	 *
-	 * @param array $config One or more database configuration parameters
-	 * @param array|string $paths One or more paths to the tasks which updates the database
+	 * @param array<string,string|array<string,string>> $config One or more database configuration parameters
+	 * @param array<string>|string $paths One or more paths to the tasks which updates the database
 	 */
 	public function __construct( array $config, $paths )
 	{
@@ -54,8 +81,8 @@ class Up
 	/**
 	 * Creates a new Upscheme object initialized with the given configuration and paths
 	 *
-	 * @param array $config One or more database configuration parameters
-	 * @param array|string $paths One or more paths to the tasks which updates the database
+	 * @param array<string,string|array<string,string>> $config One or more database configuration parameters
+	 * @param array<string>|string $paths One or more paths to the tasks which updates the database
 	 * @return \Aimeos\Upscheme\Up Upscheme object
 	 */
 	public static function use( array $config, $paths ) : self
@@ -113,7 +140,7 @@ class Up
 	/**
 	 * Returns the paths for the setup tasks
 	 *
-	 * @return array List of paths
+	 * @return array<string> List of paths
 	 */
 	public function paths() : array
 	{
@@ -193,7 +220,7 @@ class Up
 	/**
 	 * Creates a new database connection from the given configuration
 	 *
-	 * @param array $cfg Database configuration
+	 * @param array<string,array|string> $cfg Database configuration
 	 * @return \Doctrine\DBAL\Connection New DBAL database connection
 	 */
 	protected function connect( array $cfg ) : \Doctrine\DBAL\Connection
@@ -214,8 +241,8 @@ class Up
 	/**
 	 * Creates the tasks from the given directories
 	 *
-	 * @param string[] $paths List of paths containing task classes
-	 * @return \Aimeos\Upscheme\Task\Iface[] List of task objects
+	 * @param array<string> $paths List of paths containing task classes
+	 * @return array<\Aimeos\Upscheme\Task\Iface> List of task objects
 	 */
 	protected function createTasks( array $paths ) : array
 	{
@@ -256,8 +283,8 @@ class Up
 	/**
 	 * Executes each task depending of the task dependencies
 	 *
-	 * @param string[] $tasknames List of task names
-	 * @param string[] $stack List of task names that are scheduled after this task
+	 * @param array<string> $tasknames List of task names
+	 * @param array<string> $stack List of task names that are scheduled after this task
 	 */
 	protected function runTasks( array $tasknames, array $stack = [] ) : void
 	{
