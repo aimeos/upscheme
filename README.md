@@ -680,7 +680,7 @@ public function __call( string $method, array $args )
 ```
 
 * @param string `$method` Name of the method
-* @param array `$args` Method parameters
+* @param array&#60;mixed&#62; `$args` Method parameters
 * @return mixed Return value of the called method
 
 **Examples:**
@@ -723,7 +723,7 @@ $db->hasExplicitForeignKeyIndexes();
 Closes the database connection
 
 ```php
-public function close()
+public function close() : void
 ```
 
 Call `close()` only for DB schema objects created with `$this->db( '...', true )`.
@@ -748,7 +748,7 @@ public function delete( string $table, array $conditions = null ) : self
 ```
 
 * @param string `$table` Name of the table
-* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
+* @param array&#60;string,mixed&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return self Same object for fluid method calls
 
 Warning: The condition values are escaped but the table name and condition
@@ -775,7 +775,7 @@ public function dropColumn( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the column belongs to
-* @param array&#124;string `$name` Name of the column or columns
+* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -797,7 +797,7 @@ public function dropForeign( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -820,7 +820,7 @@ public function dropIndex( string $table, $name ) : self
 ```
 
 * @param string `$table` Name of the table the index belongs to
-* @param array&#124;string `$name` Name of the index or indexes
+* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -841,7 +841,7 @@ Drops the sequence given by its name if it exists
 public function dropSequence( $name ) : self
 ```
 
-* @param array&#124;string `$name` Name of the sequence or sequences
+* @param array&#60;string&#62;&#124;string `$name` Name of the sequence or sequences
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -862,7 +862,7 @@ Drops the table given by its name if it exists
 public function dropTable( $name ) : self
 ```
 
-* @param array&#124;string `$name` Name of the table or tables
+* @param array&#60;string&#62;&#124;string `$name` Name of the table or tables
 * @return self Same object for fluid method calls
 
 **Examples:**
@@ -884,8 +884,8 @@ public function exec( string $sql, array $params = [], array $types = [] ) : int
 ```
 
 * @param string $sql Custom SQL statement
-* @param array $params List of positional parameters or associative list of placeholders and parameters
-* @param array $types List of DBAL data types for the positional or associative placeholder parameters
+* @param array&#60;int|string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
+* @param array&#60;int|string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
 * @return int Number of affected rows
 
 The database changes are not applied immediately so always call up()
@@ -908,8 +908,8 @@ Executes a custom SQL statement if the database is of the given type
 public function for( $type, $sql ) : self
 ```
 
-* @param array&#124;string `$type` Database type the statement should be executed for
-* @param array&#124;string `$sql` Custom SQL statement or statements
+* @param array&#60;string&#62;&#124;string `$type` Database type the statement should be executed for
+* @param array&#60;string&#62;&#124;string `$sql` Custom SQL statement or statements
 * @return self Same object for fluid method calls
 
 Available database platform types are:
@@ -946,7 +946,7 @@ public function hasColumn( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the column belongs to
-* @param array&#124;string `$name` Name of the column or columns
+* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
 * @return bool TRUE if the columns exists, FALSE if not
 
 **Examples:**
@@ -966,7 +966,7 @@ public function hasForeign( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
 * @return bool TRUE if the foreign key constraint exists, FALSE if not
 
 **Examples:**
@@ -986,7 +986,7 @@ public function hasIndex( string $table, $name ) : bool
 ```
 
 * @param string `$table` Name of the table the index belongs to
-* @param array&#124;string `$name` Name of the index or indexes
+* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
 * @return bool TRUE if the index exists, FALSE if not
 
 **Examples:**
@@ -1005,7 +1005,7 @@ Checks if the sequences exists
 public function hasSequence( $name ) : bool
 ```
 
-* @param array&#124;string `$name` Name of the sequence or sequences
+* @param array&#60;string&#62;&#124;string `$name` Name of the sequence or sequences
 * @return bool TRUE if the sequence exists, FALSE if not
 
 **Examples:**
@@ -1024,7 +1024,7 @@ Checks if the tables exists
 public function hasTable( $name ) : bool
 ```
 
-* @param array&#124;string `$name` Name of the table or tables
+* @param array&#60;string&#62;&#124;string `$name` Name of the table or tables
 * @return bool TRUE if the table exists, FALSE if not
 
 **Examples:**
@@ -1044,7 +1044,7 @@ Inserts a record into the given table
 ```
 
 * @param string `$table` Name of the table
-* @param array `$data` Key/value pairs of column name/value to insert
+* @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to insert
 * @return self Same object for fluid method calls
 
 Warning: The data values are escaped but the table name and column names are not!
@@ -1140,8 +1140,8 @@ public function query( string $sql, array $params = [], array $types = [] ) : \D
 ```
 
 * @param string $sql Custom SQL statement
-* @param array $params List of positional parameters or associative list of placeholders and parameters
-* @param array $types List of DBAL data types for the positional or associative placeholder parameters
+* @param array&#60;int&#124;string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
+* @param array&#60;int&#124;string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
 * @return \Doctrine\DBAL\Result DBAL result set object
 
 **Examples:**
@@ -1164,7 +1164,7 @@ public function renameColumn( string $table, $from, string $to = null ) : self
 ```
 
 * @param string `$table` Name of the table
-* @param array&#124;string `$from` Column name or array of old/new column names
+* @param array&#60;string,string&#62;&#124;string `$from` Column name or array of old/new column names
 * @param string&#124;null `$to` New column name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
@@ -1188,7 +1188,7 @@ public function renameIndex( string $table, $from, string $to = null ) : self
 ```
 
 * @param string `$table` Name of the table
-* @param array&#124;string `$from` Index name or array of old/new index names
+* @param array&#60;string,string&#62;&#124;string `$from` Index name or array of old/new index names
 * @param string&#124;null `$to` New index name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
@@ -1211,7 +1211,7 @@ Renames a table or a list of tables
 public function renameTable( $from, string $to = null ) : self
 ```
 
-* @param array&#124;string `$from` Table name or array of old/new table names
+* @param array&#60;string,string&#62;&#124;string `$from` Table name or array of old/new table names
 * @param string&#124;null `$to` New table name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
@@ -1235,8 +1235,8 @@ public function select( string $table, array $conditions = null ) : array
 ```
 
 * @param string `$table` Name of the table
-* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
-* @return array List of associative arrays containing column name/value pairs
+* @param array&#60;string&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
+* @return array&#60;int,array&#60;string,mixed&#62;&#62; List of associative arrays containing column name/value pairs
 
 Warning: The condition values are escaped but the table name and condition
 column names are not! Only use fixed strings for table name and condition
@@ -1381,8 +1381,8 @@ public function update( string $table, array $data, array $conditions = null ) :
 ```
 
 * @param string `$table` Name of the table
-* @param array `$data` Key/value pairs of column name/value to update
-* @param array&#124;null `$conditions` Key/value pairs of column names and value to compare with
+* @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to update
+* @param array&#60;string,mixed&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return self Same object for fluid method calls
 
 Warning: The condition and data values are escaped but the table name and
@@ -1667,7 +1667,7 @@ public function __call( string $method, array $args )
 ```
 
 * @param string `$method` Name of the method
-* @param array `$args` Method parameters
+* @param array&#60;mixed&#62; `$args` Method parameters
 * @return mixed Return value of the called method
 
 **Examples:**
@@ -2016,7 +2016,7 @@ Drops the column given by its name if it exists
 public function dropColumn( $name ) : self
 ```
 
-* @param array&#124;string `$name` Name of the column or columns
+* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
 * @return self Same object for fluid method calls
 
 If the column or one of the columns doesn't exist, it will be silently ignored.
@@ -2038,7 +2038,7 @@ Drops the index given by its name if it exists
 public function dropIndex( $name ) : self
 ```
 
-* @param array&#124;string `$name` Name of the index or indexes
+* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
 * @return self Same object for fluid method calls
 
 If the index or one of the indexes doesn't exist, it will be silently ignored.
@@ -2060,7 +2060,7 @@ Drops the foreign key constraint given by its name if it exists
 public function dropForeign( $name ) : self
 ```
 
-* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
 * @return self Same object for fluid method calls
 
 If the foreign key constraint or one of the constraints doesn't exist, it will be
@@ -2123,9 +2123,9 @@ Creates a new foreign key or returns the existing one
 public function foreign( $localcolumn, string $foreigntable, $foreigncolumn = 'id', string $name = null ) : Foreign
 ```
 
-* @param array&#124;string `$localcolumn` Name of the local column or columns
+* @param array&#60;string&#62;&#124;string `$localcolumn` Name of the local column or columns
 * @param string `$foreigntable` Name of the referenced table
-* @param array&#124;string `$localcolumn` Name of the referenced column or columns
+* @param array&#60;string&#62;&#124;string `$foreigncolumn` Name of the referenced column or columns
 * @param string&#124;null `$name` Name of the foreign key constraint and foreign key index or NULL for autogenerated name
 * @return \Aimeos\Upscheme\Schema\Foreign Foreign key constraint object
 
@@ -2170,7 +2170,7 @@ Checks if the column exists
 public function hasColumn( $name ) : bool
 ```
 
-* @param array&#124;string `$name` Name of the column or columns
+* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
 * @return bool TRUE if the columns exists, FALSE if not
 
 **Examples:**
@@ -2189,7 +2189,7 @@ Checks if the index exists
 public function hasIndex( $name ) : bool
 ```
 
-* @param array&#124;string `$name` Name of the index or indexes
+* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
 * @return bool TRUE if the indexes exists, FALSE if not
 
 **Examples:**
@@ -2208,7 +2208,7 @@ Checks if the foreign key constraint exists
 public function hasForeign( $name ) : bool
 ```
 
-* @param array&#124;string `$name` Name of the foreign key constraint or constraints
+* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
 * @return bool TRUE if the foreign key constraints exists, FALSE if not
 
 **Examples:**
@@ -2249,7 +2249,7 @@ Creates a new index or replaces an existing one
 public function index( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param array&#60;string&#62;&#124;string `$columns` Name of the columns or columns spawning the index
 * @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
@@ -2382,7 +2382,7 @@ Creates a new primary index or replaces an existing one
 public function primary( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string `$columns` Name of the columns or columns spawning the index
+* @param array&#60;string&#62;&#124;string `$columns` Name of the columns or columns spawning the index
 * @param string&#124;null `$name` Index name or NULL for autogenerated name
 * @return self Same object for fluid method calls
 
@@ -2406,7 +2406,7 @@ Renames a column or a list of columns
 public function renameColumn( $from, string $to = null ) : self
 ```
 
-* @param array&#124;string `$from` Column name or array of old/new column names
+* @param array&#60;string,string&#62;&#124;string `$from` Column name or array of old/new column names
 * @param string&#124;null `$to` New column name ignored if first parameter is an array
 * @return self Same object for fluid method calls
 
@@ -2942,7 +2942,7 @@ public function __call( string $method, array $args )
 ```
 
 * @param string `$method` Name of the method
-* @param array `$args` Method parameters
+* @param array&#60;mixed&#62; `$args` Method parameters
 * @return mixed Return value of the called method
 
 **Examples:**
@@ -3232,7 +3232,7 @@ public function opt( string $option, $value = null, $for = null )
 
 * @param string `$option` Column option name
 * @param mixed `$value` New column option value or NULL to return current value
-* @param array&#124;string&#124;null `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param array&#60;string&#62;&#124;string&#124;null `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 * @return self&#124;mixed Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -3604,7 +3604,7 @@ public function __call( string $method, array $args )
 ```
 
 * @param string `$method` Name of the method
-* @param array `$args` Method parameters
+* @param array&#60;mixed&#62; `$args` Method parameters
 * @return mixed Return value of the called method
 
 **Examples:**
@@ -3936,7 +3936,7 @@ public function __call( string $method, array $args )
 ```
 
 * @param string `$method` Name of the method
-* @param array `$args` Method parameters
+* @param array&#60;mixed&#62; `$args` Method parameters
 * @return mixed Return value of the called method
 
 **Examples:**
