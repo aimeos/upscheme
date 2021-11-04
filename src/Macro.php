@@ -39,7 +39,7 @@ trait Macro
 	 *
 	 * @param string $method Method name or NULL for all custom methods
 	 */
-	public static function reset( string $method = null )
+	public static function reset( string $method = null ) : void
 	{
 		if( $method ) {
 			unset( self::$macros[$method] );

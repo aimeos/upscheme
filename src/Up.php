@@ -58,7 +58,7 @@ class Up
 	 * @param array|string $paths One or more paths to the tasks which updates the database
 	 * @return \Aimeos\Upscheme\Up Upscheme object
 	 */
-	public static function use( array $config, $paths )
+	public static function use( array $config, $paths ) : self
 	{
 		return new self( $config, $paths );
 	}
@@ -259,7 +259,7 @@ class Up
 	 * @param string[] $tasknames List of task names
 	 * @param string[] $stack List of task names that are scheduled after this task
 	 */
-	protected function runTasks( array $tasknames, array $stack = [] )
+	protected function runTasks( array $tasknames, array $stack = [] ) : void
 	{
 		foreach( $tasknames as $taskname )
 		{

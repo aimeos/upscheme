@@ -774,7 +774,7 @@ class Table
 	 * @param \Doctrine\DBAL\Schema\Column $column Doctrine column object
 	 * @param string $name New local column name
 	 */
-	protected function copyColumn( \Doctrine\DBAL\Schema\Column $column, $name )
+	protected function copyColumn( \Doctrine\DBAL\Schema\Column $column, $name ) : void
 	{
 		$options = $column->toArray();
 		unset( $options['name'], $options['autoincrement'] );
