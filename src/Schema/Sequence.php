@@ -11,6 +11,9 @@ namespace Aimeos\Upscheme\Schema;
 
 /**
  * Sequence schema class
+ *
+ * @mixin \Doctrine\DBAL\Schema\Sequence
+ * @property int $cache
  */
 class Sequence
 {

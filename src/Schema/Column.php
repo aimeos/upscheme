@@ -11,6 +11,8 @@ namespace Aimeos\Upscheme\Schema;
 
 /**
  * Column schema class
+ *
+ * @mixin \Doctrine\DBAL\Schema\Column
  */
 class Column
 {

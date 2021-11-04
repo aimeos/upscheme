@@ -13,6 +13,9 @@ use Doctrine\DBAL\Schema\Table as DbalTable;
 
 /**
  * Foreign schema class
+ *
+ * @property string $onDelete
+ * @property string $onUpdate
  */
 class Foreign
 {

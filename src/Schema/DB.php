@@ -11,6 +11,8 @@ namespace Aimeos\Upscheme\Schema;
 
 /**
  * Database schema manager class
+ *
+ * @mixin \Doctrine\DBAL\Schema\Schema
  */
 class DB
 {

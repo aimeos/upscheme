@@ -11,6 +11,8 @@ namespace Aimeos\Upscheme\Task;
 
 /**
  * Base class for all setup tasks
+ *
+ * @mixin \Aimeos\Upscheme\Schema\DB
  */
 abstract class Base implements Iface
 {
