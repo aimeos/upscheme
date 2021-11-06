@@ -21,10 +21,10 @@ trait Macro
 
 
 	/**
-	 * Registers a custom method
+	 * Registers a custom method or returns the existing one
 	 *
 	 * @param string $method Name of the method
-	 * @param \Closure|null $fcn Anonymous function which receives the same parameters as the original method
+	 * @param \Closure|null $fcn Anonymous function or NULL to return the closure if available
 	 * @return \Closure|null Registered anonymous function or NULL if none has been registered
 	 */
 	public static function macro( string $method, \Closure $fcn = null ) : ?\Closure
