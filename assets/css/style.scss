@@ -11,7 +11,7 @@ body {
 
 a {
 	display: inline-block;
-	line-height: 2.25;
+	line-height: 2.5;
 }
 
 header h1>a {
@@ -103,7 +103,7 @@ header svg {
 
 .main-content h1, .main-content h2, .main-content h3,
 .main-content h4, .main-content h5, .main-content h6 {
-	padding-top: 2.5rem;
+	padding-top: 3rem;
 	margin-top: -1rem;
 	color: #13874d;
 }
@@ -130,9 +130,6 @@ header svg {
 	.page-header {
 		padding: 2.5rem 6rem;
 	}
-	header .logo {
-		max-height: 6rem;
-	}
 	.container {
 		max-width: 80rem;
 		margin: 0 auto;
@@ -149,6 +146,9 @@ header svg {
 @media screen and (max-width: 64em) {
 	.page-header {
 		padding: 1.5rem 4rem;
+	}
+	header .logo {
+		max-height: 6rem;
 	}
 	.sidebar {
 		width: 12rem;
