@@ -18,6 +18,11 @@ header h1>a {
 	color: #fff;
 }
 
+header .logo {
+	height: 100%;
+	max-height: 7.5rem;
+}
+
 header .icon.github {
 	display: none;
 }
@@ -100,6 +105,7 @@ header svg {
 .main-content h4, .main-content h5, .main-content h6 {
 	padding-top: 2.5rem;
 	margin-top: -1rem;
+	color: #13874d;
 }
 
 .main-content nav {
@@ -116,7 +122,17 @@ header svg {
 	line-height: 1.75;
 }
 
+.method-list {
+	margin-top: 0;
+}
+
 @media screen and (min-width: 64em) {
+	.page-header {
+		padding: 2.5rem 6rem;
+	}
+	header .logo {
+		max-height: 6rem;
+	}
 	.container {
 		max-width: 80rem;
 		margin: 0 auto;
@@ -131,6 +147,9 @@ header svg {
 }
 
 @media screen and (max-width: 64em) {
+	.page-header {
+		padding: 1.5rem 4rem;
+	}
 	.sidebar {
 		width: 12rem;
 	}
@@ -203,7 +222,3 @@ header svg {
 .highlight .no, .highlight .nv { color: #007b7b }
 .highlight .mi, .highlight .mf { color: #007e7e }
 .highlight .err { color: inherit; background-color: inherit }
-
-.main-content h1, .main-content h2, .main-content h3, .main-content h4, .main-content h5, .main-content h6 {
-	color: #13874d;
-}
