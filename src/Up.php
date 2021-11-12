@@ -220,7 +220,7 @@ class Up
 	/**
 	 * Creates a new database connection from the given configuration
 	 *
-	 * @param array<string,array|string> $cfg Database configuration
+	 * @param array<string,string> $cfg Database configuration
 	 * @return \Doctrine\DBAL\Connection New DBAL database connection
 	 */
 	protected function connect( array $cfg ) : \Doctrine\DBAL\Connection

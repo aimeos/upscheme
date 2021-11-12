@@ -48,7 +48,7 @@ class Foreign
 	private $fkcol;
 
 	/**
-	 * @var string
+	 * @var string|null
 	 */
 	private $name;
 
@@ -81,11 +81,11 @@ class Foreign
 			'onUpdate' => 'CASCADE',
 		];
 
-		if( $name && !$table->hasIndex( $name ) ) {
+		if( !$table->hasIndex( (string) $name ) ) {
 			$table->index( $localcol, $name );
 		}
 
-		if( $name && !$table->hasForeign( $name ) ) {
+		if( !$table->hasForeign( (string) $name ) ) {
 			$dbaltable->addForeignKeyConstraint( $fktable, (array) $localcol, (array) $fkcol, $this->opts, $name );
 		}
 	}
@@ -157,7 +157,7 @@ class Foreign
 	/**
 	 * Returns the current name of the foreign key constraint
 	 *
-	 * @return string Name of the foreign key constraint
+	 * @return string|null Name of the constraint or NULL if no name is available
 	 */
 	public function name()
 	{
@@ -181,7 +181,7 @@ class Foreign
 	public function onDelete( string $value = null )
 	{
 		if( $value === null ) {
-			return $this->opts['onDelete'] ?? null;
+			return $this->opts['onDelete'];
 		}
 
 		$this->opts['onDelete'] = $value;
@@ -205,7 +205,7 @@ class Foreign
 	public function onUpdate( string $value = null )
 	{
 		if( $value === null ) {
-			return $this->opts['onUpdate'] ?? null;
+			return $this->opts['onUpdate'];
 		}
 
 		$this->opts['onUpdate'] = (string) $value;
@@ -235,7 +235,10 @@ class Foreign
 	{
 		$newname = $newname ?: $this->name;
 
-		$this->dbaltable->removeForeignKey( $this->name );
+		if( $this->name ) {
+			$this->dbaltable->removeForeignKey( $this->name );
+		}
+
 		$this->dbaltable->addForeignKeyConstraint( $this->fktable, $this->localcol, $this->fkcol, $this->opts, $newname );
 
 		$this->name = $newname;

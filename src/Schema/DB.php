@@ -109,7 +109,7 @@ class DB
 	 */
 	public function delete( string $table, array $conditions = null ) : self
 	{
-		$this->conn->delete( $table, $conditions ?? [1 => 1] );
+		$this->conn->delete( $table, $conditions ?? ['1' => 1] );
 		return $this;
 	}
 
@@ -715,7 +715,7 @@ class DB
 	 */
 	public function update( string $table, array $data, array $conditions = null ) : self
 	{
-		$this->conn->update( $table, $data, $conditions ?? [1 => 1] );
+		$this->conn->update( $table, $data, $conditions ?? ['1' => 1] );
 		return $this;
 	}
 

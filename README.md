@@ -3812,14 +3812,13 @@ $foreign->do( 'RESTRICT' );
 
 #### Foreign::name()
 
-* Sets the name of the constraint or returns the current name
+* Returns the current name of the foreign key constraint
 
 ```php
-public function name( string $value = null )
+public function name()
 ```
 
-* @param string&#124;null `$value` New name of the constraint or NULL to return current value
-* @return self&#124;string Same object for setting the name, current name without parameter
+* @return string&#124;null Name of the constraint or NULL if no name is available
 
 **Examples:**
 
