@@ -65,7 +65,7 @@ class Create extends Base
 		$db->insert( 'testref', ['parentid' => $db->lastId(), 'label' => 'test ref'] );
 
 
-		$this->view( 'testview', 'SELECT id, price, status FROM test' );
+		$this->view( 'testview', 'SELECT id, uuid, config FROM test' );
 
 		if( !$this->hasView( 'testview' ) ) {
 			throw new \RuntimeException( 'View has not been created' );
