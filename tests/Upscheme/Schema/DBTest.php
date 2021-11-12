@@ -46,6 +46,11 @@ class DBTest extends \PHPUnit\Framework\TestCase
 		$this->connmock->expects( $this->any() )->method( $method )
 			->will( $this->returnValue( $this->smmock ) );
 
+		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )
+			->will( $this->returnCallback( function( $value ) {
+				return '"' . $value . '"';
+			} ) );
+
 		$this->smmock->expects( $this->any() )->method( 'createSchema' )
 			->will( $this->returnValue( $this->schemamock ) );
 

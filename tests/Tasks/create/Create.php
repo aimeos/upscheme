@@ -19,8 +19,8 @@ class Create extends Base
 			$this->info( 'Create test table', 'v', 1 );
 
 			$t->bigint( 'id' )->seq( true )->primary();
-//			$t->binary( 'hex' );
-//			$t->blob( 'image' );
+			// $t->binary( 'hex' ); // PostgreSQL insert problem
+			// $t->blob( 'image' ); // PostgreSQL insert problem
 			$t->bool( 'status' );
 			$t->date( 'birthday' );
 			$t->datetime( 'ctime' );
@@ -33,7 +33,7 @@ class Create extends Base
 			$t->smallint( 'type' );
 			$t->string( 'code' );
 			$t->text( 'content' );
-			$t->time( 'time' );
+			// $t->time( 'time' ); // not supported by Oracle
 			$t->guid( 'uuid' );
 			$t->default();
 
@@ -59,16 +59,12 @@ class Create extends Base
 			'status' => true, 'birthday' => '2000-01-01',
 			'ctime' => '2000-01-01 00:00:00', 'mtime' => '2000-01-01 00:00:00', 'price' => '100.00',
 			'scale' => 0.1, 'pos' => 1, 'test' => 1234, 'config' => '{}', 'type' => 123, 'code' => 'test',
-			'content' => 'some text', 'time' => '12:00:00', 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd'
+			'content' => 'some text', 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd'
 		] );
 
-		$db->insert( 'testref', ['parentid' => $db->lastId(), 'label' => 'test ref'] );
+		$db->insert( 'testref', ['parentid' => $db->lastId( 'test_id_seq' ), 'label' => 'test ref'] );
 
 
-		$this->view( 'testview', 'SELECT id, uuid, config FROM test' );
-
-		if( !$this->hasView( 'testview' ) ) {
-			throw new \RuntimeException( 'View has not been created' );
-		}
+		$this->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );
 	}
 }

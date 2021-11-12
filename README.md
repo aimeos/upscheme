@@ -1097,9 +1097,6 @@ Inserts a record into the given table
 * @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to insert
 * @return self Same object for fluid method calls
 
-Warning: The data values are escaped but the table name and column names are not!
-Only use fixed strings for table name and column names but no external input!
-
 **Examples:**
 
 ```php
@@ -1288,10 +1285,6 @@ public function select( string $table, array $conditions = null ) : array
 * @param array&#60;string&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return array&#60;int,array&#60;string,mixed&#62;&#62; List of associative arrays containing column name/value pairs
 
-Warning: The condition values are escaped but the table name and condition
-column names are not! Only use fixed strings for table name and condition
-column names but no external input!
-
 **Examples:**
 
 ```php
@@ -1434,10 +1427,6 @@ public function update( string $table, array $data, array $conditions = null ) :
 * @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to update
 * @param array&#60;string,mixed&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
 * @return self Same object for fluid method calls
-
-Warning: The condition and data values are escaped but the table name and
-column names are not! Only use fixed strings for table name and condition
-column names but no external input!
 
 **Examples:**
 
@@ -2626,6 +2615,7 @@ public function time( string $name ) : Column
 * @return \Aimeos\Upscheme\Schema\Column Column object
 
 If the column doesn't exist yet, it will be created.
+This datatype is not available when using Oracle databases.
 
 **Examples:**
 

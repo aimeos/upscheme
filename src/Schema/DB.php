@@ -99,17 +99,18 @@ class DB
 	/**
 	 * Deletes the records from the given table
 	 *
-	 * Warning: The condition values are escaped but the table name and condition
-	 * column names are not! Only use fixed strings for table name and condition
-	 * column names but no external input!
-	 *
 	 * @param string $table Name of the table
 	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
 	 * @return self Same object for fluid method calls
 	 */
 	public function delete( string $table, array $conditions = null ) : self
 	{
-		$this->conn->delete( $table, $conditions ?? ['1' => 1] );
+		$map = [];
+		foreach( $conditions ?? [] as $column => $value ) {
+			$map[$this->qi( $column )] = $value;
+		}
+
+		$this->conn->delete( $this->qi( $table ), empty( $map ) ? ['1' => 1] : $map );
 		return $this;
 	}
 
@@ -225,7 +226,7 @@ class DB
 		foreach( (array) $name as $entry )
 		{
 			if( $this->hasView( $entry ) ) {
-				$manager->dropView( $entry );
+				$manager->dropView( $this->qi( $entry ) );
 			}
 		}
 
@@ -382,6 +383,9 @@ class DB
 		$list = $manager->getSchemaSearchPaths();
 		$list[] = '';
 
+		$list = $manager->getSchemaSearchPaths();
+		$list[] = '';
+
 		foreach( (array) $name as $entry )
 		{
 			foreach( $list as $schema )
@@ -403,16 +407,18 @@ class DB
 	/**
 	 * Inserts a record into the given table
 	 *
-	 * Warning: The data values are escaped but the table name and column names are not!
-	 * Only use fixed strings for table name and column names but no external input!
-	 *
 	 * @param string $table Name of the table
 	 * @param array<string,mixed> $data Key/value pairs of column name/value to insert
 	 * @return self Same object for fluid method calls
 	 */
 	public function insert( string $table, array $data ) : self
 	{
-		$this->conn->insert( $table, $data );
+		$map = [];
+		foreach( $data as $column => $value ) {
+			$map[$this->qi( $column )] = $value;
+		}
+
+		$this->conn->insert( $this->qi( $table ), $map );
 		return $this;
 	}
 
@@ -425,7 +431,7 @@ class DB
 	 */
 	public function lastId( string $seq = null ) : string
 	{
-		return $this->conn->lastInsertId( $seq );
+		return $this->conn->lastInsertId( $seq ? $this->qi( $seq ) : null );
 	}
 
 
@@ -554,7 +560,7 @@ class DB
 					throw new \RuntimeException( $msg );
 				}
 
-				$manager->renameTable( $name, $to );
+				$manager->renameTable( $this->qi( $name ), $this->qi( $to ) );
 			}
 		}
 
@@ -581,10 +587,10 @@ class DB
 		$idx = 0;
 		$list = [];
 
-		$builder = $this->conn->createQueryBuilder()->select( '*' )->from( $table );
+		$builder = $this->conn->createQueryBuilder()->select( '*' )->from( $this->qi( $table ) );
 
 		foreach( $conditions ?? [] as $column => $value ) {
-			$builder->andWhere( $column . ' = ?' )->setParameter( $idx++, $value );
+			$builder->andWhere( $this->qi( $column ) . ' = ?' )->setParameter( $idx++, $value );
 		}
 
 		$result = method_exists( $builder, 'executeQuery' ) ? $builder->executeQuery() : $builder->execute();
@@ -620,7 +626,7 @@ class DB
 		if( $this->to->hasSequence( $name ) ) {
 			$seq = $this->to->getSequence( $name );
 		} else {
-			$seq = $this->to->createSequence( $name );
+			$seq = $this->to->createSequence( $this->qi( $name ) );
 		}
 
 		$sequence = new Sequence( $this, $seq );
@@ -659,7 +665,7 @@ class DB
 		if( $this->to->hasTable( $name ) ) {
 			$dt = $this->to->getTable( $name );
 		} else {
-			$dt = $this->to->createTable( $name );
+			$dt = $this->to->createTable( $this->qi( $name ) );
 		}
 
 		$table = new Table( $this, $dt );
@@ -714,10 +720,6 @@ class DB
 	/**
 	 * Updates the records from the given table
 	 *
-	 * Warning: The condition and data values are escaped but the table name and
-	 * column names are not! Only use fixed strings for table name and condition
-	 * column names but no external input!
-	 *
 	 * @param string $table Name of the table
 	 * @param array<string,mixed> $data Key/value pairs of column name/value to update
 	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
@@ -725,7 +727,17 @@ class DB
 	 */
 	public function update( string $table, array $data, array $conditions = null ) : self
 	{
-		$this->conn->update( $table, $data, $conditions ?? ['1' => 1] );
+		$map = $values = [];
+
+		foreach( $data as $column => $value ) {
+			$map[$this->qi( $column )] = $value;
+		}
+
+		foreach( $conditions ?? [] as $column => $value ) {
+			$values[$this->qi( $column )] = $value;
+		}
+
+		$this->conn->update( $this->qi( $table ), $map, empty( $values ) ? ['1' => 1] : $values );
 		return $this;
 	}
 
@@ -751,7 +763,7 @@ class DB
 		}
 
 		if( !isset( $views[$name] ) && ( $for === null || in_array( $this->type(), (array) $for ) ) ) {
-			$manager->createView( new \Doctrine\DBAL\Schema\View( $name, $sql ) );
+			$manager->createView( new \Doctrine\DBAL\Schema\View( $this->qi( $name ), $sql ) );
 		}
 
 		return $this;
@@ -768,9 +780,9 @@ class DB
 	 */
 	protected function getColumnSQL( string $table, string $name, string $to ) : string
 	{
-		$qtable = $this->conn->quoteIdentifier( $table );
-		$qname = $this->conn->quoteIdentifier( $name );
-		$qto = $this->conn->quoteIdentifier( $to );
+		$qtable = $this->qi( $table );
+		$qname = $this->qi( $name );
+		$qto = $this->qi( $to );
 
 		switch( $this->type() )
 		{

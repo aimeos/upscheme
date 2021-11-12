@@ -234,7 +234,13 @@ class Up
 			return $this->call( 'connect', [$cfg] );
 		}
 
-		return \Doctrine\DBAL\DriverManager::getConnection( $cfg );
+		$conn = \Doctrine\DBAL\DriverManager::getConnection( $cfg );
+
+		if( in_array( $cfg['driver'], ['oci8', 'pdo_oci'] ) ) {
+			$conn->executeStatement( "ALTER SESSION SET NLS_TIME_FORMAT='HH24:MI:SS' NLS_DATE_FORMAT='YYYY-MM-DD' NLS_TIMESTAMP_FORMAT='YYYY-MM-DD HH24:MI:SS' NLS_TIMESTAMP_TZ_FORMAT='YYYY-MM-DD HH24:MI:SS TZH:TZM' NLS_NUMERIC_CHARACTERS='.,'" );
+		}
+
+		return $conn;
 	}
 
 

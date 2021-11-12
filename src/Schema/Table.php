@@ -191,7 +191,7 @@ class Table
 		if( $this->table->hasColumn( $name ) ) {
 			$col = $this->table->getColumn( $name );
 		} else {
-			$col = $this->table->addColumn( $name, $type ?: 'string' );
+			$col = $this->table->addColumn( $this->db->qi( $name ), $type ?: 'string' );
 		}
 
 		if( $type ) {
@@ -373,6 +373,8 @@ class Table
 
 	/**
 	 * Creates a new column of type "time" or returns the existing one
+	 *
+	 * This datatype is not available when using Oracle databases
 	 *
 	 * @param string $name Name of the column
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
@@ -560,7 +562,7 @@ class Table
 		}
 
 		$name = $name ?: $this->nameIndex( $this->name(), $localcolumn, 'fk' );
-		return new Foreign( $this, $this->table, $localcolumn, $foreigntable, $foreigncolumn, $name );
+		return new Foreign( $this->db, $this, $this->table, $localcolumn, $foreigntable, $foreigncolumn, $name );
 	}
 
 
@@ -589,13 +591,17 @@ class Table
 		{
 			foreach( $this->table->getIndexes() as $index )
 			{
-				if( $index->getColumns() === $columns ) {
+				if( $index->spansColumns( $columns ) ) {
 					return $this;
 				}
 			}
 		}
 
-		$this->table->addIndex( $columns, $name );
+		foreach( $columns as $key => $column ) {
+			$columns[$key] = $this->db->qi( $column );
+		}
+
+		$this->table->addIndex( $columns, $name ? $this->db->qi( $name ) : null );
 		return $this;
 	}
 
@@ -655,8 +661,13 @@ class Table
 			$this->table->dropPrimaryKey();
 		}
 
+		$map = [];
+		foreach( $columns as $key => $column ) {
+			$columns[$key] = $this->db->qi( $column );
+		}
+
 		$name = $name ?: $this->nameIndex( $this->name(), $columns, 'pk' );
-		$this->table->setPrimaryKey( $columns, $name ?: false );
+		$this->table->setPrimaryKey( $columns, $name ? $this->db->qi( $name ) : false );
 		return $this;
 	}
 
@@ -699,7 +710,7 @@ class Table
 					$to = $this->nameIndex( $this->name(), $index->getColumns(), $type );
 				}
 
-				$this->table->renameIndex( $name, $to );
+				$this->table->renameIndex( $this->db->qi( $name ), $to ? $this->db->qi( $to ) : null );
 			}
 		}
 
@@ -730,6 +741,10 @@ class Table
 			$this->table->dropIndex( $name );
 		}
 
+		foreach( $columns as $key => $column ) {
+			$columns[$key] = $this->db->qi( $column );
+		}
+
 		$this->table->addIndex( $columns, $name, ['spatial' => true] );
 		return $this;
 	}
@@ -758,7 +773,11 @@ class Table
 			$this->table->dropIndex( $name );
 		}
 
-		$this->table->addUniqueIndex( $columns, $name );
+		foreach( $columns as $key => $column ) {
+			$columns[$key] = $this->db->qi( $column );
+		}
+
+		$this->table->addUniqueIndex( $columns, $name ? $this->db->qi( $name ) : null );
 		return $this;
 	}
 
@@ -791,7 +810,7 @@ class Table
 		if( $this->table->hasColumn( $name ) ) {
 			$this->table->changeColumn( $name, $options );
 		} else {
-			$this->table->addColumn( $name, $column->getType()->getName(), $options );
+			$this->table->addColumn( $this->db->qi( $name ), $column->getType()->getName(), $options );
 		}
 	}
 

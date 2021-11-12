@@ -21,6 +21,11 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
+		$this->dbmock->expects( $this->any() )->method( 'qi' )
+			->will( $this->returnCallback( function( $value ) {
+				return '"' . $value . '"';
+			} ) );
+
 		$methods = [
 			'addIndex', 'getIndex', 'getIndexes', 'hasIndex', 'renameIndex', 'dropIndex',
 			'dropPrimaryKey', 'getPrimaryKey', 'hasPrimaryKey', 'setPrimaryKey',

@@ -112,6 +112,25 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
+  "php-8.0 / oracle":
+    docker:
+      - image: aimeos/ci-php:8.0
+      - image: wnameless/oracle-xe-11g-r2
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php80-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php80-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: sleep 10
+      - run: echo "<?php return ['driver' => 'oci8', 'host' => '127.0.0.1', 'dbname' => 'XE', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: echo "CREATE USER upscheme IDENTIFIED BY upscheme;" > init.sql && echo "GRANT DBA TO upscheme;" >> init.sql && echo "quit" >> init.sql
+      - run: sqlplus system/oracle@127.0.0.1/XE @init.sql
+      - run: ./vendor/bin/phpunit
+
   "php-8.0 / sqlite":
     docker:
       - image: aimeos/ci-php:8.0
@@ -137,5 +156,5 @@ workflows:
       - "php-7.3 / pgsql-13"
       - "php-7.4 / mssql-2019"
       - "php-8.0 / mysql-8.0"
+      - "php-8.0 / oracle"
       - "php-8.0 / sqlite"
-

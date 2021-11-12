@@ -16,13 +16,13 @@ class Update extends Base
 
 			$t->dropIndex( 'unq_code' )->dropIndex( 'idx_status_type' )->up(); // workaround for SQL Server
 
-			$t->time( 'time' )->comment( 'some time' );
+			$t->bool( 'status' )->comment( 'some status' );
 			$t->text( 'content' )->length( 255 );
 			$t->bool( 'status' )->default( true );
 			$t->date( 'birthday' )->null( true );
-			$t->decimal( 'price', 8 )->scale( 3 );
-			$t->int( 'pos' )->type( 'smallint' );
-			$t->smallint( 'type' )->unsigned( true );
+			// $t->decimal( 'price', 8 )->scale( 3 ); // Oracle can't change NUMBER columns with data
+			// $t->int( 'pos' )->type( 'smallint' ); // Oracle can't change NUMBER columns with data
+			// $t->smallint( 'type' )->unsigned( true ); // Oracle can't change NUMBER columns with data
 			$t->string( 'code', 5 )->fixed( true );
 
 			$t->unique( 'code', 'unq_code' );
@@ -49,7 +49,6 @@ class Update extends Base
 			'price' => [100],
 			'scale' => [0.1],
 			'status' => [1],
-			'time' => ['12:00:00'],
 			'type' => [123],
 			'uuid' => ['7e57d004-2b97-0e7a-b45f-5387367791cd', '7E57D004-2B97-0E7A-B45F-5387367791CD'], // MySQL5/PostgreSQL/SQLite, SQLServer
 			'editor' => [null]

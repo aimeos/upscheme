@@ -11,12 +11,17 @@ namespace Aimeos\Upscheme\Schema;
 class ForeignTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
+	private $dbmock;
 	private $dbalmock;
 	private $tablemock;
 
 
 	protected function setUp() : void
 	{
+		$this->dbmock = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
+			->disableOriginalConstructor()
+			->getMock();
+
 		$this->tablemock = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Table' )
 			->disableOriginalConstructor()
 			->getMock();
@@ -25,7 +30,10 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->object = new \Aimeos\Upscheme\Schema\Foreign( $this->tablemock, $this->dbalmock, ['local'], 'fktable', ['foreign'], 'fk_name' );
+		$this->object = new \Aimeos\Upscheme\Schema\Foreign(
+			$this->dbmock, $this->tablemock, $this->dbalmock,
+			['local'], 'fktable', ['foreign'], 'fk_name'
+		);
 	}
 
 
