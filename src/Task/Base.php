@@ -53,7 +53,7 @@ abstract class Base implements Iface
 
 
 	/**
-	 * Returns the list of task names which depends on this task
+	 * This task will run after the returned list of task names
 	 *
 	 * @return array<string> List of task names
 	 */
@@ -64,7 +64,7 @@ abstract class Base implements Iface
 
 
 	/**
-	 * Returns the list of task names which this task depends on
+	 * This task will run before the returned list of task names
 	 *
 	 * @return array<string> List of task names
 	 */

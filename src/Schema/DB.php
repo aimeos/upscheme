@@ -213,6 +213,27 @@ class DB
 
 
 	/**
+	 * Drops the view given by its name if it exists
+	 *
+	 * @param array<string>|string $name Name of the view or views
+	 * @return self Same object for fluid method calls
+	 */
+	public function dropView( $name ) : self
+	{
+		$manager = $this->getSchemaManager();
+
+		foreach( (array) $name as $entry )
+		{
+			if( $this->hasView( $entry ) ) {
+				$manager->dropView( $entry );
+			}
+		}
+
+		return $this->up();
+	}
+
+
+	/**
 	 * Executes a custom SQL statement
 	 *
 	 * The database changes are not applied immediately so always call up()
@@ -335,6 +356,32 @@ class DB
 		foreach( (array) $name as $entry )
 		{
 			if( !$this->to->hasTable( $entry ) ) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+
+	/**
+	 * Checks if the view exists
+	 *
+	 * @param array<string>|string $name Name of the view or views
+	 * @return bool TRUE if the view exists, FALSE if not
+	 */
+	public function hasView( $name ) : bool
+	{
+		$views = [];
+		$manager = $this->getSchemaManager();
+
+		foreach( $manager->listViews() as $view ) {
+			$views[$view->getName()] = $view;
+		}
+
+		foreach( (array) $name as $entry )
+		{
+			if( !isset( $views[$entry] ) ) {
 				return false;
 			}
 		}
@@ -669,6 +716,34 @@ class DB
 	public function update( string $table, array $data, array $conditions = null ) : self
 	{
 		$this->conn->update( $table, $data, $conditions ?? [1 => 1] );
+		return $this;
+	}
+
+
+	/**
+	 * Creates a view with the given name if it doesn't exist yet
+	 *
+	 * If the view doesn't exist yet, it will be created. Otherwise, nothing
+	 * will happen.
+	 *
+	 * @param string $name Name of the view
+	 * @param string $sql SQL statement to create the view
+	 * @param array<string>|string|null $for Database type this SQL should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+	 * @return self Same object for fluid method calls
+	 */
+	public function view( string $name, string $sql, $for = null ) : self
+	{
+		$views = [];
+		$manager = $this->getSchemaManager();
+
+		foreach( $manager->listViews() as $view ) {
+			$views[$view->getName()] = $view;
+		}
+
+		if( !isset( $views[$name] ) && ( $for === null || in_array( $this->type(), (array) $for ) ) ) {
+			$manager->createView( new \Doctrine\DBAL\Schema\View( $name, $sql ) );
+		}
+
 		return $this;
 	}
 

@@ -467,6 +467,10 @@ if( $db->hasForeign( 'users_address', 'fk_users_id' ) ) {
 if( $db->hasSequence( 'seq_users' ) ) {
     // The "seq_users" sequence exists
 }
+
+if( $db->hasView( 'testview' ) ) {
+    // The "testview" view exists
+}
 ```
 
 ### Renaming objects
@@ -510,6 +514,9 @@ $db->dropSequence( 'seq_users' );
 
 // Drops the "users" table
 $db->dropTable( 'users' );
+
+// Drops the "testview" view
+$db->dropView( 'testview' );
 ```
 
 If the table, column, index, foreign key or sequence doesn't exist, it is silently
@@ -644,6 +651,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbdropindex">dropIndex()</a></li>
 	<li><a href="#dbdropsequence">dropSequence()</a></li>
 	<li><a href="#dbdroptable">dropTable()</a></li>
+	<li><a href="#dbdropview">dropView()</a></li>
 	<li><a href="#dbexec">exec()</a></li>
 	<li><a href="#dbfor">for()</a></li>
 	<li><a href="#dbhascolumn">hasColumn()</a></li>
@@ -651,6 +659,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbhasindex">hasIndex()</a></li>
 	<li><a href="#dbhassequence">hasSequence()</a></li>
 	<li><a href="#dbhastable">hasTable()</a></li>
+	<li><a href="#dbhasview">hasView()</a></li>
 	<li><a href="#dbinsert">insert()</a></li>
 	<li><a href="#dblastid">lastId()</a></li>
 	<li><a href="#dbname">name()</a></li>
@@ -667,6 +676,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbtype">type()</a></li>
 	<li><a href="#dbup">up()</a></li>
 	<li><a href="#dbupdate">update()</a></li>
+	<li><a href="#dbview">view()</a></li>
 </ul>
 </nav>
 
@@ -875,6 +885,27 @@ $db->dropTable( ['test', 'test2'] );
 If the table or one of the tables doesn't exist, it will be silently ignored.
 
 
+#### DB::dropView()
+
+Drops the view given by its name if it exists
+
+```php
+public function dropView( $name ) : self
+```
+
+* @param array&#60;string&#62;&#124;string `$name` Name of the view or views
+* @return self Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->dropView( 'test' );
+$db->dropView( ['test', 'test2'] );
+```
+
+If the view or one of the views doesn't exist, it will be silently ignored.
+
+
 #### DB::exec()
 
 Executes a custom SQL statement
@@ -1032,6 +1063,25 @@ public function hasTable( $name ) : bool
 ```php
 $db->hasTable( 'test' );
 $db->hasTable( ['test', 'test2'] );
+```
+
+
+#### DB::hasView()
+
+Checks if the views exists
+
+```php
+public function hasView( $name ) : bool
+```
+
+* @param array&#60;string&#62;&#124;string `$name` Name of the view or views
+* @return bool TRUE if the view exists, FALSE if not
+
+**Examples:**
+
+```php
+$db->hasView( 'test' );
+$db->hasView( ['test', 'test2'] );
 ```
 
 
@@ -1398,6 +1448,30 @@ $db->update( 'test', ['status' => true], ['status' => false, 'type' => 'new'] );
 
 Several conditions passed in the second parameter are combined by "AND". If you
 need more complex statements, use the [`stmt()`](#dbstmt) method instead.
+
+
+#### DB::view()
+
+Creates a view with the given name if it doesn't exist yet
+
+```php
+public function view( string $name, string $sql, $for = null ) : self
+```
+
+* @param string `$name` Name of the view
+* @param string `$sql` SELECT statement for populating the view
+* @param array&#60;string&#62;&#124;string&#124;null `$for` Database type this SQL should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @return self Same object for fluid method calls
+
+If the view doesn't exist yet, it will be created. Otherwise, nothing will happen.
+
+**Examples:**
+
+```php
+$db->view( 'testview', 'SELECT * FROM testtable' );
+$db->view( 'testview', 'SELECT id, label, status FROM testtable WHERE status = 1' );
+$db->view( 'testview', 'SELECT * FROM `testtable` WHERE `status` = 1', 'mysql' );
+```
 
 
 

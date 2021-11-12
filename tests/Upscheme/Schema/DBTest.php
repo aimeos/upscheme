@@ -198,6 +198,35 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testDropView()
+	{
+		$view = new class {
+			public function getName() { return 'test'; }
+		};
+
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+		$this->smmock->expects( $this->once() )->method( 'dropView' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( 'test' ) );
+	}
+
+
+	public function testDropViewMultiple()
+	{
+		$view = new class {
+			public function getName() { return 'test'; }
+		};
+		$view2 = new class {
+			public function getName() { return 'test2'; }
+		};
+
+		$this->smmock->expects( $this->exactly( 2 ) )->method( 'listViews' )->will( $this->returnValue( [$view, $view2] ) );
+		$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropView' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( ['test', 'test2'] ) );
+	}
+
+
 	public function testExec()
 	{
 		$this->connmock->expects( $this->once() )->method( 'executeStatement' )->will( $this->returnValue( 123 ) );
@@ -307,6 +336,23 @@ class DBTest extends \PHPUnit\Framework\TestCase
 		$this->assertFalse( $this->object->hasTable( 'unit', 'test' ) );
 	}
 
+
+	public function testHasView()
+	{
+		$view = new class {
+			public function getName() { return 'test'; }
+		};
+
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+		$this->assertTrue( $this->object->hasView( 'test' ) );
+	}
+
+
+	public function testHasViewNot()
+	{
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [] ) );
+		$this->assertFalse( $this->object->hasView( 'test' ) );
+	}
 
 
 	public function testInsert()
@@ -552,5 +598,30 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->connmock->expects( $this->once() )->method( 'update' );
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->update( 'unittest', [] ) );
+	}
+
+
+	public function testView()
+	{
+		$view = new class {
+			public function getName() { return 'unittest'; }
+		};
+
+		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
+
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->view( 'unittest', 'CREATE VIEW' ) );
+	}
+
+
+	public function testViewNew()
+	{
+		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
+
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [] ) );
+		$this->smmock->expects( $this->once() )->method( 'createView' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->view( 'unittest', 'CREATE VIEW' ) );
 	}
 }
