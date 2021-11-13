@@ -379,11 +379,21 @@ class DB
 			$views[$view->getName()] = $view;
 		}
 
+		$list = $manager->getSchemaSearchPaths();
+		$list[] = '';
+
 		foreach( (array) $name as $entry )
 		{
-			if( !isset( $views[$entry] ) ) {
-				return false;
+			foreach( $list as $schema )
+			{
+				$key = $schema ? $schema . '.' . $entry : $entry;
+
+				if( isset( $views[$key] ) ) {
+					continue 2;
+				}
 			}
+
+			return false;
 		}
 
 		return true;
