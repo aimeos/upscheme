@@ -3,13 +3,9 @@
 	"description": "Database schema upgrades made easy",
 	"license": "LGPL-3.0-or-later",
 	"type": "library",
-	"repositories": [{
-		"type": "vcs",
-		"url": "https://github.com/aimeos/dbal"
-	}],
 	"require": {
 		"php": "~7.1||~8.0",
-		"doctrine/dbal": "dev-oracle_identifier_mixedcase"
+		"doctrine/dbal": "~2.13||~3.0"
 	},
 	"require-dev": {
         "phpunit/phpunit": "~7.0||~8.0||~9.0",
