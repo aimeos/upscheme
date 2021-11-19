@@ -270,7 +270,11 @@ class Foreign
 		}
 
 		$this->table->index( $this->localcol, $newname )->up();
-		$this->dbaltable->addForeignKeyConstraint( $this->db->qi( $this->fktable ), $lcol, $fcol, $this->opts, $this->db->qi( $newname ) );
+		$this->dbaltable->addForeignKeyConstraint(
+			$this->db->qi( $this->fktable ),
+			$lcol, $fcol, $this->opts,
+			$newname ? $this->db->qi( $newname ) : null
+		);
 
 		$this->name = $newname;
 		return $this;

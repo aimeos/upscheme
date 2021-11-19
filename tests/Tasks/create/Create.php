@@ -54,6 +54,7 @@ class Create extends Base
 
 		} )->up();
 
+
 		$db->insert( 'test', [
 //			'hex' => '0xff', 'image' => 'svg+xml:',
 			'status' => true, 'birthday' => '2000-01-01',
@@ -66,5 +67,9 @@ class Create extends Base
 
 
 		$this->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );
+
+		if( !$this->hasView( 'testview' ) ) {
+			throw new \RuntimeException( 'View not created' );
+		}
 	}
 }
