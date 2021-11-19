@@ -661,7 +661,6 @@ class Table
 			$this->table->dropPrimaryKey();
 		}
 
-		$map = [];
 		foreach( $columns as $key => $column ) {
 			$columns[$key] = $this->db->qi( $column );
 		}
