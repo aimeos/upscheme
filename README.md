@@ -195,16 +195,39 @@ the path(s) to the migration tasks. For the config, the array keys and the value
 for *driver* must be supported by Doctrine DBAL. Available drivers are:
 
 - pdo_mysql
-- pdo_sqlite
 - pdo_pgsql
-- pdo_oci
-- oci8
-- ibm_db2
+- pdo_sqlite
 - pdo_sqlsrv
+- pdo_oci
+- ibm_db2
 - mysqli
-- drizzle_pdo_mysql
+- oci8
 - sqlanywhere
 - sqlsrv
+
+Some databases require different parameters, most notable SQLite and Oracle:
+
+**SQLite:**
+
+```php
+$config = [
+	'driver' => 'pdo_sqlite',
+	'path' => 'path/to/file.sq3'
+];
+```
+
+**Oracle:**
+
+```php
+$config = [
+	'driver' => 'pdo_oci',
+	'host' => '<host or IP>',
+	'dbname' => '<SID or service name (Oracle 18+)>',
+	'service' => true, // for Oracle 18+ only
+	'user' => '<dbuser>',
+	'password' => '<secret>'
+];
+```
 
 If you didn't use Doctrine DBAL before, your database configuration may have a
 different structure and/or use different values for the database type. Upscheme
@@ -1214,6 +1237,10 @@ public function renameColumn( string $table, $from, string $to = null ) : self
 * @param array&#60;string,string&#62;&#124;string `$from` Column name or array of old/new column names
 * @param string&#124;null `$to` New column name ignored if first parameter is an array
 * @return self Same object for fluid method calls
+
+**Limitations**
+
+* SQLite since 3.25.0
 
 **Examples:**
 
