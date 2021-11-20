@@ -431,6 +431,17 @@ class DB
 	 */
 	public function lastId( string $seq = null ) : string
 	{
+		if( $seq && $this->type() === 'oracle' )
+		{
+			$sql = sprintf( 'SELECT %1$s.CURRVAL FROM DUAL', $this->qi( $seq ) );
+
+			if( ( $result = $this->query( $sql )->fetchOne() ) === false ) {
+				throw new \RuntimeException( sprintf( 'Sequence "%1$s" does not exist', $seq ) );
+			}
+
+			return $result;
+		}
+
 		return $this->conn->lastInsertId( $seq ? $this->qi( $seq ) : null );
 	}
 
