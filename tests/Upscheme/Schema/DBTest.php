@@ -12,6 +12,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 {
 	private $object;
 	private $connmock;
+	private $pfmock;
 	private $schemamock;
 	private $smmock;
 	private $tablemock;
@@ -25,6 +26,10 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$this->connmock = $this->getMockBuilder( '\Doctrine\DBAL\Connection' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$this->pfmock = $this->getMockBuilder( '\Doctrine\DBAL\Platforms\AbstractPlatform' )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -51,13 +56,16 @@ class DBTest extends \PHPUnit\Framework\TestCase
 				return '"' . $value . '"';
 			} ) );
 
+		$this->connmock->expects( $this->any() )->method( 'getDatabasePlatform' )
+			->will( $this->returnValue( $this->pfmock ) );
+
 		$this->smmock->expects( $this->any() )->method( 'createSchema' )
 			->will( $this->returnValue( $this->schemamock ) );
 
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['table', 'type', 'up', 'getColumnSQL'] )
+			->setMethods( ['table', 'up', 'getColumnSQL'] )
 			->getMock();
 
 		$this->object->expects( $this->any() )->method( 'table' )->will( $this->returnValue( $this->tablemock ) );
@@ -66,7 +74,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	protected function tearDown() : void
 	{
-		unset( $this->object, $this->upmock, $this->connmock );
+		unset( $this->object, $this->tablemock, $this->schemamock, $this->smmock, $this->connmock, $this->upmock );
 	}
 
 
@@ -250,7 +258,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testForMultiple()
 	{
-		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mysql' ) );
+		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
 		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', ['test', 'test2'] ) );
@@ -259,7 +267,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testForMismatch()
 	{
-		$this->object->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'pgsql' ) );
+		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'postgresql' ) );
 		$this->connmock->expects( $this->never() )->method( 'executeStatement' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', 'test' ) );
@@ -371,6 +379,20 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->will( $this->returnValue( '123' ) );
 		$this->assertEquals( '123', $this->object->lastId() );
+	}
+
+
+	public function testLastIdOracle()
+	{
+		$mock = $this->getMockBuilder( '\Doctrine\DBAL\Result' )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->will( $this->returnValue( $mock ) );
+		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'oracle' ) );
+		$mock->expects( $this->once() )->method( 'fetchOne' )->will( $this->returnValue( '123' ) );
+
+		$this->assertEquals( '123', $this->object->lastId( 'test_seq' ) );
 	}
 
 
@@ -583,19 +605,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testType()
 	{
-		$pfmock = $this->getMockBuilder( '\Doctrine\DBAL\Platforms\AbstractPlatform' )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
-			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['up'] )
-			->getMock();
-
-		$pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
-		$this->connmock->expects( $this->once() )->method( 'getDatabasePlatform' )->will( $this->returnValue( $pfmock ) );
-
-		$this->assertEquals( 'mysql', $object->type() );
+		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
+		$this->assertEquals( 'mysql', $this->object->type() );
 	}
 
 
