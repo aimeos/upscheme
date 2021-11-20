@@ -128,10 +128,12 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_sqlsrv', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'SA', 'password' => 'S3c0r3P4ss'];" > tests/config.php
       - run: ./vendor/bin/phpunit || true
 
-  "php-8.0 / oracle":
+  "php-8.0 / oracle-11":
     docker:
       - image: aimeos/ci-php:8.0
-      - image: wnameless/oracle-xe-11g-r2
+      - image: gvenzl/oracle-xe:11-slim
+        environment:
+          ORACLE_PASSWORD: oracle
     steps:
       - checkout
       - restore_cache:
@@ -142,9 +144,9 @@ jobs:
           key: php80-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: sleep 10
-      - run: echo "<?php return ['driver' => 'oci8', 'host' => '127.0.0.1', 'dbname' => 'XE', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: echo "<?php return ['driver' => 'pdo_oci', 'host' => '127.0.0.1', 'dbname' => 'XE', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: echo "CREATE USER upscheme IDENTIFIED BY upscheme;" > init.sql && echo "GRANT DBA TO upscheme;" >> init.sql && echo "quit" >> init.sql
-      - run: sqlplus system/oracle@127.0.0.1/XE @init.sql
+      - run: sqlplus system/oracle@127.0.0.1 @init.sql
       - run: ./vendor/bin/phpunit || true
 
 workflows:
@@ -157,4 +159,4 @@ workflows:
       - "php-7.4 / mysql-8.0"
       - "php-8.0 / sqlite"
       - "php-8.0 / mssql-2019"
-      - "php-8.0 / oracle"
+      - "php-8.0 / oracle-11"
