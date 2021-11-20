@@ -63,7 +63,8 @@ class Create extends Base
 			'content' => 'some text', 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd'
 		] );
 
-		$db->insert( 'testref', ['parentid' => $db->lastId( 'test_id_seq' ), 'label' => 'test ref'] );
+		$seq = $db->type() === 'postgresql' ? 'test_id_seq' : ( $db->type() === 'oracle' ? 'test_SEQ' : null );
+		$db->insert( 'testref', ['parentid' => $db->lastId( $seq ), 'label' => 'test ref'] );
 
 
 		$this->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );
