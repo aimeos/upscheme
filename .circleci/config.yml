@@ -143,10 +143,9 @@ jobs:
       - save_cache:
           key: php80-{{ checksum "composer.json" }}
           paths: [./vendor]
-      - run: sleep 10
       - run: echo "<?php return ['driver' => 'pdo_oci', 'host' => '127.0.0.1', 'dbname' => 'XE', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: echo "CREATE USER upscheme IDENTIFIED BY upscheme;" > init.sql && echo "GRANT DBA TO upscheme;" >> init.sql && echo "quit" >> init.sql
-      - run: sqlplus system/oracle@127.0.0.1 @init.sql
+      - run: for i in `seq 1 5`; do sqlplus -L system/oracle@127.0.0.1 @init.sql && exit 0; echo -n .; sleep 5; done
       - run: ./vendor/bin/phpunit || true
 
 workflows:
