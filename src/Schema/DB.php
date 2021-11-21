@@ -221,6 +221,8 @@ class DB
 	 */
 	public function dropView( $name ) : self
 	{
+		$this->up();
+
 		$manager = $this->getSchemaManager();
 
 		foreach( (array) $name as $entry )
@@ -230,7 +232,7 @@ class DB
 			}
 		}
 
-		return $this->up();
+		return $this->setup();
 	}
 
 
@@ -379,9 +381,6 @@ class DB
 		foreach( $manager->listViews() as $view ) {
 			$views[$view->getName()] = $view;
 		}
-
-		$list = $manager->getSchemaSearchPaths();
-		$list[] = '';
 
 		$list = $manager->getSchemaSearchPaths();
 		$list[] = '';
@@ -766,14 +765,9 @@ class DB
 	 */
 	public function view( string $name, string $sql, $for = null ) : self
 	{
-		$views = [];
 		$manager = $this->getSchemaManager();
 
-		foreach( $manager->listViews() as $view ) {
-			$views[$view->getName()] = $view;
-		}
-
-		if( !isset( $views[$name] ) && ( $for === null || in_array( $this->type(), (array) $for ) ) ) {
+		if( !$this->hasView( $name ) && ( $for === null || in_array( $this->type(), (array) $for ) ) ) {
 			$manager->createView( new \Doctrine\DBAL\Schema\View( $this->qi( $name ), $sql ) );
 		}
 
