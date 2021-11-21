@@ -202,14 +202,19 @@ class DB
 	 */
 	public function dropTable( $name ) : self
 	{
+		$this->up();
+
+		// Workaround for Oracle to drop sequence and trigger too
+		$manager = $this->getSchemaManager();
+
 		foreach( (array) $name as $entry )
 		{
 			if( $this->hasTable( $entry ) ) {
-				$this->to->dropTable( $entry );
+				$manager->dropTable( $this->qi( $entry ) );
 			}
 		}
 
-		return $this->up();
+		return $this->setup();
 	}
 
 
