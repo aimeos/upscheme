@@ -12,18 +12,29 @@ class CrudTest extends \PHPUnit\Framework\TestCase
 
 	protected function setUp() : void
 	{
+		Aimeos\Upscheme\Schema\Table::macro( 'default', function() {
+			$this->opt( 'engine', 'InnoDB' );
+			$this->string( 'editor' )->null( true );
+		} );
+
 		$this->config = include dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'config.php';
 	}
 
 
 	public function testCreate()
 	{
-		Aimeos\Upscheme\Schema\Table::macro( 'default', function() {
-			$this->opt( 'engine', 'InnoDB' );
-			$this->string( 'editor' )->null( true );
-		} );
-
 		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->up();
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
+
+		// test if schema is unchanged
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->up();
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
+	}
+
+
+	public function testInsert()
+	{
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/insert' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 
