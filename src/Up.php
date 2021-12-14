@@ -123,13 +123,9 @@ class Up
 	 */
 	public function info( string $msg, $level = 'v' ) : self
 	{
-		if( static::macro( 'info' ) )
-		{
-			$this->call( 'info', [$msg, $level] );
-			return $this;
-		}
-
-		if( strlen( (string) $level ) <= $this->verbose ) {
+		if( $fcn = static::macro( 'info' ) ) {
+			$fcn( $msg, $level );
+		} elseif( strlen( (string) $level ) <= $this->verbose ) {
 			echo $msg . PHP_EOL;
 		}
 
@@ -186,7 +182,7 @@ class Up
 	 */
 	public function verbose( $level = 'v' ) : self
 	{
-		$this->verbose = ( static::macro( 'verbose' ) ) ? $this->call( 'verbose', [$level] ) : strlen( (string) $level );
+		$this->verbose = ( $fcn = static::macro( 'verbose' ) ) ? $fcn( $level ) : strlen( (string) $level );
 		return $this;
 	}
 
@@ -230,8 +226,8 @@ class Up
 		$cfg['driverOptions'][\PDO::ATTR_ORACLE_NULLS] = \PDO::NULL_NATURAL;
 		$cfg['driverOptions'][\PDO::ATTR_STRINGIFY_FETCHES] = false;
 
-		if( static::macro( 'connect' ) ) {
-			return $this->call( 'connect', [$cfg] );
+		if( $fcn = static::macro( 'connect' ) ) {
+			return $fcn( $cfg );
 		}
 
 		$conn = \Doctrine\DBAL\DriverManager::getConnection( $cfg );
