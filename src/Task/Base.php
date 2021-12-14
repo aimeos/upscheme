@@ -16,7 +16,8 @@ namespace Aimeos\Upscheme\Task;
  */
 abstract class Base implements Iface
 {
-	use \Aimeos\Upscheme\Macro;
+	use \Aimeos\Macro\Macroable;
+
 
 	/**
 	 * @var \Aimeos\Upscheme\Up

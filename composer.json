@@ -5,6 +5,7 @@
 	"type": "library",
 	"require": {
 		"php": "~7.1||~8.0",
+		"aimeos/macro": "1.0",
 		"doctrine/dbal": "~2.13||~3.0"
 	},
 	"require-dev": {

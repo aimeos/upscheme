@@ -17,7 +17,8 @@ namespace Aimeos\Upscheme\Schema;
  */
 class Sequence
 {
-	use \Aimeos\Upscheme\Macro;
+	use \Aimeos\Macro\Macroable;
+
 
 	/**
 	 * @var \Aimeos\Upscheme\Schema\DB

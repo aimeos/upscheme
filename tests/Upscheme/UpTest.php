@@ -120,7 +120,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 		} );
 
 		$result = ( new \Aimeos\Upscheme\Up( ['driver' => 'pdo_mysql'], 'testpath' ) )->db();
-		\Aimeos\Upscheme\Up::reset( 'connect' );
+		\Aimeos\Upscheme\Up::unmacro( 'connect' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $result );
 	}
@@ -147,7 +147,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 		$this->expectOutputString( 'custom' );
 		$this->object->info( 'test', 'v' );
 
-		\Aimeos\Upscheme\Up::reset( 'info' );
+		\Aimeos\Upscheme\Up::unmacro( 'info' );
 	}
 
 
@@ -179,7 +179,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	{
 		\Aimeos\Upscheme\Up::macro( 'verbose', function( $level ) { return 3; } );
 		$result = $this->object->verbose( 'v' );
-		\Aimeos\Upscheme\Up::reset( 'info' );
+		\Aimeos\Upscheme\Up::unmacro( 'info' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}

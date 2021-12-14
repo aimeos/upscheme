@@ -16,7 +16,7 @@ namespace Aimeos\Upscheme\Schema;
  */
 class Column
 {
-	use \Aimeos\Upscheme\Macro;
+	use \Aimeos\Macro\Macroable;
 
 
 	/**

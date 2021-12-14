@@ -16,7 +16,7 @@ namespace Aimeos\Upscheme\Schema;
  */
 class DB
 {
-	use \Aimeos\Upscheme\Macro;
+	use \Aimeos\Macro\Macroable;
 
 
 	/**

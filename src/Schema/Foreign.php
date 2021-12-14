@@ -19,7 +19,7 @@ use Doctrine\DBAL\Schema\Table as DbalTable;
  */
 class Foreign
 {
-	use \Aimeos\Upscheme\Macro;
+	use \Aimeos\Macro\Macroable;
 
 
 	/**

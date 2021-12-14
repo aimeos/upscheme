@@ -14,7 +14,7 @@ namespace Aimeos\Upscheme;
  */
 class Up
 {
-	use Macro;
+	use \Aimeos\Macro\Macroable;
 
 
 	/**
