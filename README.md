@@ -1362,9 +1362,13 @@ public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
 **Examples:**
 
 ```php
-$db->stmt()->delete( 'test' )->where( 'status = ?' )->setParameter( 0, false )->execute();
-$db->stmt()->update( 'test' )->set( 'status', '?' )->setParameter( 0, true )->execute();
-$result = $db->stmt()->select( 'id', 'label' )->from( 'test' )->execute();
+$db->stmt()->delete( 'test' )->where( 'stat = ?' )->setParameter( 0, false )->execute();
+$db->stmt()->update( 'test' )->set( 'stat', '?' )->setParameter( 0, true )->execute();
+$result = $db->stmt()->select( 'id', 'code' )->from( 'test' )->where( 'stat = 1' )->execute();
+
+while( $row = $result->fetchAssociative() ) {
+    $id = $row['id'];
+}
 ```
 
 For more details about the available Doctrine QueryBuilder methods, please have
