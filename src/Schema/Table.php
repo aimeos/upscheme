@@ -804,12 +804,13 @@ class Table
 	protected function copyColumn( \Doctrine\DBAL\Schema\Column $column, $name ) : void
 	{
 		$options = $column->toArray();
-		unset( $options['name'], $options['autoincrement'] );
+		$custom = array_intersect_key( $options, ['charset' => null, 'collation' => null, 'check' => null] );
+		unset( $options['name'], $options['autoincrement'], $options['charset'], $options['collation'], $options['check'] );
 
 		if( $this->table->hasColumn( $name ) ) {
-			$this->table->changeColumn( $name, $options );
+			$this->table->changeColumn( $name, $options + ['customSchemaOptions' => $custom] );
 		} else {
-			$this->table->addColumn( $this->db->qi( $name ), $column->getType()->getName(), $options );
+			$this->table->addColumn( $name, $column->getType()->getName(), $options + ['customSchemaOptions' => $custom] );
 		}
 	}
 
