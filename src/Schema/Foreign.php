@@ -119,7 +119,7 @@ class Foreign
 	public function __call( string $method, array $args )
 	{
 		if( self::macro( $method ) ) {
-			return $this->call( $method, $args );
+			return $this->call( $method, ...$args );
 		}
 
 		throw new \BadMethodCallException( sprintf( 'Unknown method "%1$s" in %2$s', $method, __CLASS__ ) );

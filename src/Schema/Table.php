@@ -53,7 +53,7 @@ class Table
 	public function __call( string $method, array $args )
 	{
 		if( self::macro( $method ) ) {
-			return $this->call( $method, $args );
+			return $this->call( $method, ...$args );
 		}
 
 		return $this->table->{$method}( ...$args );
