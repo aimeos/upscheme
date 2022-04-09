@@ -30,9 +30,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			'addIndex', 'getIndex', 'getIndexes', 'hasIndex', 'renameIndex', 'dropIndex',
 			'dropPrimaryKey', 'getPrimaryKey', 'hasPrimaryKey', 'setPrimaryKey',
 			'addUniqueIndex', 'hasUniqueConstraint', 'removeUniqueConstraint',
+			'getName', 'addOption', 'getOption', 'hasOption',
 			'dropColumn', 'hasColumn', 'renameColumn',
 			'hasForeignKey', 'removeForeignKey',
-			'getName', 'addOption', 'getOption',
 		];
 
 		$this->tablemock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
@@ -68,6 +68,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetMagic()
 	{
+		$this->tablemock->expects( $this->once() )->method( 'hasOption' )
+			->will( $this->returnValue( true ) );
+
 		$this->tablemock->expects( $this->once() )->method( 'getOption' )
 			->will( $this->returnValue( 'yes' ) );
 
@@ -85,6 +88,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testOptGet()
 	{
+		$this->tablemock->expects( $this->once() )->method( 'hasOption' )
+			->will( $this->returnValue( true ) );
+
 		$this->tablemock->expects( $this->once() )->method( 'getOption' )
 			->will( $this->returnValue( 'yes' ) );
 
