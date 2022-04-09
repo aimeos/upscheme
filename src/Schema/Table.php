@@ -633,7 +633,7 @@ class Table
 	public function opt( string $name, $value = null )
 	{
 		if( $value === null ) {
-			return $this->table->getOption( $name );
+			return $this->table->hasOption( $name ) ? $this->table->getOption( $name ) : null;
 		}
 
 		$this->table->addOption( $name, $value );
