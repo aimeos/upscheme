@@ -290,6 +290,9 @@ class Up
 	 */
 	protected function runTasks( array $tasknames, array $stack = [] ) : void
 	{
+		$dir = getcwd();
+		$dirlen = strlen( $dir );
+
 		foreach( $tasknames as $taskname )
 		{
 			if( in_array( $taskname, $this->tasksDone ) ) {
@@ -310,12 +313,21 @@ class Up
 
 			if( isset( $this->tasks[$taskname] ) )
 			{
-				$this->info( PHP_EOL . $this->tasks[$taskname]->_filename, 'vvv' );
+				$start = microtime( true );
+				$file = $this->tasks[$taskname]->_filename;
+
+				if( !strncmp( $file, $dir, $dirlen ) ) {
+					$file = ltrim( substr( $file, $dirlen ), '/' );
+				}
+
+				$this->info( 'Migrating: ' . $file, 'v' );
 				$this->tasks[$taskname]->up();
 
 				foreach( $this->db as $db ) {
 					$db->up();
 				}
+
+				$this->info( 'Migrated: ' . $file . ' (' . round( microtime( true ) - $start, 2 ) . 'sec)', 'v' );
 			}
 
 			$this->tasksDone[] = $taskname;
