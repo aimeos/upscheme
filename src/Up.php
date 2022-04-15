@@ -327,7 +327,7 @@ class Up
 					$db->up();
 				}
 
-				$this->info( 'Migrated: ' . $file . ' (' . round( microtime( true ) - $start, 2 ) . 'sec)', 'v' );
+				$this->info( 'Migrated:  ' . $file . ' (' . round( ( microtime( true ) - $start ) * 1000, 2 ) . 'ms)', 'v' );
 			}
 
 			$this->tasksDone[] = $taskname;
