@@ -937,9 +937,9 @@ Executes a custom SQL statement
 public function exec( string $sql, array $params = [], array $types = [] ) : int
 ```
 
-* @param string $sql Custom SQL statement
-* @param array&#60;int&#124;string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
-* @param array&#60;int&#124;string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
+* @param string `$sql` Custom SQL statement
+* @param array&#60;int&#124;string,mixed&#62; `$params` List of positional parameters or associative list of placeholders and parameters
+* @param array&#60;int&#124;string,mixed&#62; `$types` List of DBAL data types for the positional or associative placeholder parameters
 * @return int Number of affected rows
 
 The database changes are not applied immediately so always call up()
@@ -1171,8 +1171,8 @@ Quotes a value
 public function q( $value, $type = \Doctrine\DBAL\ParameterType::STRING ) : string
 ```
 
-* @param mixed $value Value to use in a non-prepared SQL query
-* @param mixed $type DBAL parameter type
+* @param mixed `$value` Value to use in a non-prepared SQL query
+* @param mixed `$type` DBAL parameter type
 * @return string Quoted value
 
 **Examples:**
@@ -1191,7 +1191,7 @@ Quotes a database identifier
 public function qi( string $identifier ) : string
 ```
 
-* @param string $identifier Identifier like table or column name
+* @param string `$identifier` Identifier like table or column name
 * @return string Quoted identifier
 
 **Examples:**
@@ -1209,9 +1209,9 @@ Executes a custom SQL query
 public function query( string $sql, array $params = [], array $types = [] ) : \Doctrine\DBAL\Result
 ```
 
-* @param string $sql Custom SQL statement
-* @param array&#60;int&#124;string,mixed&#62; $params List of positional parameters or associative list of placeholders and parameters
-* @param array&#60;int&#124;string,mixed&#62; $types List of DBAL data types for the positional or associative placeholder parameters
+* @param string `$sql` Custom SQL statement
+* @param array&#60;int&#124;string,mixed&#62; `$params` List of positional parameters or associative list of placeholders and parameters
+* @param array&#60;int&#124;string,mixed&#62; `$types` List of DBAL data types for the positional or associative placeholder parameters
 * @return \Doctrine\DBAL\Result DBAL result set object
 
 **Examples:**
