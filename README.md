@@ -712,9 +712,9 @@ Calls custom methods or passes unknown method calls to the Doctrine schema objec
 public function __call( string $method, array $args )
 ```
 
-* @param string `$method` Name of the method
-* @param array&#60;mixed&#62; `$args` Method parameters
-* @return mixed Return value of the called method
+* @param **string** `$method` Name of the method
+* @param **array&#60;mixed&#62;** `$args` Method parameters
+* @return **mixed** Return value of the called method
 
 **Examples:**
 
@@ -780,9 +780,9 @@ Deletes the records from the given table
 public function delete( string $table, array $conditions = null ) : self
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string,mixed&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table
+* @param **array&#60;string,mixed&#62;&#124;null** `$conditions` Key/value pairs of column names and value to compare with
+* @return **self** Same object for fluid method calls
 
 Warning: The condition values are escaped but the table name and condition
 column names are not! Only use fixed strings for table name and condition
@@ -807,9 +807,9 @@ Drops the column given by its name if it exists
 public function dropColumn( string $table, $name ) : self
 ```
 
-* @param string `$table` Name of the table the column belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table the column belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the column or columns
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -829,9 +829,9 @@ Drops the foreign key constraint given by its name if it exists
 public function dropForeign( string $table, $name ) : self
 ```
 
-* @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table the foreign key constraint belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the foreign key constraint or constraints
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -852,9 +852,9 @@ Drops the index given by its name if it exists
 public function dropIndex( string $table, $name ) : self
 ```
 
-* @param string `$table` Name of the table the index belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table the index belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the index or indexes
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -874,8 +874,8 @@ Drops the sequence given by its name if it exists
 public function dropSequence( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the sequence or sequences
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the sequence or sequences
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -895,8 +895,8 @@ Drops the table given by its name if it exists
 public function dropTable( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the table or tables
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the table or tables
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -916,8 +916,8 @@ Drops the view given by its name if it exists
 public function dropView( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the view or views
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the view or views
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -937,10 +937,10 @@ Executes a custom SQL statement
 public function exec( string $sql, array $params = [], array $types = [] ) : int
 ```
 
-* @param string `$sql` Custom SQL statement
-* @param array&#60;int&#124;string,mixed&#62; `$params` List of positional parameters or associative list of placeholders and parameters
-* @param array&#60;int&#124;string,mixed&#62; `$types` List of DBAL data types for the positional or associative placeholder parameters
-* @return int Number of affected rows
+* @param **string** `$sql` Custom SQL statement
+* @param **array&#60;int&#124;string,mixed&#62;** `$params` List of positional parameters or associative list of placeholders and parameters
+* @param **array&#60;int&#124;string,mixed&#62;** `$types` List of DBAL data types for the positional or associative placeholder parameters
+* @return **int** Number of affected rows
 
 The database changes are not applied immediately so always call up()
 before executing custom statements to make sure that the tables you want
@@ -962,9 +962,9 @@ Executes a custom SQL statement if the database is of the given type
 public function for( $type, $sql ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$type` Database type the statement should be executed for
-* @param array&#60;string&#62;&#124;string `$sql` Custom SQL statement or statements
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$type` Database type the statement should be executed for
+* @param **array&#60;string&#62;&#124;string** `$sql` Custom SQL statement or statements
+* @return **self** Same object for fluid method calls
 
 Available database platform types are:
 
@@ -999,9 +999,9 @@ Checks if the column or columns exists
 public function hasColumn( string $table, $name ) : bool
 ```
 
-* @param string `$table` Name of the table the column belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
-* @return bool TRUE if the columns exists, FALSE if not
+* @param **string** `$table` Name of the table the column belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the column or columns
+* @return **bool** TRUE if the columns exists, FALSE if not
 
 **Examples:**
 
@@ -1019,9 +1019,9 @@ Checks if the foreign key constraints exists
 public function hasForeign( string $table, $name ) : bool
 ```
 
-* @param string `$table` Name of the table the foreign key constraint belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
-* @return bool TRUE if the foreign key constraint exists, FALSE if not
+* @param **string** `$table` Name of the table the foreign key constraint belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the foreign key constraint or constraints
+* @return **bool** TRUE if the foreign key constraint exists, FALSE if not
 
 **Examples:**
 
@@ -1039,9 +1039,9 @@ Checks if the indexes exists
 public function hasIndex( string $table, $name ) : bool
 ```
 
-* @param string `$table` Name of the table the index belongs to
-* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
-* @return bool TRUE if the index exists, FALSE if not
+* @param **string** `$table` Name of the table the index belongs to
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the index or indexes
+* @return **bool** TRUE if the index exists, FALSE if not
 
 **Examples:**
 
@@ -1059,8 +1059,8 @@ Checks if the sequences exists
 public function hasSequence( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the sequence or sequences
-* @return bool TRUE if the sequence exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the sequence or sequences
+* @return **bool** TRUE if the sequence exists, FALSE if not
 
 **Examples:**
 
@@ -1078,8 +1078,8 @@ Checks if the tables exists
 public function hasTable( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the table or tables
-* @return bool TRUE if the table exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the table or tables
+* @return **bool** TRUE if the table exists, FALSE if not
 
 **Examples:**
 
@@ -1097,8 +1097,8 @@ Checks if the views exists
 public function hasView( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the view or views
-* @return bool TRUE if the view exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the view or views
+* @return **bool** TRUE if the view exists, FALSE if not
 
 **Examples:**
 
@@ -1116,9 +1116,9 @@ Inserts a record into the given table
 	public function insert( string $table, array $data ) : self
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to insert
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table
+* @param **array&#60;string,mixed&#62;** `$data` Key/value pairs of column name/value to insert
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -1135,8 +1135,8 @@ Returns the ID of the last inserted row into any database table
 public function lastId( string $seq = null ) : string
 ```
 
-* @param string&#124;null `$seq` Name of the sequence generating the ID
-* @return string Generated ID from the database
+* @param **string&#124;null** `$seq` Name of the sequence generating the ID
+* @return **string** Generated ID from the database
 
 **Examples:**
 
@@ -1154,7 +1154,7 @@ Returns the name of the database
 public function name() : string
 ```
 
-* @return string Database name
+* @return **string** Database name
 
 **Examples:**
 
@@ -1171,9 +1171,9 @@ Quotes a value
 public function q( $value, $type = \Doctrine\DBAL\ParameterType::STRING ) : string
 ```
 
-* @param mixed `$value` Value to use in a non-prepared SQL query
-* @param mixed `$type` DBAL parameter type
-* @return string Quoted value
+* @param **mixed** `$value` Value to use in a non-prepared SQL query
+* @param **mixed** `$type` DBAL parameter type
+* @return **string** Quoted value
 
 **Examples:**
 
@@ -1191,8 +1191,8 @@ Quotes a database identifier
 public function qi( string $identifier ) : string
 ```
 
-* @param string `$identifier` Identifier like table or column name
-* @return string Quoted identifier
+* @param **string** `$identifier` Identifier like table or column name
+* @return **string** Quoted identifier
 
 **Examples:**
 
@@ -1209,10 +1209,10 @@ Executes a custom SQL query
 public function query( string $sql, array $params = [], array $types = [] ) : \Doctrine\DBAL\Result
 ```
 
-* @param string `$sql` Custom SQL statement
-* @param array&#60;int&#124;string,mixed&#62; `$params` List of positional parameters or associative list of placeholders and parameters
-* @param array&#60;int&#124;string,mixed&#62; `$types` List of DBAL data types for the positional or associative placeholder parameters
-* @return \Doctrine\DBAL\Result DBAL result set object
+* @param **string** `$sql` Custom SQL statement
+* @param **array&#60;int&#124;string,mixed&#62;** `$params` List of positional parameters or associative list of placeholders and parameters
+* @param **array&#60;int&#124;string,mixed&#62;** `$types` List of DBAL data types for the positional or associative placeholder parameters
+* @return **\Doctrine\DBAL\Result** DBAL result set object
 
 **Examples:**
 
@@ -1233,10 +1233,10 @@ Renames a column or a list of columns
 public function renameColumn( string $table, $from, string $to = null ) : self
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string,string&#62;&#124;string `$from` Column name or array of old/new column names
-* @param string&#124;null `$to` New column name ignored if first parameter is an array
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table
+* @param **array&#60;string,string&#62;&#124;string** `$from` Column name or array of old/new column names
+* @param **string&#124;null** `$to` New column name ignored if first parameter is an array
+* @return **self** Same object for fluid method calls
 
 **Limitations**
 
@@ -1261,10 +1261,10 @@ Renames a column or a list of columns
 public function renameIndex( string $table, $from, string $to = null ) : self
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string,string&#62;&#124;string `$from` Index name or array of old/new index names
-* @param string&#124;null `$to` New index name ignored if first parameter is an array
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table
+* @param **array&#60;string,string&#62;&#124;string** `$from` Index name or array of old/new index names
+* @param **string&#124;null** `$to` New index name ignored if first parameter is an array
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -1285,9 +1285,9 @@ Renames a table or a list of tables
 public function renameTable( $from, string $to = null ) : self
 ```
 
-* @param array&#60;string,string&#62;&#124;string `$from` Table name or array of old/new table names
-* @param string&#124;null `$to` New table name ignored if first parameter is an array
-* @return self Same object for fluid method calls
+* @param **array&#60;string,string&#62;&#124;string** `$from` Table name or array of old/new table names
+* @param **string&#124;null** `$to` New table name ignored if first parameter is an array
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -1308,9 +1308,9 @@ Returns the records from the given table
 public function select( string $table, array $conditions = null ) : array
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
-* @return array&#60;int,array&#60;string,mixed&#62;&#62; List of associative arrays containing column name/value pairs
+* @param **string** `$table` Name of the table
+* @param **array&#60;string&#62;&#124;null** `$conditions` Key/value pairs of column names and value to compare with
+* @return **array&#60;int,array&#60;string,mixed&#62;&#62;** List of associative arrays containing column name/value pairs
 
 **Examples:**
 
@@ -1331,9 +1331,9 @@ Returns the sequence object for the given name
 public function sequence( string $name, \Closure $fcn = null ) : Sequence
 ```
 
-* @param string `$name` Name of the sequence
-* @param \Closure&#124;null `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
-* @return \Aimeos\Upscheme\Schema\Sequence Sequence object
+* @param **string** `$name` Name of the sequence
+* @param **\Closure&#124;null** `$fcn` Anonymous function with ($sequence) parameter creating or updating the sequence definition
+* @return **\Aimeos\Upscheme\Schema\Sequence** Sequence object
 
 If the sequence doesn't exist yet, it will be created. To persist the changes in the
 database, you have to call `up()`.
@@ -1357,7 +1357,7 @@ Returns the query builder for a new SQL statement
 public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
 ```
 
-* @return \Doctrine\DBAL\Query\QueryBuilder Query builder object
+* @return **\Doctrine\DBAL\Query\QueryBuilder** Query builder object
 
 **Examples:**
 
@@ -1383,9 +1383,9 @@ Returns the table object for the given name
 public function table( string $name, \Closure $fcn = null ) : Table
 ```
 
-* @param string `$name` Name of the table
-* @param \Closure&#124;null `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
-* @return \Aimeos\Upscheme\Schema\Table Table object
+* @param **string** `$name` Name of the table
+* @param **\Closure&#124;null** `$fcn` Anonymous function with ($table) parameter creating or updating the table definition
+* @return **\Aimeos\Upscheme\Schema\Table** Table object
 
 If the table doesn't exist yet, it will be created. To persist the changes in the
 database, you have to call `up()`.
@@ -1411,7 +1411,7 @@ Returns the type of the database
 public function type() : string
 ```
 
-* @return string Database type
+* @return **string** Database type
 
 Possible values are:
 
@@ -1437,7 +1437,7 @@ Applies the changes to the database schema
 public function up() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -1454,10 +1454,10 @@ Updates the records from the given table
 public function update( string $table, array $data, array $conditions = null ) : self
 ```
 
-* @param string `$table` Name of the table
-* @param array&#60;string,mixed&#62; `$data` Key/value pairs of column name/value to update
-* @param array&#60;string,mixed&#62;&#124;null `$conditions` Key/value pairs of column names and value to compare with
-* @return self Same object for fluid method calls
+* @param **string** `$table` Name of the table
+* @param **array&#60;string,mixed&#62;** `$data` Key/value pairs of column name/value to update
+* @param **array&#60;string,mixed&#62;&#124;null** `$conditions` Key/value pairs of column names and value to compare with
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -1478,10 +1478,10 @@ Creates a view with the given name if it doesn't exist yet
 public function view( string $name, string $sql, $for = null ) : self
 ```
 
-* @param string `$name` Name of the view
-* @param string `$sql` SELECT statement for populating the view
-* @param array&#60;string&#62;&#124;string&#124;null `$for` Database type this SQL should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
-* @return self Same object for fluid method calls
+* @param **string** `$name` Name of the view
+* @param **string** `$sql` SELECT statement for populating the view
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this SQL should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @return **self** Same object for fluid method calls
 
 If the view doesn't exist yet, it will be created. Otherwise, nothing will happen.
 
@@ -1760,9 +1760,9 @@ Calls custom methods or passes unknown method calls to the Doctrine table object
 public function __call( string $method, array $args )
 ```
 
-* @param string `$method` Name of the method
-* @param array&#60;mixed&#62; `$args` Method parameters
-* @return mixed Return value of the called method
+* @param **string** `$method` Name of the method
+* @param **array&#60;mixed&#62;** `$args` Method parameters
+* @return **mixed** Return value of the called method
 
 **Examples:**
 
@@ -1800,8 +1800,8 @@ Returns the value for the given table option
 public function __get( string $name )
 ```
 
-* @param string `$name` Table option name
-* @return mixed Table option value
+* @param **string** `$name` Table option name
+* @return **mixed** Table option value
 
 The list of available table options are:
 
@@ -1828,7 +1828,7 @@ Sets the new value for the given table option
 public function __set( string $name, $value )
 ```
 
-* @param string `$name` Table option name
+* @param **string** `$name` Table option name
 * @param mixed Table option value
 
 The list of available table options are:
@@ -1856,8 +1856,8 @@ Creates a new ID column of type "bigint" or returns the existing one
 public function bigid( string $name = null ) : Column
 ```
 
-* @param string&#124;null `$name` Name of the ID column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string&#124;null** `$name` Name of the ID column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 The column gets a sequence (autoincrement) and a primary key assigned automatically.
 If the column doesn't exist yet, it will be created.
@@ -1878,8 +1878,8 @@ Creates a new column of type "bigint" or returns the existing one
 public function bigint( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -1898,9 +1898,9 @@ Creates a new column of type "binary" or returns the existing one
 public function binary( string $name, int $length = 255 ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$length` Length of the column in bytes
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$length` Length of the column in bytes
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -1920,9 +1920,9 @@ Creates a new column of type "blob" or returns the existing one
 public function blob( string $name, int $length = 0x7fff ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$length` Length of the column in bytes
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$length` Length of the column in bytes
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 The maximum length of a "blob" column is 2GB.
 If the column doesn't exist yet, it will be created.
@@ -1943,8 +1943,8 @@ Creates a new column of type "boolean" or returns the existing one
 public function bool( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 This method is an alias for boolean().
 If the column doesn't exist yet, it will be created.
@@ -1964,8 +1964,8 @@ Creates a new column of type "boolean" or returns the existing one
 public function boolean( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -1984,9 +1984,9 @@ Creates a new column of type "char" with a fixed type or returns the existing on
 public function char( string $name, int $length ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$length` Length of the column in characters
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$length` Length of the column in characters
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2005,9 +2005,9 @@ Creates a new column or returns the existing one
 public function col( string $name, string $type = null ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param string&#124;null `$type` Type of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **string&#124;null** `$type` Type of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2027,8 +2027,8 @@ Creates a new column of type "date" or returns the existing one
 public function date( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2047,8 +2047,8 @@ Creates a new column of type "datetime" or returns the existing one
 public function datetime( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2067,8 +2067,8 @@ Creates a new column of type "datetimetz" or returns the existing one
 public function datetimetz( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2087,10 +2087,10 @@ Creates a new column of type "decimal" or returns the existing one
 public function decimal( string $name, int $digits, int $decimals = 2 ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$digits` Total number of decimal digits including decimals
-* @param int `$decimals` Number of digits after the decimal point
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$digits` Total number of decimal digits including decimals
+* @param **int** `$decimals` Number of digits after the decimal point
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2110,8 +2110,8 @@ Drops the column given by its name if it exists
 public function dropColumn( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the column or columns
+* @return **self** Same object for fluid method calls
 
 If the column or one of the columns doesn't exist, it will be silently ignored.
 The change won't be applied until the migration task finishes or `up()` is called.
@@ -2132,8 +2132,8 @@ Drops the index given by its name if it exists
 public function dropIndex( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the index or indexes
+* @return **self** Same object for fluid method calls
 
 If the index or one of the indexes doesn't exist, it will be silently ignored.
 The change won't be applied until the migration task finishes or `up()` is called.
@@ -2154,8 +2154,8 @@ Drops the foreign key constraint given by its name if it exists
 public function dropForeign( $name ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the foreign key constraint or constraints
+* @return **self** Same object for fluid method calls
 
 If the foreign key constraint or one of the constraints doesn't exist, it will be
 silently ignored. The change won't be applied until the migration task finishes
@@ -2177,7 +2177,7 @@ Drops the primary key if it exists
 public function dropPrimary() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 If the primary key doesn't exist, it will be silently ignored. The change won't
 be applied until the migration task finishes or `up()` is called.
@@ -2197,8 +2197,8 @@ Creates a new column of type "float" or returns the existing one
 public function float( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2217,11 +2217,11 @@ Creates a new foreign key or returns the existing one
 public function foreign( $localcolumn, string $foreigntable, $foreigncolumn = 'id', string $name = null ) : Foreign
 ```
 
-* @param array&#60;string&#62;&#124;string `$localcolumn` Name of the local column or columns
-* @param string `$foreigntable` Name of the referenced table
-* @param array&#60;string&#62;&#124;string `$foreigncolumn` Name of the referenced column or columns
-* @param string&#124;null `$name` Name of the foreign key constraint and foreign key index or NULL for autogenerated name
-* @return \Aimeos\Upscheme\Schema\Foreign Foreign key constraint object
+* @param **array&#60;string&#62;&#124;string** `$localcolumn` Name of the local column or columns
+* @param **string** `$foreigntable` Name of the referenced table
+* @param **array&#60;string&#62;&#124;string** `$foreigncolumn` Name of the referenced column or columns
+* @param **string&#124;null** `$name` Name of the foreign key constraint and foreign key index or NULL for autogenerated name
+* @return **\Aimeos\Upscheme\Schema\Foreign** Foreign key constraint object
 
 The length of the foreign key name shouldn't be longer than 30 characters for
 maximum compatibility.
@@ -2244,8 +2244,8 @@ Creates a new column of type "guid" or returns the existing one
 public function guid( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2264,8 +2264,8 @@ Checks if the column exists
 public function hasColumn( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the column or columns
-* @return bool TRUE if the columns exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the column or columns
+* @return **bool** TRUE if the columns exists, FALSE if not
 
 **Examples:**
 
@@ -2283,8 +2283,8 @@ Checks if the index exists
 public function hasIndex( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the index or indexes
-* @return bool TRUE if the indexes exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the index or indexes
+* @return **bool** TRUE if the indexes exists, FALSE if not
 
 **Examples:**
 
@@ -2302,8 +2302,8 @@ Checks if the foreign key constraint exists
 public function hasForeign( $name ) : bool
 ```
 
-* @param array&#60;string&#62;&#124;string `$name` Name of the foreign key constraint or constraints
-* @return bool TRUE if the foreign key constraints exists, FALSE if not
+* @param **array&#60;string&#62;&#124;string** `$name` Name of the foreign key constraint or constraints
+* @return **bool** TRUE if the foreign key constraints exists, FALSE if not
 
 **Examples:**
 
@@ -2321,8 +2321,8 @@ Creates a new ID column of type "integer" or returns the existing one
 public function id( string $name = null ) : Column
 ```
 
-* @param string&#124;null `$name` Name of the ID column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string&#124;null** `$name` Name of the ID column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 The column gets a sequence (autoincrement) and a primary key assigned automatically.
 If the column doesn't exist yet, it will be created.
@@ -2343,9 +2343,9 @@ Creates a new index or replaces an existing one
 public function index( $columns, string $name = null ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$columns` Name of the columns or columns spawning the index
-* @param string&#124;null `$name` Index name or NULL for autogenerated name
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$columns` Name of the columns or columns spawning the index
+* @param **string&#124;null** `$name` Index name or NULL for autogenerated name
+* @return **self** Same object for fluid method calls
 
 The length of the index name shouldn't be longer than 30 characters for maximum
 compatibility.
@@ -2367,8 +2367,8 @@ Creates a new column of type "integer" or returns the existing one
 public function int( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 This method is an alias for integer().
 If the column doesn't exist yet, it will be created.
@@ -2388,8 +2388,8 @@ Creates a new column of type "integer" or returns the existing one
 public function integer( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2408,8 +2408,8 @@ Creates a new column of type "json" or returns the existing one
 public function json( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2428,7 +2428,7 @@ Returns the name of the table
 public function name() : string
 ```
 
-* @return string Table name
+* @return **string** Table name
 
 **Examples:**
 
@@ -2445,9 +2445,9 @@ Sets a custom schema option or returns the current value
 public function opt( string $name, $value = null )
 ```
 
-* @param string `$name` Name of the table-related custom schema option
-* @param mixed `$value` Value of the custom schema option
-* @return self&#124;mixed Same object for setting value, current value without second parameter
+* @param **string** `$name` Name of the table-related custom schema option
+* @param **mixed** `$value` Value of the custom schema option
+* @return **self&#124;mixed** Same object for setting value, current value without second parameter
 
 Available custom schema options are:
 
@@ -2476,9 +2476,9 @@ Creates a new primary index or replaces an existing one
 public function primary( $columns, string $name = null ) : self
 ```
 
-* @param array&#60;string&#62;&#124;string `$columns` Name of the columns or columns spawning the index
-* @param string&#124;null `$name` Index name or NULL for autogenerated name
-* @return self Same object for fluid method calls
+* @param **array&#60;string&#62;&#124;string** `$columns` Name of the columns or columns spawning the index
+* @param **string&#124;null** `$name` Index name or NULL for autogenerated name
+* @return **self** Same object for fluid method calls
 
 The length of the index name shouldn't be longer than 30 characters for maximum
 compatibility.
@@ -2500,9 +2500,9 @@ Renames a column or a list of columns
 public function renameColumn( $from, string $to = null ) : self
 ```
 
-* @param array&#60;string,string&#62;&#124;string `$from` Column name or array of old/new column names
-* @param string&#124;null `$to` New column name ignored if first parameter is an array
-* @return self Same object for fluid method calls
+* @param **array&#60;string,string&#62;&#124;string** `$from` Column name or array of old/new column names
+* @param **string&#124;null** `$to` New column name ignored if first parameter is an array
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -2523,9 +2523,9 @@ Renames an index or a list of indexes
 public function renameIndex( $from, string $to = null ) : self
 ```
 
-* @param array&#124;string `$from` Index name or array of old/new index names (if new index name is NULL, it will be generated)
-* @param string&#124;null `$to` New index name or NULL for autogenerated name (ignored if first parameter is an array)
-* @return self Same object for fluid method calls
+* @param **array&#124;string** `$from` Index name or array of old/new index names (if new index name is NULL, it will be generated)
+* @param **string&#124;null** `$to` New index name or NULL for autogenerated name (ignored if first parameter is an array)
+* @return **self** Same object for fluid method calls
 
 The length of the indexes name shouldn't be longer than 30 characters for maximum
 compatibility.
@@ -2552,8 +2552,8 @@ Creates a new column of type "smallint" or returns the existing one
 public function smallint( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 
@@ -2572,9 +2572,9 @@ Creates a new spatial index or replaces an existing one
 public function spatial( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string `$columns` Name of the columns or columns spawning the index
-* @param string&#124;null `$name` Index name or NULL for autogenerated name
-* @return self Same object for fluid method calls
+* @param **array&#124;string** `$columns` Name of the columns or columns spawning the index
+* @param **string&#124;null** `$name` Index name or NULL for autogenerated name
+* @return **self** Same object for fluid method calls
 
 The length of the index name shouldn't be longer than 30 characters for maximum
 compatibility.
@@ -2596,9 +2596,9 @@ Creates a new column of type "string" or returns the existing one
 public function string( string $name, int $length = 255 ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$length` Length of the column in characters
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$length` Length of the column in characters
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 This type should be used for up to 255 characters. For more characters, use the
 "text" type. If the column doesn't exist yet, it will be created.
@@ -2619,9 +2619,9 @@ Creates a new column of type "text" or returns the existing one
 public function text( string $name, int $length = 0xffff ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @param int `$length` Length of the column in characters
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @param **int** `$length` Length of the column in characters
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 The maximum length of a "text" column is 2GB.
 If the column doesn't exist yet, it will be created.
@@ -2642,8 +2642,8 @@ Creates a new column of type "time" or returns the existing one
 public function time( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 If the column doesn't exist yet, it will be created.
 This datatype is not available when using Oracle databases.
@@ -2663,9 +2663,9 @@ Creates a new unique index or replaces an existing one
 public function unique( $columns, string $name = null ) : self
 ```
 
-* @param array&#124;string `$columns` Name of the columns or columns spawning the index
-* @param string&#124;null `$name` Index name or NULL for autogenerated name
-* @return self Same object for fluid method calls
+* @param **array&#124;string** `$columns` Name of the columns or columns spawning the index
+* @param **string&#124;null** `$name` Index name or NULL for autogenerated name
+* @return **self** Same object for fluid method calls
 
 The length of the index name shouldn't be longer than 30 characters for maximum
 compatibility.
@@ -2687,8 +2687,8 @@ Creates a new column of type "guid" or returns the existing one
 public function uuid( string $name ) : Column
 ```
 
-* @param string `$name` Name of the column
-* @return \Aimeos\Upscheme\Schema\Column Column object
+* @param **string** `$name` Name of the column
+* @return **\Aimeos\Upscheme\Schema\Column** Column object
 
 This method is an alias for guid().
 If the column doesn't exist yet, it will be created.
@@ -2708,7 +2708,7 @@ Applies the changes to the database schema
 public function up() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3036,9 +3036,9 @@ Calls custom methods or passes unknown method calls to the Doctrine column objec
 public function __call( string $method, array $args )
 ```
 
-* @param string `$method` Name of the method
-* @param array&#60;mixed&#62; `$args` Method parameters
-* @return mixed Return value of the called method
+* @param **string** `$method` Name of the method
+* @param **array&#60;mixed&#62;** `$args` Method parameters
+* @return **mixed** Return value of the called method
 
 **Examples:**
 
@@ -3079,8 +3079,8 @@ Returns the value for the given column option
 public function __get( string $name )
 ```
 
-* @param string `$name` Column option name
-* @return mixed Column option value
+* @param **string** `$name` Column option name
+* @return **mixed** Column option value
 
 The list of available column options are:
 
@@ -3107,8 +3107,8 @@ Sets the new value for the given column option
 public function __set( string $name, $value )
 ```
 
-* @param string `$name` Column option name
-* @param mixed `$value` Column option value
+* @param **string** `$name` Column option name
+* @param **mixed** `$value` Column option value
 
 The list of available column options are:
 
@@ -3135,8 +3135,8 @@ Sets the column as autoincrement or returns the current value
 public function autoincrement( bool $value = null )
 ```
 
-* @param bool&#124;null `$value` New autoincrement flag or NULL to return current value
-* @return self&#124;bool Same object for setting the value, current value without parameter
+* @param **bool&#124;null** `$value` New autoincrement flag or NULL to return current value
+* @return **self&#124;bool** Same object for setting the value, current value without parameter
 
 This method is an alias for the [`seq()`](#columnseq) method.
 
@@ -3156,8 +3156,8 @@ Sets the column charset or returns the current value
 public function charset( string $value = null )
 ```
 
-* @param string&#124;null `$value` New column charset or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` New column charset or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3175,8 +3175,8 @@ Sets the column collation or returns the current value
 public function collation( string $value = null )
 ```
 
-* @param string&#124;null `$value` New column collation or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` New column collation or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3194,8 +3194,8 @@ Sets the column comment or returns the current value
 public function comment( string $value = null )
 ```
 
-* @param string&#124;null `$value` New column comment or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` New column comment or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3213,8 +3213,8 @@ Sets the column default value or returns the current value
 public function default( $value = null )
 ```
 
-* @param mixed `$value` New column default value or NULL to return current value
-* @return self&#124;mixed Same object for setting the value, current value without parameter
+* @param **mixed** `$value` New column default value or NULL to return current value
+* @return **self&#124;mixed** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3232,8 +3232,8 @@ Sets the column fixed flag or returns the current value
 public function fixed( bool $value = null )
 ```
 
-* @param bool&#124;null `$value` New column fixed flag or NULL to return current value
-* @return self&#124;bool Same object for setting the value, current value without parameter
+* @param **bool&#124;null** `$value` New column fixed flag or NULL to return current value
+* @return **self&#124;bool** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3251,8 +3251,8 @@ Creates a regular index for the column
 public function index( string $name = null ) : self
 ```
 
-* @param string&#124;null `$name` Name of the index or NULL to generate automatically
-* @return self Same object for fluid method calls
+* @param **string&#124;null** `$name` Name of the index or NULL to generate automatically
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3270,8 +3270,8 @@ Sets the column length or returns the current value
 public function length( int $value = null )
 ```
 
-* @param int&#124;null `$value` New column length or NULL to return current value
-* @return self&#124;int Same object for setting the value, current value without parameter
+* @param **int&#124;null** `$value` New column length or NULL to return current value
+* @return **self&#124;int** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3289,7 +3289,7 @@ Returns the name of the column
 public function name() : string
 ```
 
-* @return string Column name
+* @return **string** Column name
 
 **Examples:**
 
@@ -3306,8 +3306,8 @@ Sets the column null flag or returns the current value
 public function null( bool $value = null )
 ```
 
-* @param bool&#124;null `$value` New column null flag or NULL to return current value
-* @return self&#124;bool Same object for setting the value, current value without parameter
+* @param **bool&#124;null** `$value` New column null flag or NULL to return current value
+* @return **self&#124;bool** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3325,10 +3325,10 @@ Sets the column option value or returns the current value
 public function opt( string $option, $value = null, $for = null )
 ```
 
-* @param string `$option` Column option name
-* @param mixed `$value` New column option value or NULL to return current value
-* @param array&#60;string&#62;&#124;string&#124;null `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
-* @return self&#124;mixed Same object for setting the value, current value without parameter
+* @param **string** `$option` Column option name
+* @param **mixed** `$value` New column option value or NULL to return current value
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @return **self&#124;mixed** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3346,8 +3346,8 @@ Sets the column precision or returns the current value
 public function precision( int $value = null )
 ```
 
-* @param int&#124;null `$value` New column precision value or NULL to return current value
-* @return self&#124;int Same object for setting the value, current value without parameter
+* @param **int&#124;null** `$value` New column precision value or NULL to return current value
+* @return **self&#124;int** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3365,8 +3365,8 @@ Creates a primary index for the column
 public function primary( string $name = null ) : self
 ```
 
-* @param string&#124;null `$name` Name of the index or NULL to generate automatically
-* @return self Same object for fluid method calls
+* @param **string&#124;null** `$name` Name of the index or NULL to generate automatically
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3384,8 +3384,8 @@ Sets the column scale or returns the current value
 public function scale( int $value = null )
 ```
 
-* @param int&#124;null `$value` New column scale value or NULL to return current value
-* @return self&#124;int Same object for setting the value, current value without parameter
+* @param **int&#124;null** `$value` New column scale value or NULL to return current value
+* @return **self&#124;int** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3403,8 +3403,8 @@ Sets the column as autoincrement or returns the current value
 public function seq( bool $value = null )
 ```
 
-* @param bool&#124;null `$value` New autoincrement flag or NULL to return current value
-* @return self&#124;bool Same object for setting the value, current value without parameter
+* @param **bool&#124;null** `$value` New autoincrement flag or NULL to return current value
+* @return **self&#124;bool** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3422,8 +3422,8 @@ Creates a spatial index for the column
 public function spatial( string $name = null ) : self
 ```
 
-* @param string&#124;null `$name` Name of the index or NULL to generate automatically
-* @return self Same object for fluid method calls
+* @param **string&#124;null** `$name` Name of the index or NULL to generate automatically
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3441,8 +3441,8 @@ Sets the column type or returns the current value
 public function type( string $value = null )
 ```
 
-* @param string&#124;null `$value` New column type or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` New column type or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3460,8 +3460,8 @@ Creates an unique index for the column
 public function unique( string $name = null ) : self
 ```
 
-* @param string&#124;null `$name` Name of the index or NULL to generate automatically
-* @return self Same object for fluid method calls
+* @param **string&#124;null** `$name` Name of the index or NULL to generate automatically
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3479,8 +3479,8 @@ Sets the column unsigned flag or returns the current value
 public function unsigned( bool $value = null )
 ```
 
-* @param bool&#124;null `$value` New column unsigned flag or NULL to return current value
-* @return self&#124;bool Same object for setting the value, current value without parameter
+* @param **bool&#124;null** `$value` New column unsigned flag or NULL to return current value
+* @return **self&#124;bool** Same object for setting the value, current value without parameter
 
 **Examples:**
 
@@ -3498,7 +3498,7 @@ Applies the changes to the database schema
 public function up() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -3698,9 +3698,9 @@ Calls custom methods
 public function __call( string $method, array $args )
 ```
 
-* @param string `$method` Name of the method
-* @param array&#60;mixed&#62; `$args` Method parameters
-* @return mixed Return value of the called method
+* @param **string** `$method` Name of the method
+* @param **array&#60;mixed&#62;** `$args` Method parameters
+* @return **mixed** Return value of the called method
 
 **Examples:**
 
@@ -3746,8 +3746,8 @@ Returns the value for the given foreign key option
 public function __get( string $name )
 ```
 
-* @param string `$name` Foreign key option name
-* @return mixed Foreign key option value
+* @param **string** `$name` Foreign key option name
+* @return **mixed** Foreign key option value
 
 The list of available foreign key options are:
 
@@ -3779,7 +3779,7 @@ Sets the new value for the given Foreign key option
 public function __set( string $name, $value )
 ```
 
-* @param string `$name` Foreign key option name
+* @param **string** `$name` Foreign key option name
 * @param mixed Foreign key option value
 
 The list of available Foreign key options are:
@@ -3813,8 +3813,8 @@ Sets the new value for the given Foreign key option
 public function do( string $action ) : self
 ```
 
-* @param string `$action` Performed action
-* @return self Same object for fluid method calls
+* @param **string** `$action` Performed action
+* @return **self** Same object for fluid method calls
 
 Possible actions are:
 
@@ -3839,7 +3839,7 @@ $foreign->do( 'RESTRICT' );
 public function name()
 ```
 
-* @return string&#124;null Name of the constraint or NULL if no name is available
+* @return **string&#124;null** Name of the constraint or NULL if no name is available
 
 **Examples:**
 
@@ -3856,8 +3856,8 @@ $fkname = $foreign->name();
 public function onDelete( string $value = null )
 ```
 
-* @param string&#124;null `$value` Performed action or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` Performed action or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 * Available actions are:
 * - CASCADE : Delete referenced value
@@ -3889,8 +3889,8 @@ $foreign->onDelete( 'SET NULL' )->onUpdate( 'SET NULL' );
 public function onUpdate( string $value = null )
 ```
 
-* @param string&#124;null `$value` Performed action or NULL to return current value
-* @return self&#124;string Same object for setting the value, current value without parameter
+* @param **string&#124;null** `$value` Performed action or NULL to return current value
+* @return **self&#124;string** Same object for setting the value, current value without parameter
 
 * Available actions are:
 * - CASCADE : Update referenced value
@@ -3922,7 +3922,7 @@ $foreign->onUpdate( 'SET NULL' )->onDelete( 'SET NULL' );
 public function up() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 **Examples:**
 
@@ -4029,9 +4029,9 @@ Calls custom methods or passes unknown method calls to the Doctrine table object
 public function __call( string $method, array $args )
 ```
 
-* @param string `$method` Name of the method
-* @param array&#60;mixed&#62; `$args` Method parameters
-* @return mixed Return value of the called method
+* @param **string** `$method` Name of the method
+* @param **array&#60;mixed&#62;** `$args` Method parameters
+* @return **mixed** Return value of the called method
 
 **Examples:**
 
@@ -4063,8 +4063,8 @@ Returns the value for the given sequence option
 public function __get( string $name )
 ```
 
-* @param string `$name` Sequence option name
-* @return mixed Sequence option value
+* @param **string** `$name` Sequence option name
+* @return **mixed** Sequence option value
 
 **Examples:**
 
@@ -4083,7 +4083,7 @@ Sets the new value for the given sequence option
 public function __set( string $name, $value )
 ```
 
-* @param string `$name` Sequence option name
+* @param **string** `$name` Sequence option name
 * @param mixed Sequence option value
 
 **Examples:**
@@ -4103,8 +4103,8 @@ Sets the cached size of the sequence or returns the current value
 public function cache( int $value = null )
 ```
 
-* @param int `$value` New number of sequence IDs cached by the client or NULL to return current value
-* @return self&#124;int Same object for setting value, current value without parameter
+* @param **int** `$value` New number of sequence IDs cached by the client or NULL to return current value
+* @return **self&#124;int** Same object for setting value, current value without parameter
 
 **Examples:**
 
@@ -4122,7 +4122,7 @@ Returns the name of the sequence
 public function name()
 ```
 
-* @return string Sequence name
+* @return **string** Sequence name
 
 ```php
 $name = $sequence->name();
@@ -4137,8 +4137,8 @@ Sets the new start value of the sequence or returns the current value
 public function start( int $value = null )
 ```
 
-* @param int `$value` New start value of the sequence or NULL to return current value
-* @return self&#124;int Same object for setting value, current value without parameter
+* @param **int** `$value` New start value of the sequence or NULL to return current value
+* @return **self&#124;int** Same object for setting value, current value without parameter
 
 ```php
 $value = $sequence->start();
@@ -4154,8 +4154,8 @@ Sets the step size of new sequence values or returns the current value
 public function step( int $value = null )
 ```
 
-* @param int `$value` New step size the sequence is incremented or decremented by or NULL to return current value
-* @return self&#124;int Same object for setting value, current value without parameter
+* @param **int** `$value` New step size the sequence is incremented or decremented by or NULL to return current value
+* @return **self&#124;int** Same object for setting value, current value without parameter
 
 ```php
 $value = $sequence->step();
@@ -4171,7 +4171,7 @@ Applies the changes to the database schema
 public function up() : self
 ```
 
-* @return self Same object for fluid method calls
+* @return **self** Same object for fluid method calls
 
 ```php
 $sequence->up();
