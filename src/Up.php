@@ -329,6 +329,10 @@ class Up
 
 				$this->info( 'Migrated:  ' . $file . ' (' . round( ( microtime( true ) - $start ) * 1000, 2 ) . 'ms)', 'v' );
 			}
+			else
+			{
+				$this->info( 'Missing:   ' . $taskname, 'v' );
+			}
 
 			$this->tasksDone[] = $taskname;
 		}
