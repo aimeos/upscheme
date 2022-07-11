@@ -777,11 +777,11 @@ $db->close();
 Deletes the records from the given table
 
 ```php
-public function delete( string $table, array $conditions = null ) : self
+public function delete( string $table, array $conditions = [] ) : self
 ```
 
 * @param **string** `$table` Name of the table
-* @param **array&#60;string,mixed&#62;&#124;null** `$conditions` Key/value pairs of column names and value to compare with
+* @param **array&#60;string,mixed&#62;** `$conditions` Key/value pairs of column names and value to compare with
 * @return **self** Same object for fluid method calls
 
 Warning: The condition values are escaped but the table name and condition
@@ -1451,12 +1451,12 @@ $db->up();
 Updates the records from the given table
 
 ```php
-public function update( string $table, array $data, array $conditions = null ) : self
+public function update( string $table, array $data, array $conditions = [] ) : self
 ```
 
 * @param **string** `$table` Name of the table
 * @param **array&#60;string,mixed&#62;** `$data` Key/value pairs of column name/value to update
-* @param **array&#60;string,mixed&#62;&#124;null** `$conditions` Key/value pairs of column names and value to compare with
+* @param **array&#60;string,mixed&#62;** `$conditions` Key/value pairs of column names and value to compare with
 * @return **self** Same object for fluid method calls
 
 **Examples:**

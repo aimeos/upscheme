@@ -100,13 +100,13 @@ class DB
 	 * Deletes the records from the given table
 	 *
 	 * @param string $table Name of the table
-	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
+	 * @param array<string,mixed> $conditions Key/value pairs of column names and value to compare with
 	 * @return self Same object for fluid method calls
 	 */
-	public function delete( string $table, array $conditions = null ) : self
+	public function delete( string $table, array $conditions = [] ) : self
 	{
 		$map = [];
-		foreach( $conditions ?? [] as $column => $value ) {
+		foreach( $conditions as $column => $value ) {
 			$map[$this->qi( $column )] = $value;
 		}
 
@@ -737,10 +737,10 @@ class DB
 	 *
 	 * @param string $table Name of the table
 	 * @param array<string,mixed> $data Key/value pairs of column name/value to update
-	 * @param array<string,mixed>|null $conditions Key/value pairs of column names and value to compare with
+	 * @param array<string,mixed> $conditions Key/value pairs of column names and value to compare with
 	 * @return self Same object for fluid method calls
 	 */
-	public function update( string $table, array $data, array $conditions = null ) : self
+	public function update( string $table, array $data, array $conditions = [] ) : self
 	{
 		$map = $values = [];
 
@@ -748,7 +748,7 @@ class DB
 			$map[$this->qi( $column )] = $value;
 		}
 
-		foreach( $conditions ?? [] as $column => $value ) {
+		foreach( $conditions as $column => $value ) {
 			$values[$this->qi( $column )] = $value;
 		}
 
