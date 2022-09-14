@@ -722,12 +722,7 @@ class DB
 		foreach( $this->from->getMigrateToSql( $this->to, $this->conn->getDatabasePlatform() ) as $sql )
 		{
 			$this->up->info( '  ->  ' . $sql, 'vvv' );
-
-			if( method_exists( $this->conn, 'executeStatement' ) ) {
-				$this->conn->executeStatement( $sql );
-			} else {
-				$this->conn->exec( $sql );
-			}
+			$this->conn->executeStatement( $sql );
 		}
 
 		unset( $this->from );
