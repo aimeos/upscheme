@@ -110,6 +110,7 @@ class DB
 			$map[$this->qi( $column )] = $value;
 		}
 
+		$this->up->info( '  =>  DELETE {"' . $table . '"} WHERE ' . json_encode( $conditions ), 'vvv' );
 		$this->conn->delete( $this->qi( $table ), empty( $map ) ? ['1' => 1] : $map );
 		return $this;
 	}
@@ -422,6 +423,7 @@ class DB
 			$map[$this->qi( $column )] = $value;
 		}
 
+		$this->up->info( '  =>  INSERT {"' . $table . '"} VALUES ' . json_encode( $data ), 'vvv' );
 		$this->conn->insert( $this->qi( $table ), $map );
 		return $this;
 	}
@@ -752,6 +754,7 @@ class DB
 			$values[$this->qi( $column )] = $value;
 		}
 
+		$this->up->info( '  =>  UPDATE {"' . $table . '"} SET ' . json_encode( $data ) . ' WHERE ' . json_encode( $conditions ), 'vvv' );
 		$this->conn->update( $this->qi( $table ), $map, empty( $values ) ? ['1' => 1] : $values );
 		return $this;
 	}
