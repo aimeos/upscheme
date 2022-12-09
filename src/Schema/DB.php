@@ -204,18 +204,21 @@ class DB
 	public function dropTable( $name ) : self
 	{
 		$this->up();
+		$setup = false;
 
 		// Workaround for Oracle to drop sequence and trigger too
 		$manager = $this->getSchemaManager();
 
 		foreach( (array) $name as $entry )
 		{
-			if( $this->hasTable( $entry ) ) {
+			if( $this->hasTable( $entry ) )
+			{
 				$manager->dropTable( $this->qi( $entry ) );
+				$setup = true;
 			}
 		}
 
-		return $this->setup();
+		return $setup ? $this->setup() : $this;
 	}
 
 
@@ -228,17 +231,20 @@ class DB
 	public function dropView( $name ) : self
 	{
 		$this->up();
+		$setup = false;
 
 		$manager = $this->getSchemaManager();
 
 		foreach( (array) $name as $entry )
 		{
-			if( $this->hasView( $entry ) ) {
+			if( $this->hasView( $entry ) )
+			{
 				$manager->dropView( $this->qi( $entry ) );
+				$setup = true;
 			}
 		}
 
-		return $this->setup();
+		return $setup ? $this->setup() : $this;
 	}
 
 
@@ -513,6 +519,7 @@ class DB
 	public function renameColumn( string $table, $from, string $to = null ) : self
 	{
 		$this->up();
+		$setup = false;
 
 		if( !is_array( $from ) ) {
 			$from = [$from => $to];
@@ -529,10 +536,11 @@ class DB
 				}
 
 				$this->conn->executeStatement( $this->getColumnSQL( $table, $name, $to ) );
+				$setup = true;
 			}
 		}
 
-		return $this->setup();
+		return $setup ? $this->setup() : $this;
 	}
 
 
@@ -560,6 +568,7 @@ class DB
 	public function renameTable( $from, string $to = null ) : self
 	{
 		$this->up();
+		$setup = false;
 
 		if( !is_array( $from ) ) {
 			$from = [$from => $to];
@@ -578,10 +587,11 @@ class DB
 				}
 
 				$manager->renameTable( $this->qi( $name ), $this->qi( $to ) );
+				$setup = true;
 			}
 		}
 
-		return $this->setup();
+		return $setup ? $this->setup() : $this;
 	}
 
 
