@@ -12,9 +12,9 @@ class Update extends Base
 	{
 		$this->info( 'Change test table', 'v', 1 );
 
-		$this->db( 'test' )->table( 'test', function( Table $t ) {
+		$this->db( 'test' )->dropIndex( 'test', ['unq_code', 'idx_status_type'] )->up(); // workaround for SQL Server
 
-			$t->dropIndex( 'unq_code' )->dropIndex( 'idx_status_type' )->up(); // workaround for SQL Server
+		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
 			$t->bool( 'status' )->comment( 'some status' );
 			$t->text( 'content' )->length( 255 );
@@ -23,7 +23,7 @@ class Update extends Base
 			// $t->decimal( 'price', 8 )->scale( 3 ); // Oracle can't change NUMBER columns with data
 			// $t->int( 'pos' )->type( 'smallint' ); // Oracle can't change NUMBER columns with data
 			// $t->smallint( 'type' )->unsigned( true ); // Oracle can't change NUMBER columns with data
-			$t->string( 'code', 5 )->fixed( true );
+			// $t->string( 'code', 5 )->fixed( true ); // Yugabyte can't change column types yet
 
 			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_type' );
