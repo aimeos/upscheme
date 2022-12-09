@@ -535,7 +535,10 @@ class DB
 					throw new \RuntimeException( $msg );
 				}
 
-				$this->conn->executeStatement( $this->getColumnSQL( $table, $name, $to ) );
+				$sql = $this->getColumnSQL( $table, $name, $to );
+				$this->up->info( '  ->  ' . $sql, 'vvv' );
+
+				$this->conn->executeStatement( $sql );
 				$setup = true;
 			}
 		}
