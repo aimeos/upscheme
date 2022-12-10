@@ -18,6 +18,10 @@ abstract class Base implements Iface
 {
 	use \Aimeos\Macro\Macroable;
 
+	/**
+	 * @var string File name of the task
+	 */
+	public $_filename;
 
 	/**
 	 * @var \Aimeos\Upscheme\Up
