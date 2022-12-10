@@ -92,26 +92,6 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-8.0 / mssql-2019":
-    docker:
-      - image: aimeos/ci-php:8.0
-      - image: mcr.microsoft.com/mssql/server:2019-latest
-        environment:
-          SA_PASSWORD: S3c0r3P4ss
-          ACCEPT_EULA: Y
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - php80-{{ checksum "composer.json" }}
-      - run: composer update -n --prefer-dist
-      - save_cache:
-          key: php80-{{ checksum "composer.json" }}
-          paths: [./vendor]
-      - run: echo "CREATE DATABASE upscheme;" > sqlserver.sql; for i in `seq 1 5`; do /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'S3c0r3P4ss' -i sqlserver.sql && exit 0; sleep 3; done
-      - run: echo "<?php return ['driver' => 'pdo_sqlsrv', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'SA', 'password' => 'S3c0r3P4ss'];" > tests/config.php
-      - run: ./vendor/bin/phpunit || true
-
   "php-8.0 / oracle-11":
     docker:
       - image: aimeos/ci-php:8.0
@@ -132,17 +112,37 @@ jobs:
       - run: for i in `seq 1 5`; do sqlplus -L system/oracle@127.0.0.1 @init.sql && exit 0; echo -n .; sleep 5; done
       - run: ./vendor/bin/phpunit || true
 
-  "php-8.1 / sqlite":
+  "php-8.1 / mssql-2019":
     docker:
-      - image: aimeos/ci-php:8.1
+      - image: aimeos/ci-php:8.0
+      - image: mcr.microsoft.com/mssql/server:2019-latest
+        environment:
+          SA_PASSWORD: S3c0r3P4ss
+          ACCEPT_EULA: Y
     steps:
       - checkout
       - restore_cache:
           keys:
-            - php80-{{ checksum "composer.json" }}
+            - php81-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php80-{{ checksum "composer.json" }}
+          key: php81-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: echo "CREATE DATABASE upscheme;" > sqlserver.sql; for i in `seq 1 5`; do /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'S3c0r3P4ss' -i sqlserver.sql && exit 0; sleep 3; done
+      - run: echo "<?php return ['driver' => 'pdo_sqlsrv', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'SA', 'password' => 'S3c0r3P4ss'];" > tests/config.php
+      - run: ./vendor/bin/phpunit || true
+
+  "php-8.2 / sqlite":
+    docker:
+      - image: aimeos/ci-php:8.2
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php82-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php82-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "<?php return ['driver' => 'pdo_sqlite', 'path' => 'sqlite.test'];" > tests/config.php
       - run: ./vendor/bin/phpunit --coverage-clover coverage.xml
@@ -156,6 +156,6 @@ workflows:
       - "php-7.2 / mysql-5.7"
       - "php-7.3 / pgsql-13"
       - "php-7.4 / mysql-8.0"
-      - "php-8.0 / mssql-2019"
       - "php-8.0 / oracle-11"
-      - "php-8.1 / sqlite"
+      - "php-8.1 / mssql-2019"
+      - "php-8.2 / sqlite"
