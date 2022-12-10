@@ -132,35 +132,17 @@ jobs:
       - run: for i in `seq 1 5`; do sqlplus -L system/oracle@127.0.0.1 @init.sql && exit 0; echo -n .; sleep 5; done
       - run: ./vendor/bin/phpunit || true
 
-  "php-8.1 / yugabyte":
+  "php-8.1 / sqlite":
     docker:
       - image: aimeos/ci-php:8.1
-      - image: yugabytedb/yugabyte
     steps:
       - checkout
       - restore_cache:
           keys:
-            - php81-{{ checksum "composer.json" }}
+            - php80-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php81-{{ checksum "composer.json" }}
-          paths: [./vendor]
-      - run: docker run -d --name yugabyte -p127.0.0.1:5433:5433 yugabyte bin/yugabyted start --daemon=false
-      - run: for i in `seq 1 20`; do nc -z 127.0.0.1 5433 && echo OK && exit 0; echo -n .; sleep 1; done
-      - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'port' => 5433, 'dbname' => 'yugabyte', 'user' => 'yugabyte', 'password' => 'yugabyte'];" > tests/config.php
-      - run: ./vendor/bin/phpunit
-
-  "php-8.2 / sqlite":
-    docker:
-      - image: aimeos/ci-php:8.2
-    steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - php82-{{ checksum "composer.json" }}
-      - run: composer update -n --prefer-dist
-      - save_cache:
-          key: php82-{{ checksum "composer.json" }}
+          key: php80-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "<?php return ['driver' => 'pdo_sqlite', 'path' => 'sqlite.test'];" > tests/config.php
       - run: ./vendor/bin/phpunit --coverage-clover coverage.xml
@@ -176,5 +158,4 @@ workflows:
       - "php-7.4 / mysql-8.0"
       - "php-8.0 / mssql-2019"
       - "php-8.0 / oracle-11"
-      - "php-8.1 / yugabyte"
-      - "php-8.2 / sqlite"
+      - "php-8.1 / sqlite"
