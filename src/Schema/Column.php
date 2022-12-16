@@ -175,10 +175,10 @@ class Column
 	 * @param array<string>|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function custom( string $value, $for = null )
+	public function custom( string $value = null, $for = null )
 	{
 		if( $value === null ) {
-			return $this->column->setColumnDefinition( $value );
+			return $this->column->getColumnDefinition();
 		}
 
 		if( $for === null || in_array( $this->db->type(), (array) $for ) ) {

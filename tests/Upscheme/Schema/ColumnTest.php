@@ -176,6 +176,41 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testCustomGet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'getColumnDefinition' )
+			->will( $this->returnValue( 'INT NOT NULL' ) );
+
+		$this->assertEquals( 'INT NOT NULL', $this->object->custom() );
+	}
+
+
+	public function testCustomSet()
+	{
+		$this->colmock->expects( $this->once() )->method( 'setColumnDefinition' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->custom( 'INT NOT NULL' ) );
+	}
+
+
+	public function testCustomSetType()
+	{
+		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->colmock->expects( $this->once() )->method( 'setColumnDefinition' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->custom( 'INT NOT NULL', 'mydb' ) );
+	}
+
+
+	public function testCustomSetTypeNot()
+	{
+		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->colmock->expects( $this->never() )->method( 'setColumnDefinition' );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->custom( 'INT NOT NULL', 'yourdb' ) );
+	}
+
+
 	public function testDefaultGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getDefault' )

@@ -13,6 +13,8 @@ namespace Aimeos\Upscheme\Schema;
  * Table schema class
  *
  * @mixin \Doctrine\DBAL\Schema\Table
+ * @method Schema\Column id(string $name = null)
+ * @method Schema\Column bigid(string $name = null)
  */
 class Table
 {
