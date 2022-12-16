@@ -108,6 +108,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testBigid()
 	{
+		\Aimeos\Upscheme\Schema\Table::macro( 'bigid', function( string $name = null ) : Column {
+			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
+		} );
+
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
 
 		$col = $this->object->bigid();
@@ -121,6 +125,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testBigidName()
 	{
+		\Aimeos\Upscheme\Schema\Table::macro( 'bigid', function( string $name = null ) : Column {
+			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
+		} );
+
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
 
 		$col = $this->object->bigid( 'uid' );
@@ -295,6 +303,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testId()
 	{
+		\Aimeos\Upscheme\Schema\Table::macro( 'id', function( string $name = null ) : Column {
+			return $this->integer( $name ?: 'id' )->seq( true )->primary();
+		} );
+
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
 
 		$col = $this->object->id();
@@ -308,6 +320,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testIdName()
 	{
+		\Aimeos\Upscheme\Schema\Table::macro( 'id', function( string $name = null ) : Column {
+			return $this->integer( $name ?: 'id' )->seq( true )->primary();
+		} );
+
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
 
 		$col = $this->object->id( 'uid' );

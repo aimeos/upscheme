@@ -85,20 +85,6 @@ class Table
 
 
 	/**
-	 * Creates a new ID column of type "bigint" or returns the existing one
-	 *
-	 * The column gets a sequence (autoincrement) and a primary key assigned automatically
-	 *
-	 * @param string|null $name Name of the ID column
-	 * @return \Aimeos\Upscheme\Schema\Column Column object
-	 */
-	public function bigid( string $name = null ) : Column
-	{
-		return $this->bigint( $name ?: 'id' )->seq( true )->primary();
-	}
-
-
-	/**
 	 * Creates a new column of type "bigint" or returns the existing one
 	 *
 	 * @param string $name Name of the column
@@ -273,20 +259,6 @@ class Table
 	public function guid( string $name ) : Column
 	{
 		return $this->col( $name, 'guid' );
-	}
-
-
-	/**
-	 * Creates a new ID column of type "integer" or returns the existing one
-	 *
-	 * The column gets a sequence (autoincrement) and a primary key assigned automatically
-	 *
-	 * @param string|null $name Name of the ID column
-	 * @return \Aimeos\Upscheme\Schema\Column Column object
-	 */
-	public function id( string $name = null ) : Column
-	{
-		return $this->integer( $name ?: 'id' )->seq( true )->primary();
 	}
 
 

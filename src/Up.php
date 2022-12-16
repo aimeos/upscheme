@@ -75,6 +75,8 @@ class Up
 
 		$this->config = $config;
 		$this->paths = (array) $paths;
+
+		$this->macros();
 	}
 
 
@@ -279,6 +281,21 @@ class Up
 
 		ksort( $tasks );
 		return $tasks;
+	}
+
+
+	/**
+	 * Adds default macros which can be overwritten
+	 */
+	protected function macros()
+	{
+		\Aimeos\Upscheme\Schema\Table::macro( 'id', function( string $name = null ) : Schema\Column {
+			return $this->integer( $name ?: 'id' )->seq( true )->primary();
+		} );
+
+		\Aimeos\Upscheme\Schema\Table::macro( 'bigid', function( string $name = null ) : Schema\Column {
+			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
+		} );
 	}
 
 
