@@ -36,6 +36,7 @@ class Create extends Base
 			// $t->time( 'time' ); // not supported by Oracle
 			$t->guid( 'uuid' );
 			$t->default();
+			$t->uuid( 'uid2' )->null( true )->custom( 'UUID DEFAULT gen_random_uuid() NOT NULL', 'postgresql' );
 
 			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_type' );

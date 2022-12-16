@@ -169,6 +169,27 @@ class Column
 
 
 	/**
+	 * Sets the custom column definition or returns the current value
+	 *
+	 * @param string $value Custom column definition
+	 * @param array<string>|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+	 * @return \Aimeos\Upscheme\Schema\Column Column object
+	 */
+	public function custom( string $value, $for = null )
+	{
+		if( $value === null ) {
+			return $this->column->setColumnDefinition( $value );
+		}
+
+		if( $for === null || in_array( $this->db->type(), (array) $for ) ) {
+			$this->column->setColumnDefinition( $value );
+		}
+
+		return $this;
+	}
+
+
+	/**
 	 * Sets the column default value or returns the current value
 	 *
 	 * @param mixed $value New column default value or NULL to return current value
