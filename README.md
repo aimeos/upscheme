@@ -606,7 +606,7 @@ documentation for more details.
 
 If you want to use values directly in a SQL statement (use prepared statements for
 security reasons whenever possible!), you have to quote the values using the
-[`q()](#dbq) method:
+[`q()`](#dbq) method:
 
 ```php
 $db = $this->db();
@@ -638,7 +638,7 @@ result set you can iterate over:
 $sql = 'SELECT id, label, status FROM product WHERE label LIKE ?';
 $result = $this->db()->query( $sql, ['test%'] );
 
-foreach( $result->iterateKeyValue() as $key => $row ) {
+foreach( $result->iterateAssociative() as $row ) {
 	// ...
 }
 ```
@@ -727,6 +727,7 @@ Upscheme DB object:
 } );
 
 $db->hasFkIndexes();
+// returns true/false
 ```
 
 Available class properties are:
@@ -784,7 +785,7 @@ public function delete( string $table, array $conditions = [] ) : self
 * @param **array&#60;string,mixed&#62;** `$conditions` Key/value pairs of column names and value to compare with
 * @return **self** Same object for fluid method calls
 
-Warning: The condition values are escaped but the table name and condition
+**Warning:** The condition values are escaped but the table name and condition
 column names are not! Only use fixed strings for table name and condition
 column names but no external input!
 
