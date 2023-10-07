@@ -1219,7 +1219,7 @@ public function query( string $sql, array $params = [], array $types = [] ) : \D
 ```php
 $result = $db->query( 'SELECT id, label, status FROM product WHERE label LIKE ?', ['test%'] );
 
-foreach( $result->iterateKeyValue() as $key => $row ) {
+foreach( $result->iterateAssociative() as $row ) {
 	// ...
 }
 ```
