@@ -48,8 +48,10 @@ class DB
 	 */
 	public function __construct( \Aimeos\Upscheme\Up $up, \Doctrine\DBAL\Connection $conn )
 	{
-		$this->up = $up;
+		$conn->getDatabasePlatform()->registerDoctrineTypeMapping( 'enum', 'string' );
+
 		$this->conn = $conn;
+		$this->up = $up;
 
 		$this->setup();
 	}
