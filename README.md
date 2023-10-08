@@ -1225,6 +1225,8 @@ foreach( $result->iterateAssociative() as $row ) {
 }
 ```
 
+**Tip:** Check the [DBAL methods for retrieving data](https://github.com/doctrine/dbal/blob/master/src/Result.php) for more information.
+
 
 #### DB::renameColumn()
 
