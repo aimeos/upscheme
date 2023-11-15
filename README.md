@@ -578,7 +578,7 @@ rows while you send new commands to the database server. This only works on
 separate connections, not on the same.
 
 To wrap all delete/insert/update operations into a transaction, you must use
-the [`transaction()`](#dbtransaction) method of the [DB schema]() object:
+the [`transaction()`](#dbtransaction) method of the [database](#database) object:
 
 ```php
 $this->db()->transaction( function( $db ) {
