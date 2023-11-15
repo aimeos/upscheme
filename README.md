@@ -548,7 +548,7 @@ ignored. For cases where you need to know if they exist, use the
 [`hasForeign()`](#dbhasforeign) and [`hasSeqence()`](#dbhassequence) methods before
 like described in the ["Checking for existence"](#checking-for-existence) section.
 
-### Query and modify table rows
+### Query/modify table rows
 
 The [`insert()`](#dbinsert), [`select()`](#dbselect), [`update()`](#dbupdate) and
 [`delete()`](#dbdelete) methods are an easy way to add, retrieve, modify and
