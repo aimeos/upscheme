@@ -558,14 +558,17 @@ remove rows in any table:
 $db1 = $this->db();
 $db2 = $this->db( 'db', true );
 
-foreach( $db1->select( 'users', ['status' => false] ) as $row )
-{
-	$db2->insert( 'newusers', ['userid' => $row['id'], 'status' => true] );
-	$db2->update( 'users', ['refid' => $db2->lastId()], ['id' => $row['id']] );
-}
+$db2->transaction( function( $db2 ) use ( $db1 ) {
 
-$db2->delete( 'newusers', ['status' => false] );
-$db2->close();
+	foreach( $db1->select( 'users', ['status' => false] ) as $row )
+	{
+		$db2->insert( 'newusers', ['userid' => $row['id'], 'status' => true] );
+		$db2->update( 'users', ['refid' => $db2->lastId()], ['id' => $row['id']] );
+	}
+
+	$db2->delete( 'newusers', ['status' => false] );
+	$db2->close();
+} );
 ```
 
 If you use [`select()`](#dbselect) simultaniously with [`insert()`](#dbinsert),
@@ -573,6 +576,32 @@ If you use [`select()`](#dbselect) simultaniously with [`insert()`](#dbinsert),
 database connection because the [`select()`](#dbselect) statement will return
 rows while you send new commands to the database server. This only works on
 separate connections, not on the same.
+
+To wrap all delete/insert/update operations into a transaction, you must use
+the [`transaction()`](#dbtransaction) method of the [DB schema]() object:
+
+```php
+$this->db()->transaction( function( $db ) {
+	// $db->insert( ... )
+	// $db->update( ... )
+	// $db->delete( ... )
+} );
+```
+
+This ensures that all write operations are performed atomically or none of them
+in case of an error. The [`transaction()`](#dbtransaction) method ensures that
+the transaction is committed or rolled back automatically after your anonymous
+function returns control to the method.
+
+If you need additional parameters within your anonymous function, you can hand
+them over in the `use` list of your function:
+
+```php
+$userid = 123;
+$this->db()->transaction( function( $db ) use ( $userid ) {
+	$db->insert( 'newusers', ['userid' => userid, 'status' => true] );
+} );
+```
 
 You can only pass simple key/value pairs for conditions to the methods which are
 combined by AND. If you need more complex queries, use the [`stmt()`](#dbstmt)
@@ -696,6 +725,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
 	<li><a href="#dbtable">table()</a></li>
+	<li><a href="#dbtransaction">transaction()</a></li>
 	<li><a href="#dbtype">type()</a></li>
 	<li><a href="#dbup">up()</a></li>
 	<li><a href="#dbupdate">update()</a></li>
@@ -1403,6 +1433,29 @@ $table = $db->table( 'test', function( $t ) {
 	$t->string( 'label' );
 	$t->bool( 'status' );
 } )->up();
+```
+
+
+#### DB::transaction()
+
+Executes the given closure within a transaction
+
+```php
+public function transaction( \Closure $fcn ) : self
+```
+
+* @param \Closure $fcn Anonymous function with (\Aimeos\Upscheme\Schema $db) parameter
+* @return self Same object for fluid method calls
+* @throws \Exception If an error occurred
+
+**Examples:**
+
+```php
+$this->db()->transaction( function( $db ) {
+	// $db->insert( ... )
+	// $db->update( ... )
+	// $db->delete( ... )
+} );
 ```
 
 

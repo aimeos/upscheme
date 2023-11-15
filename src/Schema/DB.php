@@ -711,6 +711,32 @@ class DB
 
 
 	/**
+	 * Executes the given closure within a transaction
+	 *
+	 * @param \Closure $fcn Anonymous function with (\Aimeos\Upscheme\Schema $db) parameter
+	 * @return self Same object for fluid method calls
+	 * @throws \Exception If an error occurred
+	 */
+	public function transaction( \Closure $fcn ) : self
+	{
+		$this->conn->beginTransaction();
+
+		try
+		{
+			$fcn( $this );
+			$this->conn->commit();
+		}
+		catch( \Exception $e )
+		{
+			$this->conn->rollBack();
+			throw $e;
+		}
+
+		return $this;
+	}
+
+
+	/**
 	 * Returns the type of the database
 	 *
 	 * Possible values are:

@@ -603,6 +603,35 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testTransaction()
+	{
+		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
+			->setConstructorArgs( [$this->upmock, $this->connmock] )
+			->setMethods( ['up'] )
+			->getMock();
+
+		$fcn = function( $db ) {};
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->transaction( $fcn ) );
+	}
+
+
+	public function testTransactionException()
+	{
+		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
+			->setConstructorArgs( [$this->upmock, $this->connmock] )
+			->setMethods( ['up'] )
+			->getMock();
+
+		$fcn = function( $db ) {
+			throw new \Exception();
+		};
+
+		$this->expectException( \Exception::class );
+		$object->transaction( $fcn );
+	}
+
+
 	public function testType()
 	{
 		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
