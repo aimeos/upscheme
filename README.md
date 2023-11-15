@@ -1168,6 +1168,7 @@ public function lastId( string $seq = null ) : string
 
 * @param **string&#124;null** `$seq` Name of the sequence generating the ID
 * @return **string** Generated ID from the database
+* @throws \RuntimeException If sequence does not exist
 
 **Examples:**
 
@@ -1321,6 +1322,7 @@ public function renameTable( $from, string $to = null ) : self
 * @param **array&#60;string,string&#62;&#124;string** `$from` Table name or array of old/new table names
 * @param **string&#124;null** `$to` New table name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
+* @throws \RuntimeException If an error occured
 
 **Examples:**
 
@@ -2559,6 +2561,7 @@ public function renameColumn( $from, string $to = null ) : self
 * @param **array&#60;string,string&#62;&#124;string** `$from` Column name or array of old/new column names
 * @param **string&#124;null** `$to` New column name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
+* @throws \RuntimeException If an error occured
 
 **Examples:**
 

@@ -442,6 +442,7 @@ class DB
 	 *
 	 * @param string|null $seq Name of the sequence generating the ID
 	 * @return string Generated ID from the database
+	 * @throws \RuntimeException If sequence does not exist
 	 */
 	public function lastId( string $seq = null ) : string
 	{
@@ -517,6 +518,7 @@ class DB
 	 * @param array<string,string>|string $from Column name or array of old/new column names
 	 * @param string|null $to New column name or NULL if first parameter is an array
 	 * @return self Same object for fluid method calls
+	 * @throws \RuntimeException If an error occured
 	 */
 	public function renameColumn( string $table, $from, string $to = null ) : self
 	{
@@ -569,6 +571,7 @@ class DB
 	 * @param array<string,string>|string $from Table name or array of old/new table names
 	 * @param string|null $to New table name or ignored if first parameter is an array
 	 * @return self Same object for fluid method calls
+	 * @throws \RuntimeException If an error occured
 	 */
 	public function renameTable( $from, string $to = null ) : self
 	{
