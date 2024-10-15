@@ -28,7 +28,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 		$methods = [
 			'addIndex', 'getIndex', 'getIndexes', 'hasIndex', 'renameIndex', 'dropIndex',
-			'dropPrimaryKey', 'getPrimaryKey', 'hasPrimaryKey', 'setPrimaryKey',
+			'dropPrimaryKey', 'getPrimaryKey', 'setPrimaryKey',
 			'addUniqueIndex', 'hasUniqueConstraint', 'removeUniqueConstraint',
 			'getName', 'addOption', 'getOption', 'hasOption',
 			'dropColumn', 'hasColumn', 'renameColumn',
@@ -460,7 +460,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropPrimary()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasPrimaryKey' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( true ) );
 		$this->tablemock->expects( $this->once() )->method( 'dropPrimaryKey' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropPrimary( 'unittest' ) );

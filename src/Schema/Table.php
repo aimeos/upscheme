@@ -437,7 +437,7 @@ class Table
 	 */
 	public function dropPrimary() : self
 	{
-		if( $this->table->hasPrimaryKey() ) {
+		if( $this->table->getPrimaryKey() ) {
 			$this->table->dropPrimaryKey();
 		}
 
@@ -642,7 +642,7 @@ class Table
 		}
 
 		$name = $name ?: $this->nameIndex( $this->name(), $columns, 'pk' );
-		$this->table->setPrimaryKey( $columns, $name ? $this->db->qi( $name ) : false );
+		$this->table->setPrimaryKey( $columns, $this->db->qi( $name ) );
 		return $this;
 	}
 

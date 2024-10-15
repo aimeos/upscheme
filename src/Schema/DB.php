@@ -600,7 +600,7 @@ class DB
 			$builder->andWhere( $this->qi( $column ) . ' = ?' )->setParameter( $idx++, $value );
 		}
 
-		$result = method_exists( $builder, 'executeQuery' ) ? $builder->executeQuery() : $builder->execute();
+		$result = $builder->executeQuery();
 
 		while( $row = $result->fetchAssociative() )
 		{
