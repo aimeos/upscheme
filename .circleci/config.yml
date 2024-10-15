@@ -5,10 +5,10 @@
 version: 2
 
 jobs:
-  "php-7.1 / mariadb-10":
+  "php-7.1 / mysql-5.7":
     docker:
       - image: aimeos/ci-php:7.1
-      - image: cimg/mariadb:10.3
+      - image: cimg/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: upscheme
@@ -27,10 +27,10 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.2 / mysql-5.7":
+  "php-7.2 / mariadb-10":
     docker:
       - image: aimeos/ci-php:7.2
-      - image: cimg/mysql:5.7
+      - image: cimg/mariadb:10.4
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
           MYSQL_DATABASE: upscheme
@@ -49,10 +49,10 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.3 / pgsql-13":
+  "php-7.3 / pgsql-10":
     docker:
       - image: aimeos/ci-php:7.3
-      - image: cimg/postgres:14.0
+      - image: cimg/postgres:10.0
         environment:
           POSTGRES_PASSWORD: upscheme
           POSTGRES_USER: upscheme
@@ -70,7 +70,7 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.4 / mysql-8.0":
+  "php-7.4 / mysql-8":
     docker:
       - image: aimeos/ci-php:7.4
       - image: cimg/mysql:8.0
@@ -92,10 +92,10 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-8.0 / oracle-11":
+  "php-8.0 / oracle-18":
     docker:
       - image: aimeos/ci-php:8.0
-      - image: gvenzl/oracle-xe:11-slim
+      - image: gvenzl/oracle-xe:18-slim
         environment:
           ORACLE_PASSWORD: oracle
     steps:
@@ -148,14 +148,59 @@ jobs:
       - run: ./vendor/bin/phpunit --coverage-clover coverage.xml
       - run: ./vendor/bin/php-coveralls -vvv -o coverage.json -x coverage.xml
 
+  "php-8.3 / mariadb-11":
+    docker:
+      - image: aimeos/ci-php:8.3
+      - image: cimg/mariadb:11.0
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: upscheme
+          MYSQL_USER: upscheme
+          MYSQL_PASSWORD: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php71-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php71-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-8.3 / pgsql-17":
+    docker:
+      - image: aimeos/ci-php:8.3
+      - image: cimg/postgres:17.0
+        environment:
+          POSTGRES_PASSWORD: upscheme
+          POSTGRES_USER: upscheme
+          POSTGRES_DB: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php73-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php73-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 5432 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
 workflows:
   version: 2
   unittest:
     jobs:
       - "php-7.1 / mariadb-10"
       - "php-7.2 / mysql-5.7"
-      - "php-7.3 / pgsql-13"
-      - "php-7.4 / mysql-8.0"
-      - "php-8.0 / oracle-11"
+      - "php-7.3 / pgsql-10"
+      - "php-7.4 / mysql-8"
+      - "php-8.0 / oracle-18"
       - "php-8.1 / mssql-2019"
       - "php-8.2 / sqlite"
+      - "php-8.3 / mariadb-11"
+      - "php-8.3 / pgsql-17"
