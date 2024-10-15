@@ -31,7 +31,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			'dropPrimaryKey', 'getPrimaryKey', 'setPrimaryKey',
 			'addUniqueIndex', 'hasUniqueConstraint', 'removeUniqueConstraint',
 			'getName', 'addOption', 'getOption', 'hasOption',
-			'dropColumn', 'hasColumn', 'renameColumn',
+			'dropColumn', 'hasColumn',
 			'hasForeignKey', 'removeForeignKey',
 		];
 
