@@ -17,7 +17,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Up' )
 			->setConstructorArgs( [['driver' => 'sqlite'], 'test'] )
-			->setMethods( ['test'] )
+			->onlyMethods( [] )
 			->getMock();
 	}
 

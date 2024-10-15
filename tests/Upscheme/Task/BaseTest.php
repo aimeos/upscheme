@@ -27,7 +27,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Task\Base' )
 			->setConstructorArgs( [$this->upmock] )
-			->setMethods( ['test'] )
+			->onlyMethods( [] )
 			->getMockForAbstractClass();
 	}
 

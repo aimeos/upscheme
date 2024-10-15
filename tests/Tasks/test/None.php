@@ -4,7 +4,7 @@
 namespace Aimeos\Upscheme\Task;
 
 
-class Test extends Base
+class None extends Base
 {
 	public function up()
 	{

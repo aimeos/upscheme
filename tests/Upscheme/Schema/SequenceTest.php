@@ -55,7 +55,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Sequence' )
 			->disableOriginalConstructor()
-			->setMethods( ['cache'] )
+			->onlyMethods( ['cache'] )
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'cache' )
@@ -69,7 +69,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Sequence' )
 			->disableOriginalConstructor()
-			->setMethods( ['cache'] )
+			->onlyMethods( ['cache'] )
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'cache' );

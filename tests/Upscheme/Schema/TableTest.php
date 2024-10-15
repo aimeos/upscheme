@@ -37,7 +37,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 		$this->tablemock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
 			->disableOriginalConstructor()
-			->setMethods( $methods )
+			->onlyMethods( $methods )
 			->getMock();
 
 		$this->object = new \Aimeos\Upscheme\Schema\Table( $this->dbmock, $this->tablemock );
@@ -460,7 +460,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropPrimary()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( true ) );
+		$idx = new \Doctrine\DBAL\Schema\Index( 'PRIMARY', ['id'], true, true );
+		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( $idx ) );
 		$this->tablemock->expects( $this->once() )->method( 'dropPrimaryKey' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropPrimary( 'unittest' ) );
@@ -541,13 +542,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$table = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Table' )
-			->setMethods( ['copyColumn', 'getColumn', 'hasColumn', 'hasTable'] )
+			->onlyMethods( ['copyColumn', 'hasColumn'] )
 			->setConstructorArgs( [$this->dbmock, $dbaltable] )
 			->getMock();
 
 		$table->expects( $this->once() )->method( 'copyColumn' );
 		$table->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$table->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
+		$dbaltable->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
 
 		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
 		$this->dbmock->expects( $this->once() )->method( 'table' )->will( $this->returnValue( $table ) );
@@ -583,13 +584,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$table = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Table' )
-			->setMethods( ['copyColumn', 'getColumn', 'hasColumn', 'hasTable'] )
+			->onlyMethods( ['copyColumn', 'hasColumn'] )
 			->setConstructorArgs( [$this->dbmock, $dbaltable] )
 			->getMock();
 
 		$table->expects( $this->once() )->method( 'copyColumn' );
 		$table->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$table->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
+		$dbaltable->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
 
 		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
 		$this->dbmock->expects( $this->once() )->method( 'table' )->will( $this->returnValue( $table ) );
@@ -620,7 +621,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testIndexExists()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['getColumns'] )
+			->onlyMethods( ['getColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -635,7 +636,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testIndexExistsName()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['spansColumns'] )
+			->onlyMethods( ['spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -650,7 +651,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testIndexChange()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['spansColumns'] )
+			->onlyMethods( ['spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -684,7 +685,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testPrimaryExists()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['spansColumns'] )
+			->onlyMethods( ['spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -698,7 +699,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testPrimaryChange()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['spansColumns'] )
+			->onlyMethods( ['spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -739,7 +740,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testRenameIndexName()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['getColumns'] )
+			->onlyMethods( ['getColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -782,7 +783,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testSpatialExists()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['hasFlag', 'spansColumns'] )
+			->onlyMethods( ['hasFlag', 'spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -798,7 +799,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testSpatialChange()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['hasFlag', 'spansColumns'] )
+			->onlyMethods( ['hasFlag', 'spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -833,7 +834,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testUniqueExists()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['isUnique', 'spansColumns'] )
+			->onlyMethods( ['isUnique', 'spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -849,7 +850,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testUniqueChange()
 	{
 		$idxmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Index' )
-			->setMethods( ['isUnique', 'spansColumns'] )
+			->onlyMethods( ['isUnique', 'spansColumns'] )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -878,7 +879,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 		$dbaltable = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
 			->disableOriginalConstructor()
-			->setMethods( ['addColumn'] )
+			->onlyMethods( ['addColumn'] )
 			->getMock();
 
 		$dbaltable->expects( $this->once() )->method( 'addColumn' );
@@ -893,11 +894,11 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	{
 		$dbalcol = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Column' )
 			->disableOriginalConstructor()
-			->setMethods( ['toArray'] )
+			->onlyMethods( ['toArray'] )
 			->getMock();
 
 		$dbaltable = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
-			->setMethods( ['modifyColumn', 'hasColumn'] )
+			->onlyMethods( ['modifyColumn', 'hasColumn'] )
 			->disableOriginalConstructor()
 			->getMock();
 

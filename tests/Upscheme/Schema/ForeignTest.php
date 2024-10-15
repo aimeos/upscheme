@@ -62,7 +62,7 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Foreign' )
 			->disableOriginalConstructor()
-			->setMethods( ['onDelete'] )
+			->onlyMethods( ['onDelete'] )
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'onDelete' )
@@ -76,7 +76,7 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\Foreign' )
 			->disableOriginalConstructor()
-			->setMethods( ['onDelete'] )
+			->onlyMethods( ['onDelete'] )
 			->getMock();
 
 			$object->expects( $this->once() )->method( 'onDelete' );

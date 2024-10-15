@@ -64,7 +64,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['table', 'up', 'getColumnSQL'] )
+			->onlyMethods( ['table', 'up', 'getColumnSQL'] )
 			->getMock();
 
 		$this->object->expects( $this->any() )->method( 'table' )->will( $this->returnValue( $this->tablemock ) );
@@ -578,7 +578,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['up'] )
+			->onlyMethods( ['up'] )
 			->getMock();
 
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
@@ -594,7 +594,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['up'] )
+			->onlyMethods( ['up'] )
 			->getMock();
 
 		$fcn = function( $db ) {};
@@ -607,7 +607,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->setMethods( ['up'] )
+			->onlyMethods( ['up'] )
 			->getMock();
 
 		$fcn = function( $db ) {
