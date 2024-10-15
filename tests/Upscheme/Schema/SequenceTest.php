@@ -59,7 +59,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'cache' )
-			->will( $this->returnValue( 1000 ) );
+			->willReturn( 1000 );
 
 		$this->assertEquals( 1000, $object->cache );
 	}
@@ -80,7 +80,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 
 	public function testName()
 	{
-		$this->seqmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'seq_name' ) );
+		$this->seqmock->expects( $this->once() )->method( 'getName' )->willReturn( 'seq_name' );
 
 		$this->assertEquals( 'seq_name', $this->object->name() );
 	}
@@ -102,7 +102,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 
 	public function testStartGet()
 	{
-		$this->seqmock->expects( $this->once() )->method( 'getInitialValue' )->will( $this->returnValue( 1 ) );
+		$this->seqmock->expects( $this->once() )->method( 'getInitialValue' )->willReturn( 1 );
 
 		$this->assertEquals( 1, $this->object->start() );
 	}
@@ -118,7 +118,7 @@ class SequenceTest extends \PHPUnit\Framework\TestCase
 
 	public function testStepGet()
 	{
-		$this->seqmock->expects( $this->once() )->method( 'getAllocationSize' )->will( $this->returnValue( 1 ) );
+		$this->seqmock->expects( $this->once() )->method( 'getAllocationSize' )->willReturn( 1 );
 
 		$this->assertEquals( 1, $this->object->step() );
 	}

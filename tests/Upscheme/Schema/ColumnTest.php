@@ -59,7 +59,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testGetMagic()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->unittest );
 	}
@@ -76,7 +76,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testOptGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->opt( 'unittest' ) );
 	}
@@ -92,7 +92,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testOptSetType()
 	{
-		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->dbmock->expects( $this->once() )->method( 'type' )->willReturn( 'mydb' );
 		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'mydb' ) );
@@ -101,7 +101,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testOptSetTypeNot()
 	{
-		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->dbmock->expects( $this->once() )->method( 'type' )->willReturn( 'mydb' );
 		$this->colmock->expects( $this->never() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'yourdb' ) );
@@ -111,7 +111,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testAutoincrementGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getAutoincrement' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->autoincrement() );
 	}
@@ -128,7 +128,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testCharsetGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
-			->will( $this->returnValue( 'utf8' ) );
+			->willReturn( 'utf8' );
 
 		$this->assertEquals( 'utf8', $this->object->charset() );
 	}
@@ -145,7 +145,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testCollationGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
-			->will( $this->returnValue( 'binary' ) );
+			->willReturn( 'binary' );
 
 		$this->assertEquals( 'binary', $this->object->collation() );
 	}
@@ -162,7 +162,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testCommentGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getComment' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->comment() );
 	}
@@ -179,7 +179,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testCustomGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getColumnDefinition' )
-			->will( $this->returnValue( 'INT NOT NULL' ) );
+			->willReturn( 'INT NOT NULL' );
 
 		$this->assertEquals( 'INT NOT NULL', $this->object->custom() );
 	}
@@ -195,7 +195,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCustomSetType()
 	{
-		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->dbmock->expects( $this->once() )->method( 'type' )->willReturn( 'mydb' );
 		$this->colmock->expects( $this->once() )->method( 'setColumnDefinition' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->custom( 'INT NOT NULL', 'mydb' ) );
@@ -204,7 +204,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCustomSetTypeNot()
 	{
-		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
+		$this->dbmock->expects( $this->once() )->method( 'type' )->willReturn( 'mydb' );
 		$this->colmock->expects( $this->never() )->method( 'setColumnDefinition' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->custom( 'INT NOT NULL', 'yourdb' ) );
@@ -214,7 +214,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testDefaultGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getDefault' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->default() );
 	}
@@ -231,7 +231,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testFixedGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getFixed' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->fixed() );
 	}
@@ -248,7 +248,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testLengthGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getLength' )
-			->will( $this->returnValue( 10 ) );
+			->willReturn( 10 );
 
 		$this->assertEquals( 10, $this->object->length() );
 	}
@@ -265,7 +265,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testName()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getName' )
-			->will( $this->returnValue( 'unittest' ) );
+			->willReturn( 'unittest' );
 
 		$this->assertEquals( 'unittest', $this->object->name() );
 	}
@@ -274,7 +274,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testNullGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getNotnull' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertEquals( false, $this->object->null() );
 	}
@@ -291,7 +291,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testPrecisionGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getPrecision' )
-			->will( $this->returnValue( 10 ) );
+			->willReturn( 10 );
 
 		$this->assertEquals( 10, $this->object->precision() );
 	}
@@ -308,7 +308,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testScaleGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getScale' )
-			->will( $this->returnValue( 10 ) );
+			->willReturn( 10 );
 
 		$this->assertEquals( 10, $this->object->scale() );
 	}
@@ -325,7 +325,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testSeqGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getAutoincrement' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->seq() );
 	}
@@ -342,7 +342,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testTypeGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getType' )
-			->will( $this->returnValue( \Doctrine\DBAL\Types\Type::getType( 'string' ) ) );
+			->willReturn( \Doctrine\DBAL\Types\Type::getType( 'string' ) );
 
 		$this->assertEquals( 'string', $this->object->type() );
 	}
@@ -359,7 +359,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testUnsignedGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getUnsigned' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->assertEquals( true, $this->object->unsigned() );
 	}
@@ -375,7 +375,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testIndex()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'unitcol' ) );
+		$this->colmock->expects( $this->once() )->method( 'getName' )->willReturn( 'unitcol' );
 		$this->tablemock->expects( $this->once() )->method( 'index' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->index( 'unittest', 'idx_utst' ) );
@@ -384,7 +384,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testPrimary()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'unitcol' ) );
+		$this->colmock->expects( $this->once() )->method( 'getName' )->willReturn( 'unitcol' );
 		$this->tablemock->expects( $this->once() )->method( 'primary' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->primary( 'unittest', 'pk_utst' ) );
@@ -393,7 +393,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testSpatial()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'unitcol' ) );
+		$this->colmock->expects( $this->once() )->method( 'getName' )->willReturn( 'unitcol' );
 		$this->tablemock->expects( $this->once() )->method( 'spatial' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->spatial( 'unittest', 'sp_utst' ) );
@@ -402,7 +402,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testUnique()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'unitcol' ) );
+		$this->colmock->expects( $this->once() )->method( 'getName' )->willReturn( 'unitcol' );
 		$this->tablemock->expects( $this->once() )->method( 'unique' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->unique( 'unittest', 'unq_utst' ) );

@@ -48,18 +48,18 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 
 		$this->connmock->expects( $this->any() )->method( 'createSchemaManager' )
-			->will( $this->returnValue( $this->smmock ) );
+			->willReturn( $this->smmock );
 
 		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )
-			->will( $this->returnCallback( function( $value ) {
+			->willReturnCallback( function( $value ) {
 				return '"' . $value . '"';
-			} ) );
+			} );
 
 		$this->connmock->expects( $this->any() )->method( 'getDatabasePlatform' )
-			->will( $this->returnValue( $this->pfmock ) );
+			->willReturn( $this->pfmock );
 
 		$this->smmock->expects( $this->any() )->method( 'introspectSchema' )
-			->will( $this->returnValue( $this->schemamock ) );
+			->willReturn( $this->schemamock );
 
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
@@ -67,7 +67,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->onlyMethods( ['table', 'up', 'getColumnSQL'] )
 			->getMock();
 
-		$this->object->expects( $this->any() )->method( 'table' )->will( $this->returnValue( $this->tablemock ) );
+		$this->object->expects( $this->any() )->method( 'table' )->willReturn( $this->tablemock );
 	}
 
 
@@ -96,7 +96,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 		$this->connmock->expects( $this->once() )->method( 'close' );
 		$this->object->expects( $this->once() )->method( 'up' );
 
-		$this->object->__clone();
+		$obj = clone $this->object;
 	}
 
 
@@ -116,8 +116,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropColumn()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropColumn' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropColumn( 'unit', 'test' ) );
@@ -126,8 +126,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropColumnMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->willReturn( true );
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'dropColumn' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropColumn( 'unit', ['test', 'test2'] ) );
@@ -136,8 +136,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropForeign()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasForeign' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasForeign' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropForeign' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropForeign( 'unit', 'test' ) );
@@ -146,8 +146,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropForeignMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasForeign' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasForeign' )->willReturn( true );
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'dropForeign' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropForeign( 'unit', ['test', 'test2'] ) );
@@ -156,8 +156,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropIndex()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropIndex( 'unit', 'test' ) );
@@ -166,8 +166,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropIndexMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'dropIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropIndex( 'unit', ['test', 'test2'] ) );
@@ -176,7 +176,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropSequence()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( true );
 		$this->schemamock->expects( $this->once() )->method( 'dropSequence' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropSequence( 'unit', 'test' ) );
@@ -185,7 +185,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropSequenceMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasSequence' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasSequence' )->willReturn( true );
 		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'dropSequence' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropSequence( ['test', 'test2'] ) );
@@ -194,7 +194,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropTable()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 		$this->smmock->expects( $this->once() )->method( 'dropTable' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropTable( 'unit', 'test' ) );
@@ -203,7 +203,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropTableMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
 		$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropTable' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropTable( ['test', 'test2'] ) );
@@ -217,7 +217,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			public function getShortestName() { return 'test'; }
 		};
 
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [$view] );
 		$this->smmock->expects( $this->once() )->method( 'dropView' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( 'test' ) );
@@ -235,7 +235,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			public function getShortestName() { return 'test2'; }
 		};
 
-		$this->smmock->expects( $this->exactly( 2 ) )->method( 'listViews' )->will( $this->returnValue( [$view, $view2] ) );
+		$this->smmock->expects( $this->exactly( 2 ) )->method( 'listViews' )->willReturn( [$view, $view2] );
 		$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropView' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( ['test', 'test2'] ) );
@@ -244,7 +244,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testExec()
 	{
-		$this->connmock->expects( $this->once() )->method( 'executeStatement' )->will( $this->returnValue( 123 ) );
+		$this->connmock->expects( $this->once() )->method( 'executeStatement' )->willReturn( 123 );
 
 		$this->assertEquals( 123, $this->object->exec( 'test' ) );
 	}
@@ -252,7 +252,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testFor()
 	{
-		$this->connmock->expects( $this->once() )->method( 'executeStatement' )->will( $this->returnValue( 123 ) );
+		$this->connmock->expects( $this->once() )->method( 'executeStatement' )->willReturn( 123 );
 
 		$this->assertEquals( 123, $this->object->exec( 'test' ) );
 	}
@@ -276,8 +276,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasColumn()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 
 		$this->assertTrue( $this->object->hasColumn( 'unit', 'test' ) );
 	}
@@ -285,15 +285,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasColumnNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
 		$this->assertFalse( $this->object->hasColumn( 'unit', 'test' ) );
 	}
 
 
 	public function testHasForeign()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasForeign' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasForeign' )->willReturn( true );
 
 		$this->assertTrue( $this->object->hasForeign( 'unit', 'test' ) );
 	}
@@ -301,15 +301,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasForeignNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
 		$this->assertFalse( $this->object->hasForeign( 'unit', 'test' ) );
 	}
 
 
 	public function testHasIndex()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 
 		$this->assertTrue( $this->object->hasIndex( 'unit', 'test' ) );
 	}
@@ -317,35 +317,35 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasIndexNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
 		$this->assertFalse( $this->object->hasIndex( 'unit', 'test' ) );
 	}
 
 
 	public function testHasSequence()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( true );
 		$this->assertTrue( $this->object->hasSequence( 'unit', 'test' ) );
 	}
 
 
 	public function testHasSequenceNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( false ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( false );
 		$this->assertFalse( $this->object->hasSequence( 'unit', 'test' ) );
 	}
 
 
 	public function testHasTable()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 		$this->assertTrue( $this->object->hasTable( 'unit', 'test' ) );
 	}
 
 
 	public function testHasTableNot()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
 		$this->assertFalse( $this->object->hasTable( 'unit', 'test' ) );
 	}
 
@@ -357,14 +357,14 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			public function getShortestName() { return 'test'; }
 		};
 
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [$view] );
 		$this->assertTrue( $this->object->hasView( 'test' ) );
 	}
 
 
 	public function testHasViewNot()
 	{
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [] ) );
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [] );
 		$this->assertFalse( $this->object->hasView( 'test' ) );
 	}
 
@@ -378,28 +378,28 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testLastId()
 	{
-		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->will( $this->returnValue( '123' ) );
+		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->willReturn( '123' );
 		$this->assertEquals( '123', $this->object->lastId() );
 	}
 
 
 	public function testName()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'testdb' ) );
+		$this->schemamock->expects( $this->once() )->method( 'getName' )->willReturn( 'testdb' );
 		$this->assertEquals( 'testdb', $this->object->name() );
 	}
 
 
 	public function testQ()
 	{
-		$this->connmock->expects( $this->once() )->method( 'quote' )->will( $this->returnValue( '123' ) );
+		$this->connmock->expects( $this->once() )->method( 'quote' )->willReturn( '123' );
 		$this->assertEquals( '123', $this->object->q( 123 ) );
 	}
 
 
 	public function testQi()
 	{
-		$this->connmock->expects( $this->once() )->method( 'quoteIdentifier' )->will( $this->returnValue( '"key"' ) );
+		$this->connmock->expects( $this->once() )->method( 'quoteIdentifier' )->willReturn( '"key"' );
 		$this->assertEquals( '"key"', $this->object->qi( 'key' ) );
 	}
 
@@ -410,7 +410,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->will( $this->returnValue( $mock ) );
+		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->willReturn( $mock );
 
 		$this->assertInstanceOf( \Doctrine\DBAL\Result::class, $this->object->query( 'test' ) );
 	}
@@ -418,10 +418,10 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumn()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->will( $this->returnArgument( 0 ) );
-		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->will( $this->returnValue( 'test INTEGER' ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
+		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->willReturnArgument( 0 );
+		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->willReturn( 'test INTEGER' );
 		$this->connmock->expects( $this->once() )->method( 'executeStatement' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameColumn( 'table', 'unit', 'test' ) );
@@ -430,10 +430,10 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumnMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->will( $this->returnArgument( 0 ) );
-		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->will( $this->returnValue( 'test INTEGER' ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->willReturn( true );
+		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->willReturnArgument( 0 );
+		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->willReturn( 'test INTEGER' );
 		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
 
 		$cols = ['unit' => 'test', 'unit2' => 'test2'];
@@ -443,8 +443,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumnException()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 
 		$this->expectException( \RuntimeException::class );
 		$this->object->renameColumn( 'table', 'unit' );
@@ -453,7 +453,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameIndex()
 	{
-		$this->object->expects( $this->once() )->method( 'table' )->will( $this->returnValue( true ) );
+		$this->object->expects( $this->once() )->method( 'table' )->willReturn( $this->tablemock );
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameIndex( 'table', 'unit', 'test' ) );
@@ -462,7 +462,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameTable()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 		$this->smmock->expects( $this->once() )->method( 'renameTable' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameTable( 'unit', 'test' ) );
@@ -471,7 +471,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameTableMultiple()
 	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
 		$this->smmock->expects( $this->exactly( 2 ) )->method( 'renameTable' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameTable( ['test', 'test2'] ) );
@@ -480,7 +480,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameTableException()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 
 		$this->expectException( \RuntimeException::class );
 		$this->object->renameTable( 'unit' );
@@ -493,8 +493,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( true ) );
-		$this->schemamock->expects( $this->once() )->method( 'getSequence' )->will( $this->returnValue( $seqmock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( true );
+		$this->schemamock->expects( $this->once() )->method( 'getSequence' )->willReturn( $seqmock );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Sequence::class, $this->object->sequence( 'unittest' ) );
 	}
@@ -506,8 +506,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( false ) );
-		$this->schemamock->expects( $this->once() )->method( 'createSequence' )->will( $this->returnValue( $seqmock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( false );
+		$this->schemamock->expects( $this->once() )->method( 'createSequence' )->willReturn( $seqmock );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Sequence::class, $this->object->sequence( 'unittest' ) );
 	}
@@ -519,8 +519,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->will( $this->returnValue( false ) );
-		$this->schemamock->expects( $this->once() )->method( 'createSequence' )->will( $this->returnValue( $seqmock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasSequence' )->willReturn( false );
+		$this->schemamock->expects( $this->once() )->method( 'createSequence' )->willReturn( $seqmock );
 
 		$fcn = function( $seq ) {};
 
@@ -534,7 +534,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->connmock->expects( $this->once() )->method( 'createQueryBuilder' )->will( $this->returnValue( $qbmock ) );
+		$this->connmock->expects( $this->once() )->method( 'createQueryBuilder' )->willReturn( $qbmock );
 
 		$this->assertInstanceOf( \Doctrine\DBAL\Query\QueryBuilder::class, $this->object->stmt() );
 	}
@@ -548,8 +548,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->schemamock->expects( $this->once() )->method( 'getTable' )->will( $this->returnValue( $tablemock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->schemamock->expects( $this->once() )->method( 'getTable' )->willReturn( $tablemock );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $object->table( 'unittest' ) );
 	}
@@ -563,8 +563,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
-		$this->schemamock->expects( $this->once() )->method( 'createTable' )->will( $this->returnValue( $tablemock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
+		$this->schemamock->expects( $this->once() )->method( 'createTable' )->willReturn( $tablemock );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $object->table( 'unittest' ) );
 	}
@@ -581,8 +581,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->onlyMethods( ['up'] )
 			->getMock();
 
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( false ) );
-		$this->schemamock->expects( $this->once() )->method( 'createTable' )->will( $this->returnValue( $tablemock ) );
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( false );
+		$this->schemamock->expects( $this->once() )->method( 'createTable' )->willReturn( $tablemock );
 
 		$fcn = function( $seq ) {};
 
@@ -641,7 +641,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [$view] );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->view( 'unittest', 'CREATE VIEW' ) );
 	}
@@ -651,7 +651,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );
 
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [] ) );
+		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [] );
 		$this->smmock->expects( $this->once() )->method( 'createView' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $object->view( 'unittest', 'CREATE VIEW' ) );

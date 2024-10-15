@@ -66,7 +66,7 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$object->expects( $this->once() )->method( 'onDelete' )
-			->will( $this->returnValue( 'CASCADE' ) );
+			->willReturn( 'CASCADE' );
 
 		$this->assertEquals( 'CASCADE', $object->onDelete );
 	}

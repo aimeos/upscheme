@@ -22,9 +22,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$this->dbmock->expects( $this->any() )->method( 'qi' )
-			->will( $this->returnCallback( function( $value ) {
+			->willReturnCallback( function( $value ) {
 				return '"' . $value . '"';
-			} ) );
+			} );
 
 		$methods = [
 			'addIndex', 'getIndex', 'getIndexes', 'hasIndex', 'renameIndex', 'dropIndex',
@@ -69,10 +69,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testGetMagic()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'hasOption' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->tablemock->expects( $this->once() )->method( 'getOption' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->unittest );
 	}
@@ -89,10 +89,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testOptGet()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'hasOption' )
-			->will( $this->returnValue( true ) );
+			->willReturn( true );
 
 		$this->tablemock->expects( $this->once() )->method( 'getOption' )
-			->will( $this->returnValue( 'yes' ) );
+			->willReturn( 'yes' );
 
 		$this->assertEquals( 'yes', $this->object->opt( 'unittest' ) );
 	}
@@ -112,7 +112,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
 		} );
 
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$col = $this->object->bigid();
 
@@ -129,7 +129,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
 		} );
 
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$col = $this->object->bigid( 'uid' );
 
@@ -218,7 +218,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals( 'integer', $col->type() );
 
 
-		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->willReturn( true );
 
 		$col = $this->object->col( 'unittest' );
 
@@ -227,7 +227,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals( 'integer', $col->type() );
 
 
-		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->any() )->method( 'hasColumn' )->willReturn( true );
 
 		$col = $this->object->col( 'unittest', 'bigint' );
 
@@ -307,7 +307,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			return $this->integer( $name ?: 'id' )->seq( true )->primary();
 		} );
 
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$col = $this->object->id();
 
@@ -324,7 +324,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			return $this->integer( $name ?: 'id' )->seq( true )->primary();
 		} );
 
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$col = $this->object->id( 'uid' );
 
@@ -370,7 +370,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testName()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'getName' )
-			->will( $this->returnValue( 'unittest' ) );
+			->willReturn( 'unittest' );
 
 		$this->assertEquals( 'unittest', $this->object->name() );
 	}
@@ -433,7 +433,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropColumn()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropColumn' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropColumn( 'unittest' ) );
@@ -442,7 +442,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropIndex()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropIndex( 'unittest' ) );
@@ -451,7 +451,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropForeign()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'removeForeignKey' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropForeign( 'unittest' ) );
@@ -461,7 +461,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testDropPrimary()
 	{
 		$idx = new \Doctrine\DBAL\Schema\Index( 'PRIMARY', ['id'], true, true );
-		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( $idx ) );
+		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->willReturn( $idx );
 		$this->tablemock->expects( $this->once() )->method( 'dropPrimaryKey' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->dropPrimary( 'unittest' ) );
@@ -470,63 +470,63 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasColumn()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$this->assertTrue( $this->object->hasColumn( 'unittest' ) );
 	}
 
 
 	public function testHasColumnNot()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( false ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( false );
 		$this->assertFalse( $this->object->hasColumn( 'unittest' ) );
 	}
 
 
 	public function testHasColumnMultiple()
 	{
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->willReturn( true );
 		$this->assertTrue( $this->object->hasColumn( ['unittest', 'testunit'] ) );
 	}
 
 
 	public function testHasIndex()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->assertTrue( $this->object->hasIndex( 'unittest' ) );
 	}
 
 
 	public function testHasIndexNot()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( false ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( false );
 		$this->assertFalse( $this->object->hasIndex( 'unittest' ) );
 	}
 
 
 	public function testHasIndexMultiple()
 	{
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->willReturn( true );
 		$this->assertTrue( $this->object->hasIndex( ['unittest', 'testunit'] ) );
 	}
 
 
 	public function testHasForeign()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->willReturn( true );
 		$this->assertTrue( $this->object->hasForeign( 'unittest' ) );
 	}
 
 
 	public function testHasForeignNot()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->will( $this->returnValue( false ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasForeignKey' )->willReturn( false );
 		$this->assertFalse( $this->object->hasForeign( 'unittest' ) );
 	}
 
 
 	public function testHasForeignMultiple()
 	{
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasForeignKey' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasForeignKey' )->willReturn( true );
 		$this->assertTrue( $this->object->hasForeign( ['unittest', 'testunit'] ) );
 	}
 
@@ -547,11 +547,11 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$table->expects( $this->once() )->method( 'copyColumn' );
-		$table->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$dbaltable->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
+		$table->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
+		$dbaltable->expects( $this->once() )->method( 'getColumn' )->willReturn( $dbalcol );
 
-		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->dbmock->expects( $this->once() )->method( 'table' )->will( $this->returnValue( $table ) );
+		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->dbmock->expects( $this->once() )->method( 'table' )->willReturn( $table );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Foreign::class, $table->foreign( 'pid', 'fktable', 'id', 'fk_pid' ) );
 	}
@@ -566,7 +566,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testForeignColumnMissing()
 	{
-		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
+		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 
 		$this->expectException( 'RuntimeException' );
 		$this->object->foreign( 'pid', 'fktable', 'id', 'fk_pid' );
@@ -589,11 +589,11 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$table->expects( $this->once() )->method( 'copyColumn' );
-		$table->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$dbaltable->expects( $this->once() )->method( 'getColumn' )->will( $this->returnValue( $dbalcol ) );
+		$table->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->willReturn( true );
+		$dbaltable->expects( $this->once() )->method( 'getColumn' )->willReturn( $dbalcol );
 
-		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->will( $this->returnValue( true ) );
-		$this->dbmock->expects( $this->once() )->method( 'table' )->will( $this->returnValue( $table ) );
+		$this->dbmock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
+		$this->dbmock->expects( $this->once() )->method( 'table' )->willReturn( $table );
 
 		$this->expectException( 'LogicException' );
 		$table->foreign( ['pid'], 'fktable', ['id', 'sid'], 'fk_pid' );
@@ -603,8 +603,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testIndex()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'addIndex' );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->will( $this->returnValue( [] ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
+		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->willReturn( [] );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->index( 'pid' ) );
 	}
@@ -625,9 +625,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'getColumns' )->will( $this->returnValue( ['pid'] ) );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->will( $this->returnValue( [$idxmock] ) );
+		$idxmock->expects( $this->once() )->method( 'getColumns' )->willReturn( ['pid'] );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
+		$this->tablemock->expects( $this->once() )->method( 'getIndexes' )->willReturn( [$idxmock] );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->index( 'pid' ) );
 	}
@@ -640,9 +640,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->index( 'pid', 'idx_pid' ) );
 	}
@@ -655,9 +655,9 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( false ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( false );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropIndex' );
 		$this->tablemock->expects( $this->once() )->method( 'addIndex' );
 
@@ -668,7 +668,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testPrimary()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'setPrimaryKey' );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->primary( 'id' ) );
 	}
@@ -689,8 +689,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( $idxmock ) );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->willReturn( $idxmock );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->primary( 'id', 'pk_id' ) );
 	}
@@ -703,8 +703,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( false ) );
-		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->will( $this->returnValue( $idxmock ) );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( false );
+		$this->tablemock->expects( $this->once() )->method( 'getPrimaryKey' )->willReturn( $idxmock );
 		$this->tablemock->expects( $this->once() )->method( 'dropPrimaryKey' );
 		$this->tablemock->expects( $this->once() )->method( 'setPrimaryKey' );
 
@@ -720,7 +720,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameIndexExists()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameIndex( 'idx_t1', 'idx_t2' ) );
@@ -729,7 +729,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameIndexMultiple()
 	{
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'renameIndex' );
 
 		$idx = ['idx_t1' => 'idx_t2', 'idx_t3' => 'idx_t4'];
@@ -744,10 +744,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'getColumns' )->will( $this->returnValue( ['a', 'b'] ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$idxmock->expects( $this->once() )->method( 'getColumns' )->willReturn( ['a', 'b'] );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameIndex( 'idx_test' ) );
@@ -756,7 +756,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumn()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 		$this->dbmock->expects( $this->once() )->method( 'renameColumn' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameColumn( 'test' ) );
@@ -766,7 +766,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testSpatial()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'addIndex' );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->spatial( 'pid' ) );
 	}
@@ -787,10 +787,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'hasFlag' )->will( $this->returnValue( true ) );
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'hasFlag' )->willReturn( true );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->spatial( 'pid', 'idx_pid' ) );
 	}
@@ -803,10 +803,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'hasFlag' )->will( $this->returnValue( true ) );
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( false ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'hasFlag' )->willReturn( true );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( false );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropIndex' );
 		$this->tablemock->expects( $this->once() )->method( 'addIndex' );
 
@@ -817,7 +817,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 	public function testUnique()
 	{
 		$this->tablemock->expects( $this->once() )->method( 'addUniqueIndex' );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'test' ) );
+		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->unique( 'pid' ) );
 	}
@@ -838,10 +838,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'isUnique' )->will( $this->returnValue( true ) );
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( true ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'isUnique' )->willReturn( true );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( true );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->unique( 'pid', 'unq_pid' ) );
 	}
@@ -854,10 +854,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$idxmock->expects( $this->once() )->method( 'isUnique' )->will( $this->returnValue( true ) );
-		$idxmock->expects( $this->once() )->method( 'spansColumns' )->will( $this->returnValue( false ) );
-		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->will( $this->returnValue( $idxmock ) );
-		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->will( $this->returnValue( true ) );
+		$idxmock->expects( $this->once() )->method( 'isUnique' )->willReturn( true );
+		$idxmock->expects( $this->once() )->method( 'spansColumns' )->willReturn( false );
+		$this->tablemock->expects( $this->once() )->method( 'getIndex' )->willReturn( $idxmock );
+		$this->tablemock->expects( $this->once() )->method( 'hasIndex' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'dropIndex' );
 		$this->tablemock->expects( $this->once() )->method( 'addUniqueIndex' );
 
@@ -902,8 +902,8 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-			$dbalcol->expects( $this->once() )->method( 'toArray' )->will( $this->returnValue( [] ) );
-		$dbaltable->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
+			$dbalcol->expects( $this->once() )->method( 'toArray' )->willReturn( [] );
+		$dbaltable->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$dbaltable->expects( $this->once() )->method( 'modifyColumn' );
 
 		$object = new \Aimeos\Upscheme\Schema\Table( $this->dbmock, $dbaltable );

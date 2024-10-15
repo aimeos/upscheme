@@ -25,10 +25,10 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Task\Base' )
+		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Task\TestBase' )
 			->setConstructorArgs( [$this->upmock] )
 			->onlyMethods( [] )
-			->getMockForAbstractClass();
+			->getMock();
 	}
 
 
@@ -40,7 +40,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
 	public function testCall()
 	{
-		$this->upmock->expects( $this->once() )->method( 'db' )->will( $this->returnValue( $this->dbmock ) );
+		$this->upmock->expects( $this->once() )->method( 'db' )->willReturn( $this->dbmock );
 		$this->dbmock->expects( $this->once() )->method( 'dropTable' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropTable( 'unittest' ) );
@@ -69,7 +69,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
 	public function testDb()
 	{
-		$this->upmock->expects( $this->once() )->method( 'db' )->will( $this->returnValue( $this->dbmock ) );
+		$this->upmock->expects( $this->once() )->method( 'db' )->willReturn( $this->dbmock );
 
 		$result = $this->access( 'db' )->invokeArgs( $this->object, ['unittest', true] );
 
@@ -89,7 +89,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
 	public function testPaths()
 	{
-		$this->upmock->expects( $this->once() )->method( 'paths' )->will( $this->returnValue( [dirname( __DIR__, 2 ) . '/Tasks'] ) );
+		$this->upmock->expects( $this->once() )->method( 'paths' )->willReturn( [dirname( __DIR__, 2 ) . '/Tasks'] );
 
 		$result = $this->access( 'paths' )->invokeArgs( $this->object, ['test'] );
 
@@ -104,5 +104,13 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 		$method->setAccessible( true );
 
 		return $method;
+	}
+}
+
+
+class TestBase extends \Aimeos\Upscheme\Task\Base
+{
+	public function up()
+	{
 	}
 }
