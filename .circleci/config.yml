@@ -195,8 +195,8 @@ workflows:
   version: 2
   unittest:
     jobs:
-      - "php-7.1 / mariadb-10"
-      - "php-7.2 / mysql-5.7"
+      - "php-7.1 / mysql-5.7"
+      - "php-7.2 / mariadb-10"
       - "php-7.3 / pgsql-10"
       - "php-7.4 / mysql-8"
       - "php-8.0 / oracle-18"
