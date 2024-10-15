@@ -5,7 +5,7 @@
 version: 2
 
 jobs:
-  "php-7.1 / mysql-5.7":
+  "php-7.4 / mysql-5.7":
     docker:
       - image: aimeos/ci-php:7.1
       - image: cimg/mysql:5.7
@@ -18,16 +18,16 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php71-{{ checksum "composer.json" }}
+            - php74-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php71-{{ checksum "composer.json" }}
+          key: php74-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.2 / mariadb-10":
+  "php-7.4 / mariadb-10":
     docker:
       - image: aimeos/ci-php:7.2
       - image: cimg/mariadb:10.4
@@ -40,16 +40,16 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php72-{{ checksum "composer.json" }}
+            - php74-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php72-{{ checksum "composer.json" }}
+          key: php74-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.3 / pgsql-10":
+  "php-7.4 / pgsql-10":
     docker:
       - image: aimeos/ci-php:7.3
       - image: cimg/postgres:10.0
@@ -61,10 +61,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php73-{{ checksum "composer.json" }}
+            - php74-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php73-{{ checksum "composer.json" }}
+          key: php74-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: for i in `seq 1 10`; do nc -z 127.0.0.1 5432 && echo OK && exit 0; echo -n .; sleep 1; done
       - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
@@ -92,7 +92,7 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-8.0 / oracle-18":
+  "php-8.1 / oracle-18":
     docker:
       - image: aimeos/ci-php:8.0
       - image: gvenzl/oracle-xe:18-slim
@@ -102,10 +102,10 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php80-{{ checksum "composer.json" }}
+            - php81-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php80-{{ checksum "composer.json" }}
+          key: php81-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "<?php return ['driver' => 'pdo_oci', 'host' => '127.0.0.1', 'dbname' => 'XE', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: echo "CREATE USER upscheme IDENTIFIED BY upscheme;" > init.sql && echo "GRANT DBA TO upscheme;" >> init.sql && echo "quit" >> init.sql
@@ -195,11 +195,11 @@ workflows:
   version: 2
   unittest:
     jobs:
-      - "php-7.1 / mysql-5.7"
-      - "php-7.2 / mariadb-10"
-      - "php-7.3 / pgsql-10"
+      - "php-7.4 / mysql-5.7"
+      - "php-7.4 / mariadb-10"
+      - "php-7.4 / pgsql-10"
       - "php-7.4 / mysql-8"
-      - "php-8.0 / oracle-18"
+      - "php-8.1 / oracle-18"
       - "php-8.1 / mssql-2019"
       - "php-8.2 / sqlite"
       - "php-8.3 / mariadb-11"

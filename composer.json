@@ -4,9 +4,9 @@
 	"license": "LGPL-3.0-or-later",
 	"type": "library",
 	"require": {
-		"php": "~7.1||~8.0",
+		"php": "~7.4||~8.0",
 		"aimeos/macro": "1.0",
-		"doctrine/dbal": "~3.10||~4.0"
+		"doctrine/dbal": "~3.9||~4.0"
 	},
 	"require-dev": {
         "phpunit/phpunit": "~7.0||~8.0||~9.0",
