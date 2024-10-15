@@ -49,10 +49,10 @@ jobs:
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-7.4 / pgsql-10":
+  "php-7.4 / pgsql-13":
     docker:
       - image: aimeos/ci-php:7.4
-      - image: cimg/postgres:10.22
+      - image: cimg/postgres:13.16
         environment:
           POSTGRES_PASSWORD: upscheme
           POSTGRES_USER: upscheme
@@ -197,7 +197,7 @@ workflows:
     jobs:
       - "php-7.4 / mysql-5.7"
       - "php-7.4 / mariadb-10"
-      - "php-7.4 / pgsql-10"
+      - "php-7.4 / pgsql-13"
       - "php-7.4 / mysql-8"
       - "php-8.1 / oracle-18"
       - "php-8.1 / mssql-2019"
