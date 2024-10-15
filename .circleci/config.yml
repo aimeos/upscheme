@@ -7,7 +7,7 @@ version: 2
 jobs:
   "php-7.4 / mysql-5.7":
     docker:
-      - image: aimeos/ci-php:7.1
+      - image: aimeos/ci-php:7.4
       - image: cimg/mysql:5.7
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -29,7 +29,7 @@ jobs:
 
   "php-7.4 / mariadb-10":
     docker:
-      - image: aimeos/ci-php:7.2
+      - image: aimeos/ci-php:7.4
       - image: cimg/mariadb:10.4
         environment:
           MYSQL_ROOT_PASSWORD: rootpw
@@ -51,7 +51,7 @@ jobs:
 
   "php-7.4 / pgsql-10":
     docker:
-      - image: aimeos/ci-php:7.3
+      - image: aimeos/ci-php:7.4
       - image: cimg/postgres:10.0
         environment:
           POSTGRES_PASSWORD: upscheme
