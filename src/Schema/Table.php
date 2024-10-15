@@ -784,9 +784,10 @@ class Table
 		unset( $options['name'], $options['autoincrement'], $options['charset'], $options['collation'], $options['check'] );
 
 		if( $this->table->hasColumn( $name ) ) {
-			$this->table->changeColumn( $name, $options + ['customSchemaOptions' => $custom] );
+			$this->table->modifyColumn( $name, $options + ['platformOptions' => $custom] );
 		} else {
-			$this->table->addColumn( $name, $column->getType()->getName(), $options + ['customSchemaOptions' => $custom] );
+			$types = $column->getType()->getTypeRegistry();
+			$this->table->addColumn( $name, $types->lookupName( $column->getType() ), $options + ['platformOptions' => $custom] );
 		}
 	}
 

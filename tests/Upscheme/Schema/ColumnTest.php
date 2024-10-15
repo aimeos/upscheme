@@ -58,7 +58,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testGetMagic()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
 			->will( $this->returnValue( 'yes' ) );
 
 		$this->assertEquals( 'yes', $this->object->unittest );
@@ -67,7 +67,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testSetMagic()
 	{
-		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->object->unittest = 'yes';
 	}
@@ -75,7 +75,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testOptGet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
 			->will( $this->returnValue( 'yes' ) );
 
 		$this->assertEquals( 'yes', $this->object->opt( 'unittest' ) );
@@ -84,7 +84,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testOptSet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes' ) );
 	}
@@ -93,7 +93,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testOptSetType()
 	{
 		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
-		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'mydb' ) );
 	}
@@ -102,7 +102,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testOptSetTypeNot()
 	{
 		$this->dbmock->expects( $this->once() )->method( 'type' )->will( $this->returnValue( 'mydb' ) );
-		$this->colmock->expects( $this->never() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->never() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->opt( 'unittest', 'yes', 'yourdb' ) );
 	}
@@ -127,7 +127,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCharsetGet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
 			->will( $this->returnValue( 'utf8' ) );
 
 		$this->assertEquals( 'utf8', $this->object->charset() );
@@ -136,7 +136,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCharsetSet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->charset( 'utf8' ) );
 	}
@@ -144,7 +144,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCollationGet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'getCustomSchemaOption' )
+		$this->colmock->expects( $this->once() )->method( 'getPlatformOption' )
 			->will( $this->returnValue( 'binary' ) );
 
 		$this->assertEquals( 'binary', $this->object->collation() );
@@ -153,7 +153,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 
 	public function testCollationSet()
 	{
-		$this->colmock->expects( $this->once() )->method( 'setCustomSchemaOption' );
+		$this->colmock->expects( $this->once() )->method( 'setPlatformOption' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Column::class, $this->object->collation( 'binary' ) );
 	}
@@ -342,7 +342,7 @@ class ColumnTest extends \PHPUnit\Framework\TestCase
 	public function testTypeGet()
 	{
 		$this->colmock->expects( $this->once() )->method( 'getType' )
-			->will( $this->returnValue( new \Doctrine\DBAL\Types\StringType() ) );
+			->will( $this->returnValue( \Doctrine\DBAL\Types\Type::getType( 'string' ) ) );
 
 		$this->assertEquals( 'string', $this->object->type() );
 	}

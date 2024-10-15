@@ -102,11 +102,11 @@ class Column
 	public function opt( string $option, $value = null, $for = null )
 	{
 		if( $value === null ) {
-			return $this->column->getCustomSchemaOption( $option );
+			return $this->column->getPlatformOption( $option );
 		}
 
 		if( $for === null || in_array( $this->db->type(), (array) $for ) ) {
-			$this->column->setCustomSchemaOption( $option, $value );
+			$this->column->setPlatformOption( $option, $value );
 		}
 
 		return $this;
@@ -327,8 +327,10 @@ class Column
 	 */
 	public function type( string $value = null )
 	{
-		if( $value === null ) {
-			return $this->column->getType()->getName();
+		if( $value === null )
+		{
+			$type = $this->column->getType();
+			return $type->getTypeRegistry()->lookupName( $type );
 		}
 
 		$this->column->setType( \Doctrine\DBAL\Types\Type::getType( $value ) );

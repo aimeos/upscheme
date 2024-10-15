@@ -874,18 +874,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testCopyColumn()
 	{
-		$dbalcol = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Column' )
-			->disableOriginalConstructor()
-			->setMethods( ['getType'] )
-			->getMock();
+		$dbalcol = new \Doctrine\DBAL\Schema\Column( 'unittest2', \Doctrine\DBAL\Types\Type::getType( 'string' ) );
 
 		$dbaltable = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
 			->disableOriginalConstructor()
 			->setMethods( ['addColumn'] )
 			->getMock();
 
-		$type = new \Doctrine\DBAL\Types\StringType();
-		$dbalcol->expects( $this->once() )->method( 'getType' )->will( $this->returnValue( $type ) );
 		$dbaltable->expects( $this->once() )->method( 'addColumn' );
 
 		$object = new \Aimeos\Upscheme\Schema\Table( $this->dbmock, $dbaltable );
@@ -902,13 +897,13 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 		$dbaltable = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
-			->setMethods( ['changeColumn', 'hasColumn'] )
+			->setMethods( ['modifyColumn', 'hasColumn'] )
 			->disableOriginalConstructor()
 			->getMock();
 
 			$dbalcol->expects( $this->once() )->method( 'toArray' )->will( $this->returnValue( [] ) );
 		$dbaltable->expects( $this->once() )->method( 'hasColumn' )->will( $this->returnValue( true ) );
-		$dbaltable->expects( $this->once() )->method( 'changeColumn' );
+		$dbaltable->expects( $this->once() )->method( 'modifyColumn' );
 
 		$object = new \Aimeos\Upscheme\Schema\Table( $this->dbmock, $dbaltable );
 

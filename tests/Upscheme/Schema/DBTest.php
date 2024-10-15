@@ -29,7 +29,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-		$this->pfmock = $this->getMockBuilder( '\Doctrine\DBAL\Platforms\AbstractPlatform' )
+		$this->pfmock = $this->getMockBuilder( '\Doctrine\DBAL\Platforms\MySQLPlatform' )
 			->disableOriginalConstructor()
 			->getMock();
 
@@ -47,8 +47,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			->getMock();
 
 
-		$method = method_exists( $this->connmock, 'createSchemaManager' ) ? 'createSchemaManager' : 'getSchemaManager';
-		$this->connmock->expects( $this->any() )->method( $method )
+		$this->connmock->expects( $this->any() )->method( 'createSchemaManager' )
 			->will( $this->returnValue( $this->smmock ) );
 
 		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )
@@ -59,7 +58,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 		$this->connmock->expects( $this->any() )->method( 'getDatabasePlatform' )
 			->will( $this->returnValue( $this->pfmock ) );
 
-		$this->smmock->expects( $this->any() )->method( 'createSchema' )
+		$this->smmock->expects( $this->any() )->method( 'introspectSchema' )
 			->will( $this->returnValue( $this->schemamock ) );
 
 
@@ -80,8 +79,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testCall()
 	{
-		$this->schemamock->expects( $this->once() )->method( 'hasExplicitForeignKeyIndexes' );
-		$this->object->hasExplicitForeignKeyIndexes();
+		$this->schemamock->expects( $this->once() )->method( 'hasNamespace' );
+		$this->object->hasNamespace( 'test' );
 	}
 
 
@@ -214,7 +213,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testDropView()
 	{
 		$view = new class {
-			public function getName() { return 'test'; }
+			public function getNamespaceName() { return ''; }
+			public function getShortestName() { return 'test'; }
 		};
 
 		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
@@ -227,10 +227,12 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testDropViewMultiple()
 	{
 		$view = new class {
-			public function getName() { return 'test'; }
+			public function getNamespaceName() { return ''; }
+			public function getShortestName() { return 'test'; }
 		};
 		$view2 = new class {
-			public function getName() { return 'test2'; }
+			public function getNamespaceName() { return ''; }
+			public function getShortestName() { return 'test2'; }
 		};
 
 		$this->smmock->expects( $this->exactly( 2 ) )->method( 'listViews' )->will( $this->returnValue( [$view, $view2] ) );
@@ -258,7 +260,6 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testForMultiple()
 	{
-		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
 		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', ['test', 'test2'] ) );
@@ -267,10 +268,9 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testForMismatch()
 	{
-		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'postgresql' ) );
 		$this->connmock->expects( $this->never() )->method( 'executeStatement' );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'mysql', 'test' ) );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->for( 'postgresql', 'test' ) );
 	}
 
 
@@ -353,7 +353,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testHasView()
 	{
 		$view = new class {
-			public function getName() { return 'test'; }
+			public function getNamespaceName() { return ''; }
+			public function getShortestName() { return 'test'; }
 		};
 
 		$this->smmock->expects( $this->once() )->method( 'listViews' )->will( $this->returnValue( [$view] ) );
@@ -379,20 +380,6 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	{
 		$this->connmock->expects( $this->once() )->method( 'lastInsertId' )->will( $this->returnValue( '123' ) );
 		$this->assertEquals( '123', $this->object->lastId() );
-	}
-
-
-	public function testLastIdOracle()
-	{
-		$mock = $this->getMockBuilder( '\Doctrine\DBAL\Result' )
-			->disableOriginalConstructor()
-			->getMock();
-
-		$this->connmock->expects( $this->once() )->method( 'executeQuery' )->will( $this->returnValue( $mock ) );
-		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'oracle' ) );
-		$mock->expects( $this->once() )->method( 'fetchOne' )->will( $this->returnValue( '123' ) );
-
-		$this->assertEquals( '123', $this->object->lastId( 'test_seq' ) );
 	}
 
 
@@ -634,7 +621,6 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testType()
 	{
-		$this->pfmock->expects( $this->once() )->method( 'getName' )->will( $this->returnValue( 'mysql' ) );
 		$this->assertEquals( 'mysql', $this->object->type() );
 	}
 
@@ -649,7 +635,8 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testView()
 	{
 		$view = new class {
-			public function getName() { return 'unittest'; }
+			public function getNamespaceName() { return ''; }
+			public function getShortestName() { return 'unittest'; }
 		};
 
 		$object = new \Aimeos\Upscheme\Schema\DB( $this->upmock, $this->connmock );

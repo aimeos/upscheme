@@ -389,31 +389,14 @@ class DB
 	 */
 	public function hasView( $name ) : bool
 	{
-		$views = [];
-		$manager = $this->getSchemaManager();
-
-		foreach( $manager->listViews() as $view ) {
-			$views[$view->getName()] = $view;
-		}
-
-		$list = $manager->getSchemaSearchPaths();
-		$list[] = '';
-
-		foreach( (array) $name as $entry )
+		foreach( $this->getSchemaManager()->listViews() as $view )
 		{
-			foreach( $list as $schema )
-			{
-				$key = $schema ? $schema . '.' . $entry : $entry;
-
-				if( isset( $views[$key] ) ) {
-					continue 2;
-				}
+			if( in_array( $view->getShortestName( $view->getNamespaceName() ), (array) $name ) ) {
+				return true;
 			}
-
-			return false;
 		}
 
-		return true;
+		return false;
 	}
 
 
@@ -446,17 +429,6 @@ class DB
 	 */
 	public function lastId( string $seq = null ) : string
 	{
-		if( $seq && $this->type() === 'oracle' )
-		{
-			$sql = sprintf( 'SELECT %1$s.CURRVAL FROM DUAL', $this->qi( $seq ) );
-
-			if( ( $result = $this->query( $sql )->fetchOne() ) === false ) {
-				throw new \RuntimeException( sprintf( 'Sequence "%1$s" does not exist', $seq ) );
-			}
-
-			return $result;
-		}
-
 		return $this->conn->lastInsertId( $seq ? $this->qi( $seq ) : null );
 	}
 
@@ -754,7 +726,20 @@ class DB
 	 */
 	public function type() : string
 	{
-		return $this->conn->getDatabasePlatform()->getName();
+		$platform = $this->conn->getDatabasePlatform();
+		$classes = class_parents( $platform );
+		$classes[] = get_class( $platform );
+		$list = [];
+
+		foreach( $classes as $class )
+		{
+			$match = [];
+			if( preg_match( '/([a-z]+)platform/i', $class, $match ) && $match[1] !== 'Abstract' ) {
+				$list[] = strtolower( $match[1] );
+			}
+		}
+
+		return current( $list ) ?: '';
 	}
 
 
@@ -765,7 +750,9 @@ class DB
 	 */
 	public function up() : self
 	{
-		foreach( $this->from->getMigrateToSql( $this->to, $this->conn->getDatabasePlatform() ) as $sql )
+		$diff = $this->getSchemaManager()->createComparator()->compareSchemas( $this->from, $this->to );
+
+		foreach( $this->conn->getDatabasePlatform()->getAlterSchemaSQL( $diff ) as $sql )
 		{
 			$this->up->info( '  ->  ' . $sql, 'vvv' );
 			$this->conn->executeStatement( $sql );
@@ -866,9 +853,7 @@ class DB
 	 */
 	protected function getSchemaManager() : \Doctrine\DBAL\Schema\AbstractSchemaManager
 	{
-		return method_exists( $this->conn, 'createSchemaManager' )
-			? $this->conn->createSchemaManager()
-			: $this->conn->getSchemaManager();
+		return $this->conn->createSchemaManager();
 	}
 
 
@@ -879,7 +864,7 @@ class DB
 	 */
 	protected function setup() : self
 	{
-		$this->to = $this->getSchemaManager()->createSchema();
+		$this->to = $this->getSchemaManager()->introspectSchema();
 		$this->from = clone $this->to;
 
 		return $this;
