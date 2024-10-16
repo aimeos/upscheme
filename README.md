@@ -4565,9 +4565,11 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
-# Upgrade Upscheme
+## Upgrade Upscheme
 
-## 0.8.9 to 0.9.0
+### To 0.9.0
+
+Version 0.9+ supports Doctrine DBAL 3.x/4.x and dropped support for Doctrine DBAL 2.x.
 
 * [`DB::type()`](#dbtype) returns `mariadb` instead of `mysql` for MariaDDB database
 * [`DB::for()`](#dbfor), [`DB::view()`](#dbview) and [`Column::opt`](#columnopt) require `['mariadb', 'mysql']` to get the same results
