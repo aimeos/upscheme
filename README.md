@@ -63,6 +63,7 @@ composer req aimeos/upscheme
 * [Customizing Upscheme](#customizing-upscheme)
   * [Adding custom methods](#adding-custom-methods)
   * [Implementing custom columns](#implementing-custom-columns)
+* [Upgrade Upscheme](#upgrade-upscheme)
 
 
 
@@ -104,7 +105,10 @@ $table->addOption( 'engine', 'InnoDB' );
 $table->addColumn( 'id', 'integer', ['autoincrement' => true] );
 $table->addColumn( 'domain', 'string', ['length' => 32] );
 
-if( $conn->getDatabasePlatform()->getName() === 'mysql' ) {
+$platform = $conn->getDatabasePlatform();
+if( $platform instanceof \Doctrine\DBAL\Platform\MySQLPlatform
+	|| $platform instanceof \Doctrine\DBAL\Platform\MariaDBPlatform
+) {
 	$table->addColumn( 'code', 'string', ['length' => 64, 'customSchemaOptions' => ['charset' => 'binary']] );
 } else {
 	$table->addColumn( 'code', 'string', ['length' => 64]] );
@@ -134,7 +138,7 @@ $this->db()->table( 'test', function( $t ) {
 
 	$t->id();
 	$t->string( 'domain', 32 );
-	$t->string( 'code', 64 )->opt( 'charset', 'binary', 'mysql' );
+	$t->string( 'code', 64 )->opt( 'charset', 'binary', ['mariadb', 'mysql'] );
 	$t->string( 'label', 255 );
 	$t->int( 'pos' )->default( 0 );
 	$t->smallint( 'status' );
@@ -1000,6 +1004,7 @@ public function for( $type, $sql ) : self
 Available database platform types are:
 
 - mysql
+- mariadb
 - postgresql
 - sqlite
 - mssql
@@ -1474,6 +1479,7 @@ public function type() : string
 Possible values are:
 
 * db2
+* mariadb
 * mssql
 * mysql
 * oracle
@@ -1538,7 +1544,7 @@ public function view( string $name, string $sql, $for = null ) : self
 
 * @param **string** `$name` Name of the view
 * @param **string** `$sql` SELECT statement for populating the view
-* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this SQL should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this SQL should be used for ("mysql", "mariadb", "postgresql", "sqlite", "mssql", "oracle", "db2")
 * @return **self** Same object for fluid method calls
 
 If the view doesn't exist yet, it will be created. Otherwise, nothing will happen.
@@ -3386,7 +3392,7 @@ public function opt( string $option, $value = null, $for = null )
 
 * @param **string** `$option` Column option name
 * @param **mixed** `$value` New column option value or NULL to return current value
-* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this option should be used for ("mysql", "mariadb", "postgresql", "sqlite", "mssql", "oracle", "db2")
 * @return **self&#124;mixed** Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -4558,3 +4564,10 @@ $this->db()->table( 'test', function( $table ) {
 	$table->utinyint( 'status' );
 } );
 ```
+
+# Upgrade Upscheme
+
+## 0.8.9 to 0.9.0
+
+* [`DB::type()`](#dbtype) returns `mariadb` instead of `mysql` for MariaDDB database
+* [`DB::for()`](#dbfor), [`DB::view()`](#dbview) and [`Column::opt`](#columnopt) require `['mariadb', 'mysql']` to get the same results
