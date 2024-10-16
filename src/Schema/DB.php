@@ -834,6 +834,7 @@ class DB
 				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
 				break;
 			case 'mysql':
+			case 'mariadb':
 				$col = $this->to->getTable( $table )->getColumn( $name );
 				$sql = $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
 				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
