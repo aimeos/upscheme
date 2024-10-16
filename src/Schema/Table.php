@@ -642,7 +642,7 @@ class Table
 		}
 
 		$name = $name ?: $this->nameIndex( $this->name(), $columns, 'pk' );
-		$this->table->setPrimaryKey( $columns, $name ? $this->db->qi( $name ) : null );
+		$this->table->setPrimaryKey( $columns, $name ? $this->db->qi( $name ) : 'primary' );
 		return $this;
 	}
 
