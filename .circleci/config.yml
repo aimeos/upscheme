@@ -145,7 +145,7 @@ jobs:
           key: php82-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: echo "<?php return ['driver' => 'pdo_sqlite', 'path' => 'sqlite.test'];" > tests/config.php
-      - run: ./vendor/bin/phpunit --coverage-clover coverage.xml
+      - run: ./vendor/bin/phpunit --coverage-clover coverage.xml --coverage-filter ./tests/
       - run: ./vendor/bin/php-coveralls -vvv -o coverage.json -x coverage.xml
 
   "php-8.3 / mariadb-11":
