@@ -559,18 +559,17 @@ The [`insert()`](#dbinsert), [`select()`](#dbselect), [`update()`](#dbupdate) an
 remove rows in any table:
 
 ```php
-$db1 = $this->db();
-$db2 = $this->db( 'db', true );
+$this->db()->transaction( function( $db ) {
 
-$db2->transaction( function( $db2 ) use ( $db1 ) {
+	$db2 = $this->db( 'db', true );
 
-	foreach( $db1->select( 'users', ['status' => false] ) as $row )
+	foreach( $db2->select( 'users', ['status' => false] ) as $row )
 	{
-		$db2->insert( 'newusers', ['userid' => $row['id'], 'status' => true] );
-		$db2->update( 'users', ['refid' => $db2->lastId()], ['id' => $row['id']] );
+		$db->insert( 'newusers', ['userid' => $row['id'], 'status' => true] );
+		$db->update( 'users', ['refid' => $db->lastId()], ['id' => $row['id']] );
 	}
 
-	$db2->delete( 'newusers', ['status' => false] );
+	$db->delete( 'newusers', ['status' => false] );
 	$db2->close();
 } );
 ```
