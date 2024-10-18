@@ -1276,6 +1276,8 @@ public function renameColumn( string $table, $from, string $to = null ) : self
 * @param **string&#124;null** `$to` New column name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
 
+If the column doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
+
 **Limitations**
 
 * SQLite since 3.25.0
@@ -1304,6 +1306,8 @@ public function renameIndex( string $table, $from, string $to = null ) : self
 * @param **string&#124;null** `$to` New index name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
 
+If the index doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
+
 **Examples:**
 
 ```php
@@ -1327,6 +1331,8 @@ public function renameTable( $from, string $to = null ) : self
 * @param **string&#124;null** `$to` New table name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
 * @throws \RuntimeException If an error occured
+
+If the table doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
 
 **Examples:**
 
@@ -1738,6 +1744,15 @@ array which old and new names as key/value pairs:
 // Renames the table "users" to "accounts" and "blog" to "posts"
 $this->db()->renameTable( ['users' => 'account', 'blog' => 'posts'] );
 ```
+
+Tables are only renamed if they exist. If a table doesn't exist any more, no error
+is reported:
+
+```php
+$this->db()->renameTable( 'notexist', 'newtable' );
+```
+
+In that case, the method call will succeed but nothing will happen.
 
 ### Dropping tables
 
@@ -3006,6 +3021,16 @@ to change a VARCHAR column (string) into an INTEGER column.
 
 ### Renaming columns
 
+To rename columns, use the [`renameColumn()`](#dbrenamecolumn) method of the DB schema:
+
+```php
+// single column
+$this->db()->renameColumn( 'testtable', 'label', 'name' );
+
+// multiple columns
+$this->db()->renameColumn( 'testtable', ['label' => 'name', 'stat' => 'status'] );
+```
+
 If a table object is already available, you can use its [`renameColumn()`](#tablerenamecolumn)
 method to rename one or more columns:
 
@@ -3019,16 +3044,8 @@ $this->db()->table( 'testtable', function( $table ) {
 } );
 ```
 
-It's also possible to rename columns directly, using the [`renameColumn()`](#dbrenamecolumn)
-method of the DB schema:
-
-```php
-// single column
-$this->db()->renameColumn( 'testtable', 'label', 'name' );
-
-// multiple columns
-$this->db()->renameColumn( 'testtable', ['label' => 'name', 'stat' => 'status'] );
-```
+In all cases, columns are only removed if they exist. No error is reported if one
+or more columns doesn't exist in the table.
 
 ### Dropping columns
 
@@ -4380,6 +4397,9 @@ $this->db()->table( 'test', function( $table ) {
 } );
 ```
 
+In all cases, indexes are only renamed if they exist. No error is reported if one
+or more indexes doesn't exist in the table.
+
 ### Dropping indexes
 
 To drop indexes, use the [`dropIndex()`](#dbdropindex) method from the DB schema object:
@@ -4398,11 +4418,13 @@ $this->db()->dropIndex( 'users', ['idx_test_name', 'idx_test_status'] );
 If you already have a table object, you can use [`dropIndex()`](#tabledropindex) too:
 
 ```php
-// single index
-$table->dropIndex( 'idx_test_name' );
+$this->db()->table( 'test', function( $table ) {
+	// single index
+	$table->dropIndex( 'idx_test_name' );
 
-// multiple indexes
-$table->dropIndex( ['idx_test_name', 'idx_test_status'] );
+	// multiple indexes
+	$table->dropIndex( ['idx_test_name', 'idx_test_status'] );
+} );
 ```
 
 In all cases, indexes are only removed if they exist. No error is reported if one

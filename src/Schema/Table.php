@@ -656,6 +656,10 @@ class Table
 	 */
 	public function renameColumn( $from, string $to = null ) : self
 	{
+		if( !$this->hasColumn( $from ) ) {
+			return $this;
+		}
+
 		$this->db->renameColumn( $this->name(), $from, $to );
 		return $this;
 	}

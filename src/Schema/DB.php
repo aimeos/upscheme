@@ -532,7 +532,10 @@ class DB
 	 */
 	public function renameIndex( string $table, $from, string $to = null ) : self
 	{
-		$this->table( $table )->renameIndex( $from, $to );
+		if( $this->hasIndex( $table, $from ) ) {
+			$this->table( $table )->renameIndex( $from, $to );
+		}
+
 		return $this;
 	}
 
