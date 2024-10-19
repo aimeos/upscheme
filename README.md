@@ -1006,7 +1006,7 @@ Available database platform types are:
 - mariadb
 - postgresql
 - sqlite
-- mssql
+- sqlserver
 - oracle
 - db2
 
@@ -1485,11 +1485,11 @@ Possible values are:
 
 * db2
 * mariadb
-* mssql
 * mysql
 * oracle
 * postgresql
 * sqlite
+* sqlserver
 
 **Examples:**
 
@@ -1549,7 +1549,7 @@ public function view( string $name, string $sql, $for = null ) : self
 
 * @param **string** `$name` Name of the view
 * @param **string** `$sql` SELECT statement for populating the view
-* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this SQL should be used for ("mysql", "mariadb", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this SQL should be used for ("mysql", "mariadb", "postgresql", "sqlite", "sqlserver", "oracle", "db2")
 * @return **self** Same object for fluid method calls
 
 If the view doesn't exist yet, it will be created. Otherwise, nothing will happen.
@@ -3408,7 +3408,7 @@ public function opt( string $option, $value = null, $for = null )
 
 * @param **string** `$option` Column option name
 * @param **mixed** `$value` New column option value or NULL to return current value
-* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this option should be used for ("mysql", "mariadb", "postgresql", "sqlite", "mssql", "oracle", "db2")
+* @param **array&#60;string&#62;&#124;string&#124;null** `$for` Database type this option should be used for ("mysql", "mariadb", "postgresql", "sqlite", "sqlserver", "oracle", "db2")
 * @return **self&#124;mixed** Same object for setting the value, current value without parameter
 
 **Examples:**
@@ -4593,4 +4593,5 @@ $this->db()->table( 'test', function( $table ) {
 Version 0.9+ supports Doctrine DBAL 3.x/4.x and dropped support for Doctrine DBAL 2.x.
 
 * [`DB::type()`](#dbtype) returns `mariadb` instead of `mysql` for MariaDDB database
+* [`DB::type()`](#dbtype) returns `sqlserver` instead of `mssql` for Microsoft SQLServer database
 * [`DB::for()`](#dbfor), [`DB::view()`](#dbview) and [`Column::opt`](#columnopt) require `['mariadb', 'mysql']` to get the same results

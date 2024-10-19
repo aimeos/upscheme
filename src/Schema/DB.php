@@ -833,7 +833,7 @@ class DB
 
 		switch( $this->type() )
 		{
-			case 'mssql':
+			case 'sqlserver':
 				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
 				break;
 			case 'mysql':
