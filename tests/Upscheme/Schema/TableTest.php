@@ -756,6 +756,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumn()
 	{
+		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
 		$this->dbmock->expects( $this->once() )->method( 'renameColumn' );
 

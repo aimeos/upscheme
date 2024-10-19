@@ -453,6 +453,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameIndex()
 	{
+		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
 		$this->object->expects( $this->once() )->method( 'table' )->willReturn( $this->tablemock );
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
