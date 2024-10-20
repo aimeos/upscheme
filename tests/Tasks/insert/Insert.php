@@ -22,7 +22,6 @@ class Insert extends Base
 			'content' => 'some text', 'uuid' => '7e57d004-2b97-0e7a-b45f-5387367791cd'
 		] );
 
-		$seq = $db->type() === 'postgresql' ? 'test_id_seq' : ( $db->type() === 'oracle' ? 'test_SEQ' : null );
-		$db->insert( 'testref', ['parentid' => $db->lastId( $seq ), 'label' => 'test ref'] );
+		$db->insert( 'testref', ['parentid' => $db->lastId(), 'label' => 'test ref'] );
 	}
 }

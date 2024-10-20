@@ -44,6 +44,10 @@ class Create extends Base
 
 		} )->up();
 
+		if( !$this->hasTable( 'test' ) ) {
+			throw new \RuntimeException( 'Table not created' );
+		}
+
 
 		$db->table( 'testref', function( Table $t ) {
 
@@ -54,6 +58,10 @@ class Create extends Base
 			$t->string( 'label' );
 
 		} )->up();
+
+		if( !$this->hasTable( 'testref' ) ) {
+			throw new \RuntimeException( 'Table not created' );
+		}
 
 
 		$this->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );

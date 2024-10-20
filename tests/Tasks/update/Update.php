@@ -12,7 +12,7 @@ class Update extends Base
 	{
 		$this->info( 'Change test table', 'v', 1 );
 
-		$this->db( 'test' )->dropIndex( 'test', ['unq_code', 'idx_status_type'] )->up(); // workaround for SQL Server
+		$this->db( 'test' )->dropIndex( 'test', ['unq_code', 'idx_status_type'] ); // workaround for SQL Server
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 

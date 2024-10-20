@@ -13,6 +13,11 @@ class Rename extends Base
 		$this->info( 'Renames test tables/columns/indexes' );
 
 		$this->renameTable( ['test' => 'test2', 'testref' => 'testref2'] );
+
+		if( !$this->hasTable( ['test2', 'testref2'] ) ) {
+			throw new \Exception( 'Renaming tables failed' );
+		}
+
 		$this->renameColumn( 'test2', ['uuid' => 'guid'] );
 
 		if( !$this->hasColumn( 'test2', 'guid' ) ) {
