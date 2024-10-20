@@ -12,7 +12,7 @@ class Update extends Base
 	{
 		$this->info( 'Change test table', 'v', 1 );
 
-		$this->db( 'test' )->dropIndex( 'test', ['unq_code', 'idx_status_type'] ); // workaround for SQL Server
+		$this->db( 'test' )->dropIndex( 'test', ['idx_status_type'] );
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
@@ -26,7 +26,7 @@ class Update extends Base
 			// $t->string( 'code', 5 )->fixed( true ); // Yugabyte can't change column types yet
 
 			$t->unique( 'code', 'unq_code' );
-			$t->index( ['status', 'pos'], 'idx_status_type' );
+			$t->index( ['status', 'pos'], 'idx_status_pos' );
 			$t->index( 'uuid' );
 
 		} )->dropColumn( 'test' )->up();
@@ -40,17 +40,17 @@ class Update extends Base
 			'code' => ['test', 'test '], // MySQL/SQLite, PostgreSQL
 			'config' => ['{}'],
 			'content' => ['some text'],
-			'ctime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00.000000'], // MySQL5/PostgreSQL/SQLite, SQLServer
+			'ctime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00.000000'], // MySQL/PostgreSQL/SQLite, SQLServer
 //			'hex' => ['0xff'],
 			'id' => [1],
 //			'image' => ['svg+xml:'],
-//			'mtime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00+xx'], // MySQL5/SQLite, PostgreSQL
+//			'mtime' => ['2000-01-01 00:00:00', '2000-01-01 00:00:00+xx'], // MySQL/SQLite, PostgreSQL
 			'pos' => [1],
 			'price' => [100],
 			'scale' => [0.1],
 			'status' => [1],
 			'type' => [123],
-			'uuid' => ['7e57d004-2b97-0e7a-b45f-5387367791cd', '7E57D004-2B97-0E7A-B45F-5387367791CD'], // MySQL5/PostgreSQL/SQLite, SQLServer
+			'uuid' => ['7e57d004-2b97-0e7a-b45f-5387367791cd', '7E57D004-2B97-0E7A-B45F-5387367791CD'], // MySQL/PostgreSQL/SQLite, SQLServer
 			'editor' => [null]
 		];
 
