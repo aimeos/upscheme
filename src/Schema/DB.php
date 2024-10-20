@@ -511,6 +511,7 @@ class DB
 
 				$sql = $this->getColumnSQL( $table, $name, $to );
 				$this->up->info( '  ->  ' . $sql, 'vvv' );
+echo $sql.PHP_EOL;
 
 				$this->conn->executeStatement( $sql );
 				$setup = true;
