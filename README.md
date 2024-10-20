@@ -14,6 +14,7 @@ composer req aimeos/upscheme
 **Table of contents**
 
 * [Why Upscheme](#why-upscheme)
+* [Database support](#database-support)
 * [Integrating Upscheme](#integrating-upscheme)
 * [Writing migrations](#writing-migrations)
   * [Dependencies](#dependencies)
@@ -176,6 +177,26 @@ If the migration of the data was lossy, you can't recreate the same state in a
 `down()` method. The same is the case if you've dropped a table. Thus, Upscheme
 only offers scheme upgrading but no downgrading to avoid implicit data loss.
 
+
+## Database support
+
+Upscheme uses Doctrine DBAL for abstracting from different database server
+implementations. DBAL supports all major relationsal database management systems
+(RDBMS) but with a different level of support for the available features:
+
+**Good support:**
+
+* MySQL
+* MariaDB
+* PostgreSQL
+* SQLite
+* SQL server
+
+**Limited support:**
+
+* DB2
+* Oracle
+* SQL Anywhere
 
 ## Integrating Upscheme
 
@@ -1306,6 +1327,8 @@ public function renameIndex( string $table, $from, string $to = null ) : self
 * @return **self** Same object for fluid method calls
 
 If the index doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
+
+**Caution:** This doesn't work for SQL Server due to a but in Doctrine DBAL. If you want to support SQL Server, use [dropIndex](#dbdropindex) and re-create the index in the table object using the new name instead.
 
 **Examples:**
 
