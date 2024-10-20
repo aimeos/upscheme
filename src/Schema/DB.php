@@ -510,7 +510,6 @@ class DB
 				}
 
 				$sql = $this->getColumnSQL( $table, $name, $to );
-echo $sql . PHP_EOL;
 				$this->up->info( '  ->  ' . $sql, 'vvv' );
 
 				$this->conn->executeStatement( $sql );
@@ -833,7 +832,7 @@ echo $sql . PHP_EOL;
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%1$s.%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
 				break;
 			case 'mysql':
 			case 'mariadb':
