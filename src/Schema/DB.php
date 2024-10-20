@@ -510,6 +510,7 @@ class DB
 				}
 
 				$sql = $this->getColumnSQL( $table, $name, $to );
+echo $sql.PHP_EOL;
 				$this->up->info( '  ->  ' . $sql, 'vvv' );
 
 				$this->conn->executeStatement( $sql );
