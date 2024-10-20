@@ -568,7 +568,11 @@ echo $sql.PHP_EOL;
 					throw new \RuntimeException( $msg );
 				}
 
-				$manager->renameTable( $this->qi( $name ), $this->qi( $to ) );
+				if( $this->type() !== 'sqlserver' ) {
+					$to = $this->qi( $to );
+				}
+
+				$manager->renameTable( $this->qi( $name ), $to );
 				$setup = true;
 			}
 		}
@@ -832,7 +836,7 @@ echo $sql.PHP_EOL;
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'EXEC sp_rename N\'[dbo].%1$s."%2$s"\', N\'%3$s\', \'COLUMN\'', $qtable, $name, $to );
+				$sql = sprintf( 'EXEC sp_rename N\'[dbo].%1$s.%2$s\', N\'%3$s\', \'COLUMN\'', $qtable, $name, $to );
 				break;
 			case 'mysql':
 			case 'mariadb':
