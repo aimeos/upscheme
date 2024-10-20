@@ -1167,18 +1167,17 @@ $db->insert( 'test', ['label' => 'myvalue', 'status' => true] );
 Returns the ID of the last inserted row into any database table
 
 ```php
-public function lastId( string $seq = null ) : string
+public function lastId() : string
 ```
 
-* @param **string&#124;null** `$seq` Name of the sequence generating the ID
 * @return **string** Generated ID from the database
-* @throws \RuntimeException If sequence does not exist
+
+**Caution:** This doesn't work for the Oracle platform because Doctrine DBAL doesn't support Oracle IDENTITY columns at the moment.
 
 **Examples:**
 
 ```php
 $db->lastId();
-$db->lastId( 'seq_test' );
 ```
 
 
@@ -4595,3 +4594,4 @@ Version 0.9+ supports Doctrine DBAL 3.x/4.x and dropped support for Doctrine DBA
 * [`DB::type()`](#dbtype) returns `mariadb` instead of `mysql` for MariaDDB database
 * [`DB::type()`](#dbtype) returns `sqlserver` instead of `mssql` for Microsoft SQLServer database
 * [`DB::for()`](#dbfor), [`DB::view()`](#dbview) and [`Column::opt`](#columnopt) require `['mariadb', 'mysql']` to get the same results
+* [`DB::lastId()`](#dblastid) doesn't require/support passing a sequence name because Doctrine DBAL removed it but doesn't support Oracle IDENTITY columns at the moment

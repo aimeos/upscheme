@@ -423,13 +423,11 @@ class DB
 	/**
 	 * Returns the ID of the last inserted row into any database table
 	 *
-	 * @param string|null $seq Name of the sequence generating the ID
 	 * @return string Generated ID from the database
-	 * @throws \RuntimeException If sequence does not exist
 	 */
-	public function lastId( string $seq = null ) : string
+	public function lastId() : string
 	{
-		return $this->conn->lastInsertId( $seq ? $this->qi( $seq ) : null );
+		return $this->conn->lastInsertId();
 	}
 
 
