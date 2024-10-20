@@ -24,13 +24,10 @@ class Rename extends Base
 			throw new \Exception( 'Renaming column failed' );
 		}
 
-		if( $this->type() !== 'sqlserver' ) // Bug in DBAL implementation for SQL Server
-		{
-			$this->renameIndex( 'test2', ['unq_code' => 'unq_code2'] );
+		$this->renameIndex( 'test2', ['unq_code' => 'unq_code2'] );
 
-			if( !$this->hasIndex( 'test2', 'unq_code2' ) ) {
-				throw new \Exception( 'Renaming index failed' );
-			}
+		if( !$this->hasIndex( 'test2', 'unq_code2' ) ) {
+			throw new \Exception( 'Renaming index failed' );
 		}
 	}
 }

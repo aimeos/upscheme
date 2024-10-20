@@ -531,7 +531,7 @@ class DB
 	public function renameIndex( string $table, $from, string $to = null ) : self
 	{
 		if( $this->hasTable( $table ) ) {
-			$this->table( $table )->renameIndex( $from, $to );
+			$this->table( $table )->renameIndex( $from, $to )->up();
 		}
 
 		return $this;
@@ -833,7 +833,8 @@ echo $sql.PHP_EOL;
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%1$s.%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+echo $sql . PHP_EOL;
 				break;
 			case 'mysql':
 			case 'mariadb':
