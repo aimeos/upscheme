@@ -1328,8 +1328,6 @@ public function renameIndex( string $table, $from, string $to = null ) : self
 
 If the index doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
 
-**Caution:** This doesn't work for SQL Server due to a but in Doctrine DBAL. If you want to support SQL Server, use [dropIndex](#dbdropindex) and re-create the index in the table object using the new name instead.
-
 **Examples:**
 
 ```php

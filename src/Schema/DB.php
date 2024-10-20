@@ -567,7 +567,11 @@ class DB
 					throw new \RuntimeException( $msg );
 				}
 
-				$manager->renameTable( $this->qi( $name ), $this->qi( $to ) );
+				if( $this->type() !== 'sqlserver' ) {
+					$to = $this->qi( $to );
+				}
+
+				$manager->renameTable( $this->qi( $name ), $to );
 				$setup = true;
 			}
 		}
@@ -826,20 +830,21 @@ class DB
 	protected function getColumnSQL( string $table, string $name, string $to ) : string
 	{
 		$qtable = $this->qi( $table );
+		$qname = $this->qi( $name );
 
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $name, $to );
+				$sql = sprintf( 'EXEC sp_rename N\'[dbo].%1$s.%2$s\', N\'%3$s\', \'COLUMN\'', $qtable, $qname, $to );
 				break;
 			case 'mysql':
 			case 'mariadb':
 				$col = $this->to->getTable( $table )->getColumn( $name );
 				$sql = $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
-				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $this->qi( $name ), $sql );
+				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
 				break;
 			default:
-				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $this->qi( $name ), $this->qi( $to ) );
+				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $this->qi( $to ) );
 		}
 
 		return $sql;
