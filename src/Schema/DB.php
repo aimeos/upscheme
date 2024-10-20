@@ -756,6 +756,7 @@ class DB
 		foreach( $this->conn->getDatabasePlatform()->getAlterSchemaSQL( $diff ) as $sql )
 		{
 			$this->up->info( '  ->  ' . $sql, 'vvv' );
+echo $sql.PHP_EOL;
 			$this->conn->executeStatement( $sql );
 		}
 
