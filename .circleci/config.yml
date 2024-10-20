@@ -130,7 +130,7 @@ jobs:
           paths: [./vendor]
       - run: echo "CREATE DATABASE upscheme;" > sqlserver.sql; for i in `seq 1 5`; do /opt/mssql-tools/bin/sqlcmd -S 127.0.0.1 -U SA -P 'S3c0r3P4ss' -i sqlserver.sql && exit 0; sleep 3; done
       - run: echo "<?php return ['driver' => 'pdo_sqlsrv', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'SA', 'password' => 'S3c0r3P4ss'];" > tests/config.php
-      - run: ./vendor/bin/phpunit || true
+      - run: ./vendor/bin/phpunit
 
   "php-8.2 / sqlite":
     docker:
