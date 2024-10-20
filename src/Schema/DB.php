@@ -826,22 +826,20 @@ class DB
 	protected function getColumnSQL( string $table, string $name, string $to ) : string
 	{
 		$qtable = $this->qi( $table );
-		$qname = $this->qi( $name );
-		$qto = $this->qi( $to );
 
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $qname, $qto );
+				$sql = sprintf( 'sp_rename \'%1$s.%2$s\', \'%3$s\', \'COLUMN\'', $qtable, $name, $to );
 				break;
 			case 'mysql':
 			case 'mariadb':
 				$col = $this->to->getTable( $table )->getColumn( $name );
 				$sql = $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
-				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
+				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $this->qi( $name ), $sql );
 				break;
 			default:
-				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $qto );
+				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $this->qi( $name ), $this->qi( $to ) );
 		}
 
 		return $sql;
