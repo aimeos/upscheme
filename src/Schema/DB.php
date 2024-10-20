@@ -832,7 +832,7 @@ echo $sql.PHP_EOL;
 		switch( $this->type() )
 		{
 			case 'sqlserver':
-				$sql = sprintf( 'EXEC sp_rename N\'dbo.%1$s.%2$s\', N\'%3$s\', \'COLUMN\'', $table, $name, $to );
+				$sql = sprintf( 'EXEC sp_rename N\'[dbo].%1$s."%2$s"\', N\'%3$s\', \'COLUMN\'', $qtable, $name, $to );
 				break;
 			case 'mysql':
 			case 'mariadb':
