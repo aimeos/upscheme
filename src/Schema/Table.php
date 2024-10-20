@@ -384,7 +384,7 @@ class Table
 		foreach( (array) $name as $entry )
 		{
 			if( $this->table->hasColumn( $entry ) ) {
-				$this->table->dropColumn( $entry );
+				$this->table->dropColumn( $this->db->qi( $entry ) );
 			}
 		}
 
@@ -403,7 +403,7 @@ class Table
 		foreach( (array) $name as $entry )
 		{
 			if( $this->table->hasIndex( $entry ) ) {
-				$this->table->dropIndex( $entry );
+				$this->table->dropIndex( $this->db->qi( $entry ) );
 			}
 		}
 
@@ -422,7 +422,7 @@ class Table
 		foreach( (array) $name as $entry )
 		{
 			if( $this->table->hasForeignKey( $entry ) ) {
-				$this->table->removeForeignKey( $entry );
+				$this->table->removeForeignKey( $this->db->qi( $entry ) );
 			}
 		}
 
@@ -560,7 +560,7 @@ class Table
 				return $this;
 			}
 
-			$this->table->dropIndex( $name );
+			$this->table->dropIndex( $this->db->qi( $name ) );
 		}
 
 		if( $name === null )
@@ -717,14 +717,14 @@ class Table
 				return $this;
 			}
 
-			$this->table->dropIndex( $name );
+			$this->table->dropIndex( $this->db->qi( $name ) );
 		}
 
 		foreach( $columns as $key => $column ) {
 			$columns[$key] = $this->db->qi( $column );
 		}
 
-		$this->table->addIndex( $columns, $name, ['spatial' => true] );
+		$this->table->addIndex( $columns, $name ? $this->db->qi( $name ) : null, ['spatial' => true] );
 		return $this;
 	}
 
@@ -749,7 +749,7 @@ class Table
 				return $this;
 			}
 
-			$this->table->dropIndex( $name );
+			$this->table->dropIndex( $this->db->qi( $name ) );
 		}
 
 		foreach( $columns as $key => $column ) {
