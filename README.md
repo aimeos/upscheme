@@ -70,9 +70,36 @@ composer req aimeos/upscheme
 
 ## Why Upscheme
 
-Migrations are like version control for your database. They allow you to record
-all changes and share them with others so they get the exact same state in their
-installation.
+Migrations are like version control for your database. They allow you to get the
+exact same state in every installation. Using Upscheme, you get:
+
+* one place for defining tables, columns, indexes, etc. easily
+* upgrades from any state in between to the expected schema
+* consistent, reliable and hassle-free schema upgrades
+* minimal code required for writing migrations
+* perfect solution for continuous deployments
+* best package for cloud-based PHP applications
+
+Here's an example of a table definition that you can adapt whenever your table
+layout must change. Then, Upscheme will automatically add and modify existing
+columns and table properties (but don't delete anything for safety reasons):
+
+```php
+$this->db()->table( 'test', function( $t ) {
+	$t->engine = 'InnoDB';
+
+	$t->id();
+	$t->string( 'domain', 32 );
+	$t->string( 'code', 64 )->opt( 'charset', 'binary', ['mariadb', 'mysql'] );
+	$t->string( 'label', 255 );
+	$t->int( 'pos' )->default( 0 );
+	$t->smallint( 'status' );
+	$t->default();
+
+	$t->unique( ['domain', 'code'] );
+	$t->index( ['status', 'pos'] );
+} );
+```
 
 For upgrading relational database schemas, two packages are currently used most
 often: Doctrine DBAL and Doctrine migrations. While Doctrine DBAL does a good job
@@ -85,10 +112,8 @@ extensions.
 
 The API of DBAL is very verbose and you need to write lots of code even for simple
 things. Upscheme uses Doctrine DBAL to offer an easy to use API for upgrading the
-database schema of your application with minimal code. Let's compare some example
-code you have to write for DBAL and for Upscheme in a migration.
-
-#### DBAL
+database schema of your application with minimal code. For the Upscheme example
+above, these lines of code are the equivalent for DBAL in a migration:
 
 ```php
 $dbalManager = $conn->createSchemaManager();
@@ -131,31 +156,16 @@ foreach( $from->getMigrateToSql( $to, $conn->getDatabasePlatform() ) as $sql ) {
 }
 ```
 
-#### Upscheme
-
-```php
-$this->db()->table( 'test', function( $t ) {
-	$t->engine = 'InnoDB';
-
-	$t->id();
-	$t->string( 'domain', 32 );
-	$t->string( 'code', 64 )->opt( 'charset', 'binary', ['mariadb', 'mysql'] );
-	$t->string( 'label', 255 );
-	$t->int( 'pos' )->default( 0 );
-	$t->smallint( 'status' );
-	$t->default();
-
-	$t->unique( ['domain', 'code'] );
-	$t->index( ['status', 'pos'] );
-} );
-```
-
 ### Doctrine Migration drawbacks
 
 Doctrine Migration relies on migration classes that are named by the time they
 have been created to ensure a certain order. Furthermore, it stores which migrations
-has been executed in a table of your database. There are two major problems that
-arise from that.
+has been executed in a table of your database. There are three major problems that
+arise from that:
+
+* dependencies between 3rd party extensions
+* tracking changes is out of sync
+* data loss when using `down()`
 
 If your application supports 3rd party extensions, these extensions are likely to
 add columns to existing tables and migrate data themselves. As there's no way to
