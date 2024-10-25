@@ -656,11 +656,28 @@ class Table
 	 */
 	public function renameColumn( $from, string $to = null ) : self
 	{
-		if( !$this->hasColumn( $from ) ) {
-			return $this;
+		if( !is_array( $from ) ) {
+			$from = [$from => $to];
 		}
 
-		$this->db->renameColumn( $this->name(), $from, $to );
+		foreach( $from as $name => $to )
+		{
+			if( $this->table->hasColumn( $name ) )
+			{
+				if( !$to )
+				{
+					$msg = sprintf( 'Renaming column "%1$s" requires a non-empty new name', $name );
+					throw new \RuntimeException( $msg );
+				}
+
+				if( $this->db->type() !== 'sqlserver' ) {
+					$to = $this->db->qi( $to );
+				}
+
+				$this->table->renameColumn( $this->db->qi( $name ), $to );
+			}
+		}
+
 		return $this;
 	}
 
@@ -693,7 +710,7 @@ class Table
 			}
 		}
 
-		return $this->up();
+		return $this;
 	}
 
 

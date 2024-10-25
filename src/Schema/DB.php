@@ -492,32 +492,11 @@ class DB
 	 */
 	public function renameColumn( string $table, $from, string $to = null ) : self
 	{
-		$this->up();
-		$setup = false;
-
-		if( !is_array( $from ) ) {
-			$from = [$from => $to];
+		if( $this->hasTable( $table ) ) {
+			$this->table( $table )->renameColumn( $from, $to )->up();
 		}
 
-		foreach( $from as $name => $to )
-		{
-			if( $this->hasColumn( $table, $name ) )
-			{
-				if( !$to )
-				{
-					$msg = sprintf( 'Renaming "%1$s.%2$s" column requires a non-empty new name', $table, $name );
-					throw new \RuntimeException( $msg );
-				}
-
-				$sql = $this->getColumnSQL( $table, $name, $to );
-				$this->up->info( '  ->  ' . $sql, 'vvv' );
-
-				$this->conn->executeStatement( $sql );
-				$setup = true;
-			}
-		}
-
-		return $setup ? $this->setup() : $this;
+		return $this;
 	}
 
 
@@ -816,38 +795,6 @@ class DB
 		}
 
 		return $this;
-	}
-
-
-	/**
-	 * Returns the column declaration as SQL string
-	 *
-	 * @param string $table Table name
-	 * @param string $name Old column name
-	 * @param string $to New column name
-	 * @return string SQL column declaration
-	 */
-	protected function getColumnSQL( string $table, string $name, string $to ) : string
-	{
-		$qtable = $this->qi( $table );
-		$qname = $this->qi( $name );
-
-		switch( $this->type() )
-		{
-			case 'sqlserver':
-				$sql = sprintf( 'EXEC sp_rename N\'[dbo].%1$s.%2$s\', N\'%3$s\', \'COLUMN\'', $qtable, $qname, $to );
-				break;
-			case 'mysql':
-			case 'mariadb':
-				$col = $this->to->getTable( $table )->getColumn( $name );
-				$sql = $this->conn->getDatabasePlatform()->getColumnDeclarationSQL( $to, $col->toArray() );
-				$sql = sprintf( 'ALTER TABLE %1$s CHANGE %2$s %3$s', $qtable, $qname, $sql );
-				break;
-			default:
-				$sql = sprintf( 'ALTER TABLE %1$s RENAME COLUMN %2$s TO %3$s', $qtable, $qname, $this->qi( $to ) );
-		}
-
-		return $sql;
 	}
 
 

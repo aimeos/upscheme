@@ -64,7 +64,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->onlyMethods( ['table', 'up', 'getColumnSQL'] )
+			->onlyMethods( ['table', 'up'] )
 			->getMock();
 
 		$this->object->expects( $this->any() )->method( 'table' )->willReturn( $this->tablemock );
@@ -419,42 +419,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testRenameColumn()
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
-		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->willReturnArgument( 0 );
-		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->willReturn( 'test INTEGER' );
-		$this->connmock->expects( $this->once() )->method( 'executeStatement' );
+		$this->tablemock->expects( $this->once() )->method( 'renameColumn' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameColumn( 'table', 'unit', 'test' ) );
-	}
-
-
-	public function testRenameColumnMultiple()
-	{
-		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
-		$this->tablemock->expects( $this->exactly( 2 ) )->method( 'hasColumn' )->willReturn( true );
-		$this->connmock->expects( $this->any() )->method( 'quoteIdentifier' )->willReturnArgument( 0 );
-		$this->object->expects( $this->any() )->method( 'getColumnSQL' )->willReturn( 'test INTEGER' );
-		$this->connmock->expects( $this->exactly( 2 ) )->method( 'executeStatement' );
-
-		$cols = ['unit' => 'test', 'unit2' => 'test2'];
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameColumn( 'table', $cols ) );
-	}
-
-
-	public function testRenameColumnException()
-	{
-		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
-
-		$this->expectException( \RuntimeException::class );
-		$this->object->renameColumn( 'table', 'unit' );
 	}
 
 
 	public function testRenameIndex()
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
-		$this->object->expects( $this->once() )->method( 'table' )->willReturn( $this->tablemock );
 		$this->tablemock->expects( $this->once() )->method( 'renameIndex' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->renameIndex( 'table', 'unit', 'test' ) );

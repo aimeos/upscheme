@@ -31,7 +31,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			'dropPrimaryKey', 'getPrimaryKey', 'setPrimaryKey',
 			'addUniqueIndex', 'hasUniqueConstraint', 'removeUniqueConstraint',
 			'getName', 'addOption', 'getOption', 'hasOption',
-			'dropColumn', 'hasColumn',
+			'dropColumn', 'hasColumn', 'renameColumn',
 			'hasForeignKey', 'removeForeignKey',
 		];
 
@@ -756,11 +756,23 @@ class TableTest extends \PHPUnit\Framework\TestCase
 
 	public function testRenameColumn()
 	{
-		$this->tablemock->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
-		$this->tablemock->expects( $this->once() )->method( 'getName' )->willReturn( 'test' );
-		$this->dbmock->expects( $this->once() )->method( 'renameColumn' );
+		$dbalcol = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Column' )
+			->disableOriginalConstructor()
+			->getMock();
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $this->object->renameColumn( 'test' ) );
+
+		$dbaltable = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Table' )
+			->onlyMethods( ['getColumn', 'hasColumn'] )
+			->disableOriginalConstructor()
+			->getMock();
+
+		$dbaltable->expects( $this->once() )->method( 'getColumn' )->willReturn( $dbalcol );
+		$dbaltable->expects( $this->any() )->method( 'hasColumn' )->willReturn( true );
+		// $this->tablemock->expects( $this->once() )->method( 'renameColumn' ); // is final
+
+		$object = new \Aimeos\Upscheme\Schema\Table( $this->dbmock, $dbaltable );
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Table::class, $object->renameColumn( 'test', 'test2' ) );
 	}
 
 
@@ -903,7 +915,7 @@ class TableTest extends \PHPUnit\Framework\TestCase
 			->disableOriginalConstructor()
 			->getMock();
 
-			$dbalcol->expects( $this->once() )->method( 'toArray' )->willReturn( [] );
+		$dbalcol->expects( $this->once() )->method( 'toArray' )->willReturn( [] );
 		$dbaltable->expects( $this->once() )->method( 'hasColumn' )->willReturn( true );
 		$dbaltable->expects( $this->once() )->method( 'modifyColumn' );
 
