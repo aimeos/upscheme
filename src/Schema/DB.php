@@ -20,6 +20,11 @@ class DB
 
 
 	/**
+	 * @var \Doctrine\DBAL\Schema\AbstractSchemaManager
+	 */
+	private $manager;
+
+	/**
 	 * @var \Doctrine\DBAL\Connection
 	 */
 	private $conn;
@@ -858,7 +863,11 @@ class DB
 	 */
 	protected function getSchemaManager() : \Doctrine\DBAL\Schema\AbstractSchemaManager
 	{
-		return $this->conn->createSchemaManager();
+		if( !isset( $this->manager ) ) {
+			$this->manager = $this->conn->createSchemaManager();
+		}
+
+		return $this->manager;
 	}
 
 
