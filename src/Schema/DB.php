@@ -44,6 +44,11 @@ class DB
 	 */
 	private $up;
 
+	/**
+	 * @var array
+	 */
+	private $views;
+
 
 	/**
 	 * Initializes the database schema manager object
@@ -237,9 +242,6 @@ class DB
 	 */
 	public function dropView( $name ) : self
 	{
-		$this->up();
-		$setup = false;
-
 		$manager = $this->getSchemaManager();
 
 		foreach( (array) $name as $entry )
@@ -247,11 +249,11 @@ class DB
 			if( $this->hasView( $entry ) )
 			{
 				$manager->dropView( $this->qi( $entry ) );
-				$setup = true;
+				unset( $this->views[$entry] );
 			}
 		}
 
-		return $setup ? $this->setup() : $this;
+		return $this;
 	}
 
 
@@ -394,14 +396,16 @@ class DB
 	 */
 	public function hasView( $name ) : bool
 	{
-		foreach( $this->getSchemaManager()->listViews() as $view )
+		$views = $this->getViews();
+
+		foreach( (array) $name as $entry )
 		{
-			if( in_array( $view->getShortestName( $view->getNamespaceName() ), (array) $name ) ) {
-				return true;
+			if( !isset( $views[$entry] ) ) {
+				return false;
 			}
 		}
 
-		return false;
+		return true;
 	}
 
 
@@ -814,10 +818,11 @@ class DB
 	 */
 	public function view( string $name, string $sql, $for = null ) : self
 	{
-		$manager = $this->getSchemaManager();
-
-		if( !$this->hasView( $name ) && ( $for === null || in_array( $this->type(), (array) $for ) ) ) {
-			$manager->createView( new \Doctrine\DBAL\Schema\View( $this->qi( $name ), $sql ) );
+		if( !$this->hasView( $name ) && ( $for === null || in_array( $this->type(), (array) $for ) ) )
+		{
+			$view = new \Doctrine\DBAL\Schema\View( $this->qi( $name ), $sql );
+			$this->getSchemaManager()->createView( $view );
+			$this->views[$name] = $view;
 		}
 
 		return $this;
@@ -868,6 +873,26 @@ class DB
 		}
 
 		return $this->manager;
+	}
+
+
+	/**
+	 * Returns the views from the database
+	 *
+	 * @return array<string,\Doctrine\DBAL\Schema\View> Associative list of view name as key and view object as value
+	 */
+	protected function getViews() : array
+	{
+		if( !isset( $this->views ) )
+		{
+			$this->views = [];
+
+			foreach( $this->getSchemaManager()->listViews() as $view ) {
+				$this->views[$view->getShortestName( $view->getNamespaceName() )] = $view;
+			}
+		}
+
+		return $this->views;
 	}
 
 

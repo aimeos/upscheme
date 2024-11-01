@@ -64,7 +64,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 		$this->object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
 			->setConstructorArgs( [$this->upmock, $this->connmock] )
-			->onlyMethods( ['table', 'up', 'getColumnSQL'] )
+			->onlyMethods( ['table', 'up', 'getColumnSQL', 'getViews'] )
 			->getMock();
 
 		$this->object->expects( $this->any() )->method( 'table' )->willReturn( $this->tablemock );
@@ -212,12 +212,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropView()
 	{
-		$view = new class {
-			public function getNamespaceName() { return ''; }
-			public function getShortestName() { return 'test'; }
-		};
-
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [$view] );
+		$this->object->expects( $this->once() )->method( 'getViews' )->willReturn( ['test' => new \stdClass] );
 		$this->smmock->expects( $this->once() )->method( 'dropView' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( 'test' ) );
@@ -226,16 +221,7 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testDropViewMultiple()
 	{
-		$view = new class {
-			public function getNamespaceName() { return ''; }
-			public function getShortestName() { return 'test'; }
-		};
-		$view2 = new class {
-			public function getNamespaceName() { return ''; }
-			public function getShortestName() { return 'test2'; }
-		};
-
-		$this->smmock->expects( $this->exactly( 2 ) )->method( 'listViews' )->willReturn( [$view, $view2] );
+		$this->object->expects( $this->exactly( 2 ) )->method( 'getViews' )->willReturn( ['test' => new \stdClass, 'test2' => new \stdClass] );
 		$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropView' );
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropView( ['test', 'test2'] ) );
@@ -352,19 +338,14 @@ class DBTest extends \PHPUnit\Framework\TestCase
 
 	public function testHasView()
 	{
-		$view = new class {
-			public function getNamespaceName() { return ''; }
-			public function getShortestName() { return 'test'; }
-		};
-
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [$view] );
+		$this->object->expects( $this->once() )->method( 'getViews' )->willReturn( ['test' => new \stdClass] );
 		$this->assertTrue( $this->object->hasView( 'test' ) );
 	}
 
 
 	public function testHasViewNot()
 	{
-		$this->smmock->expects( $this->once() )->method( 'listViews' )->willReturn( [] );
+		$this->object->expects( $this->once() )->method( 'getViews' )->willReturn( [] );
 		$this->assertFalse( $this->object->hasView( 'test' ) );
 	}
 
