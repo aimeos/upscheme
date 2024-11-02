@@ -195,7 +195,12 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testDropTable()
 	{
 		$this->schemamock->expects( $this->once() )->method( 'hasTable' )->willReturn( true );
-		$this->smmock->expects( $this->once() )->method( 'dropTable' );
+
+		if( $this->object->type() !== 'oracle' ) {
+			$this->schemamock->expects( $this->once() )->method( 'dropTable' );
+		} else {
+			$this->smmock->expects( $this->once() )->method( 'dropTable' );
+		}
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropTable( 'unit', 'test' ) );
 	}
@@ -204,7 +209,12 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	public function testDropTableMultiple()
 	{
 		$this->schemamock->expects( $this->exactly( 2 ) )->method( 'hasTable' )->willReturn( true );
-		$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropTable' );
+
+		if( $this->object->type() !== 'oracle' ) {
+			$this->schemamock->expects( $this->exactly( 2 ) )->method( 'dropTable' );
+		} else {
+			$this->smmock->expects( $this->exactly( 2 ) )->method( 'dropTable' );
+		}
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\DB::class, $this->object->dropTable( ['test', 'test2'] ) );
 	}

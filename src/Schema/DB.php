@@ -215,22 +215,31 @@ class DB
 	 */
 	public function dropTable( $name ) : self
 	{
-		$this->up();
-		$setup = false;
+		if( $this->type() === 'oracle' )
+		{
+			$this->up();
 
-		// Workaround for Oracle to drop sequence and trigger too
-		$manager = $this->getSchemaManager();
+			// Workaround for Oracle to drop sequence and trigger too
+			$manager = $this->getSchemaManager();
+
+			foreach( (array) $name as $entry )
+			{
+				if( $this->hasTable( $entry ) ) {
+					$manager->dropTable( $this->qi( $entry ) );
+				}
+			}
+
+			return $this->setup();
+		}
 
 		foreach( (array) $name as $entry )
 		{
-			if( $this->hasTable( $entry ) )
-			{
-				$manager->dropTable( $this->qi( $entry ) );
-				$setup = true;
+			if( $this->hasTable( $entry ) ) {
+				$this->to->dropTable( $entry );
 			}
 		}
 
-		return $setup ? $this->setup() : $this;
+		return $this->up();
 	}
 
 
