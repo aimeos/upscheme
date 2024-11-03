@@ -3,7 +3,7 @@
 
 namespace Aimeos\Upscheme\Task;
 
-use Aimeos\Upscheme\Schema\Table;
+use Aimeos\Upscheme\Schema\Sequence;
 
 
 class Seq extends Base
@@ -12,7 +12,7 @@ class Seq extends Base
 	{
 		$this->info( 'Testing sequences' );
 
-		$this->sequence( 'testseq', function( $seq ) {
+		$this->sequence( 'testseq', function( Sequence $seq ) {
 
 			$seq->start( 100 )->step( 50 )->cache( 10 );
 
