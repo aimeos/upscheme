@@ -260,17 +260,19 @@ class Up
 			{
 				if( $item->isDir() === true || substr( $item->getFilename(), -4 ) != '.php' ) { continue; }
 
-				include_once $item->getPathName();
-
-				$taskname = substr( $item->getFilename(), 0, -4 );
-				$classname = '\Aimeos\Upscheme\Task\\' . $taskname;
-
-				if( class_exists( $classname ) === false ) {
-					throw new \RuntimeException( sprintf( 'Class "%1$s" not found', $classname ) );
-				}
-
 				$interface = \Aimeos\Upscheme\Task\Iface::class;
-				$task = ( $fcn = static::macro( 'createTask' ) ) ? $fcn( $classname ) : new $classname( $this );
+				$taskname = substr( $item->getFilename(), 0, -4 );
+
+				if( !is_object( $task = include_once $item->getPathName() ) )
+				{
+					$classname = '\Aimeos\Upscheme\Task\\' . $taskname;
+
+					if( class_exists( $classname ) === false ) {
+						throw new \RuntimeException( sprintf( 'Class "%1$s" not found', $classname ) );
+					}
+
+					$task = ( $fcn = static::macro( 'createTask' ) ) ? $fcn( $classname ) : new $classname( $this );
+				}
 
 				if( ( $task instanceof $interface ) === false ) {
 					throw new \RuntimeException( sprintf( 'Class "%1$s" doesn\'t implement "%2$s"', $classname, $interface ) );
