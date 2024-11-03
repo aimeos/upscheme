@@ -709,6 +709,32 @@ class DB
 
 
 	/**
+	 * Returns the objects as array from the database
+	 *
+	 * @return array Associative list of sequences, tables and views
+	 */
+	public function toArray() : array
+	{
+		$map = [];
+		$tables = $this->to->getTables();
+
+		foreach( $this->to->getSequences() as $seq ) {
+			$map['sequence'][$seq->getName()] = $this->toArraySequence( $seq, $tables );
+		}
+
+		foreach( $tables as $table ) {
+			$map['table'][$table->getName()] = $this->toArrayTable( $table );
+		}
+
+		foreach( $this->views as $view ) {
+			$map['view'][$view->getName()] = $this->toArrayView( $view );
+		}
+
+		return $map;
+	}
+
+
+	/**
 	 * Executes the given closure within a transaction
 	 *
 	 * @param \Closure $fcn Anonymous function with (\Aimeos\Upscheme\Schema $db) parameter
@@ -916,5 +942,102 @@ class DB
 		$this->from = clone $this->to;
 
 		return $this;
+	}
+
+
+	/**
+	 * Converts the sequence object to an array
+	 *
+	 * @param \Doctrine\DBAL\Schema\Sequence $seq Sequence object
+	 * @param array<\Doctrine\DBAL\Schema\Table> $tables List of table objects
+	 * @return array<string,mixed> Associative list of sequence properties
+	 */
+	protected function toArraySequence( \Doctrine\DBAL\Schema\Sequence $seq, array $tables ) : array
+	{
+		$entry = [
+			'name' => $seq->getName(),
+			'cache' => $seq->getCache(),
+			'start' => $seq->getInitialValue(),
+			'step' => $seq->getAllocationSize(),
+		];
+
+		foreach( $tables as $table )
+		{
+			if( $seq->isAutoIncrementsFor( $table ) ) {
+				$entry['table'] = $table->getName();
+			}
+		}
+
+		return $entry;
+	}
+
+
+	/**
+	 * Converts the table object to an array
+	 *
+	 * @param \Doctrine\DBAL\Schema\Table $table Table object
+	 * @return array<string,string> Associative list of table properties
+	 */
+	protected function toArrayTable( \Doctrine\DBAL\Schema\Table $table ) : array
+	{
+		$options = $table->getOptions();
+		unset( $options['create_options'] );
+		$map = ['name' => $table->getName(), 'opt' => $options];
+
+		foreach( $table->getColumns() as $col )
+		{
+			$map['col'][$col->getName()] = [
+				'name' => $col->getName(),
+				'type' => \Doctrine\DBAL\Types\Type::lookupName( $col->getType() ),
+				'length' => $col->getLength(),
+				'precision' => $col->getPrecision(),
+				'scale' => $col->getScale(),
+				'null' => !$col->getNotnull(),
+				'seq' => $col->getAutoincrement(),
+				'default' => $col->getDefault(),
+				'fixed' => $col->getFixed(),
+				'unsigned' => $col->getUnsigned(),
+				'comment' => $col->getComment(),
+				'opt' => $col->getPlatformOptions(),
+			];
+		}
+
+		foreach( $table->getIndexes() as $idx )
+		{
+			$map['index'][$idx->getName()] = [
+				'columns' => $idx->getUnquotedColumns(),
+				'name' => $idx->getName(),
+				'flags' => $idx->getFlags(),
+				'options' => $idx->getOptions(),
+				'unique' => $idx->isUnique(),
+				'primary' => $idx->isPrimary(),
+			];
+		}
+
+		foreach( $table->getForeignKeys() as $fk )
+		{
+			$map['foreign'][$fk->getName()] = [
+				'localcol' => $fk->getUnquotedLocalColumns(),
+				'fktable' => $fk->getForeignTableName(),
+				'fkcol' => $fk->getUnquotedForeignColumns(),
+				'name' => $fk->getName(),
+				'onDelete' => $fk->onDelete(),
+				'onUpdate' => $fk->onUpdate(),
+			];
+		}
+
+		return $map;
+	}
+
+
+	/**
+	 * Converts the view object to an array
+	 *
+	 * @param \Doctrine\DBAL\Schema\View $view View object
+	 * @return array<string,string> Associative list of view properties
+	 */
+	protected function toArrayView( \Doctrine\DBAL\Schema\View $view ) : array
+	{
+		return ['name' => $view->getName(), 'sql' => $view->getSql()];
 	}
 }
