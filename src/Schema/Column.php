@@ -330,7 +330,7 @@ class Column
 		if( $value === null )
 		{
 			$type = $this->column->getType();
-			return $type->getTypeRegistry()->lookupName( $type );
+			return \Doctrine\DBAL\Types\Type::lookupName( $type );
 		}
 
 		$this->column->setType( \Doctrine\DBAL\Types\Type::getType( $value ) );
