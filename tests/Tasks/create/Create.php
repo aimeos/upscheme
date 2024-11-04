@@ -14,6 +14,8 @@ class Create extends Base
 
 		$db = $this->db( 'test' );
 
+		$db->sequence( 'seq_test' )->start( 1000 );
+
 		$db->table( 'test', function( Table $t ) {
 
 			$this->info( 'Create test table', 'v', 1 );
@@ -44,7 +46,7 @@ class Create extends Base
 
 		} )->up();
 
-		if( !$this->hasTable( 'test' ) ) {
+		if( !$db->hasTable( 'test' ) ) {
 			throw new \RuntimeException( 'Table not created' );
 		}
 
@@ -59,14 +61,14 @@ class Create extends Base
 
 		} )->up();
 
-		if( !$this->hasTable( 'testref' ) ) {
+		if( !$db->hasTable( 'testref' ) ) {
 			throw new \RuntimeException( 'Table not created' );
 		}
 
 
-		$this->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );
+		$db->view( 'testview', 'SELECT ' . $db->qi( 'id' ) . ', ' . $db->qi( 'config' ) . ' FROM ' . $db->qi( 'test' ) );
 
-		if( !$this->hasView( 'testview' ) ) {
+		if( !$db->hasView( 'testview' ) ) {
 			throw new \RuntimeException( 'View not created' );
 		}
 	}
