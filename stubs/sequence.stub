@@ -9,7 +9,7 @@ return new class( $this ) extends Base
 {
 	public function up()
 	{
-		$this->info( 'Create sequence {{NAME}}' );
+		$this->info( 'Create sequence "{{NAME}}"' );
 
 		$this->db( '{{DB}}' )->sequence( '{{NAME}}', function( Sequence $s ) {
 

@@ -15,7 +15,7 @@ return new class( $this ) extends Base
 
 	public function up()
 	{
-		$this->info( 'Create table {{NAME}}' );
+		$this->info( 'Create table "{{NAME}}"' );
 
 		$this->db( '{{DB}}' )->table( '{{NAME}}', function( Table $t ) {
 
