@@ -47,6 +47,18 @@ class Generate
 
 
 	/**
+	 * Returns the PHP code for an array
+	 *
+	 * @param array $a Associative list of array values
+	 * @return string PHP code for the array
+	 */
+	protected function array( array $a ) : string
+	{
+		return str_replace( ['array (', ')', "\n", ' ', ',]'], ['[', ']', '', '', ']'], var_export( $a, true ) );
+	}
+
+
+	/**
 	 * Returns the PHP code for a column definition
 	 *
 	 * @param array $def Associative list of column definitions
@@ -147,7 +159,7 @@ class Generate
 			} elseif( $e['unique'] ?? false ) {
 				$lines[] = '$t->unique( ' . json_encode( $e['columns'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ' );';
 			} else {
-				$lines[] = '$t->index( ' . json_encode( $e['columns'] ?? [] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ', ' . json_encode( $e['flags'] ?? [] ) . ', ' . json_encode( $e['options'] ?? [] ) . ' );';
+				$lines[] = '$t->index( ' . json_encode( $e['columns'] ?? [] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ', ' . $this->array( $e['flags'] ?? [] ) . ', ' . $this->array( $e['options'] ?? [] ) . ' );';
 			}
 		}
 
