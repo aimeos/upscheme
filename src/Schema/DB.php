@@ -726,7 +726,7 @@ class DB
 			$map['table'][$table->getName()] = $this->toArrayTable( $table );
 		}
 
-		foreach( $this->views as $view ) {
+		foreach( $this->getViews() as $view ) {
 			$map['view'][$view->getName()] = $this->toArrayView( $view );
 		}
 
