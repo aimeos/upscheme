@@ -76,9 +76,11 @@ class UpTest extends \PHPUnit\Framework\TestCase
 		} );
 
 		$config = include dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'config.php';
-		$object = \Aimeos\Upscheme\Up::use( $config, dirname( __DIR__ ) . '/Tasks/create' )->up();
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object->create( $dir ) );
+		\Aimeos\Upscheme\Up::use( $config, dirname( __DIR__ ) . '/Tasks/create' )->up();
+		$object = \Aimeos\Upscheme\Up::use( $config, $dir )->create();
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object );
 
 		\Aimeos\Upscheme\Up::use( $config, $dir )->up();
 
