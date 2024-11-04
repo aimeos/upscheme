@@ -65,6 +65,28 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testCreate()
+	{
+		$dir = dirname( __DIR__ ) . '/tmp';
+		file_exists( $dir ) ?: mkdir( $dir );
+
+		\Aimeos\Upscheme\Schema\Table::macro( 'default', function() {
+			$this->opt( 'engine', 'InnoDB' );
+			$this->string( 'editor' )->null( true );
+		} );
+
+		$config = include dirname( __DIR__ ) . DIRECTORY_SEPARATOR . 'config.php';
+		$object = \Aimeos\Upscheme\Up::use( $config, dirname( __DIR__ ) . '/Tasks/create' )->up();
+
+		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object->create( $dir ) );
+
+		\Aimeos\Upscheme\Up::use( $config, $dir )->up();
+
+		\Aimeos\Upscheme\Up::use( $config, dirname( __DIR__ ) . '/Tasks/rename' )->up();
+		\Aimeos\Upscheme\Up::use( $config, dirname( __DIR__ ) . '/Tasks/delete' )->up();
+	}
+
+
 	public function testDb()
 	{
 		$object = new \Aimeos\Upscheme\Up( ['test' => ['driver' => 'pdo_sqlite', 'path' => 'up.test']], 'testpath' );

@@ -94,6 +94,24 @@ class Up
 
 
 	/**
+	 * Creates the database migration files for the given connection name
+	 *
+	 * @param string|array<string> $name Name of the connection from the configuration or empty string for first one
+	 * @return self Same object for fluid method calls
+	 */
+	public function create( $name = '' ) : self
+	{
+		$generator = static::macro( 'generate' ) ?: new Generate();
+
+		foreach( (array) $name as $dbname ) {
+			$generator( $this->db( $dbname )->toArray(), current( $this->paths ), $dbname );
+		}
+
+		return $this;
+	}
+
+
+	/**
 	 * Returns the DB schema for the passed connection name
 	 *
 	 * @param string $name Name of the connection from the configuration or empty string for first one
