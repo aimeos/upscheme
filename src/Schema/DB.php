@@ -932,8 +932,6 @@ class DB
 					$this->views[$view->getShortestName( $view->getNamespaceName() )] = $view;
 				}
 			}
-
-print_r($this->views);
 		}
 
 		return $this->views;
