@@ -12,7 +12,8 @@ class Update extends Base
 	{
 		$this->info( 'Change test table', 'v', 1 );
 
-		$this->db( 'test' )->dropIndex( 'test', ['idx_status_type'] );
+		$this->db( 'test' )->dropIndex( 'test', 'idx_status_type' );
+		$this->db( 'test' )->dropIndex( 'test', 'unq_code' ); // workaround for SQL Server
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
@@ -20,10 +21,15 @@ class Update extends Base
 			$t->text( 'content' )->length( 255 );
 			$t->bool( 'status' )->default( true );
 			$t->date( 'birthday' )->null( true );
-			// $t->decimal( 'price', 8 )->scale( 3 ); // Oracle can't change NUMBER columns with data
-			// $t->int( 'pos' )->type( 'smallint' ); // Oracle can't change NUMBER columns with data
-			// $t->smallint( 'type' )->unsigned( true ); // Oracle can't change NUMBER columns with data
-			// $t->string( 'code', 5 )->fixed( true ); // Yugabyte can't change column types yet
+
+			$t->string( 'code', 5 )->fixed( true );
+
+			if( $this->type() !== 'oracle' )
+			{
+				$t->decimal( 'price', 8 )->scale( 3 ); // Oracle can't change NUMBER columns with data
+				$t->int( 'pos' )->type( 'smallint' ); // Oracle can't change NUMBER columns with data
+				$t->smallint( 'type' )->unsigned( true ); // Oracle can't change NUMBER columns with data
+			}
 
 			$t->unique( 'code', 'unq_code' );
 			$t->index( ['status', 'pos'], 'idx_status_pos' );
