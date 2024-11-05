@@ -21,9 +21,9 @@ return new class( $this ) extends Base
 
 			{{COLUMN}}
 
-			{{INDEX}}
-
 			{{FOREIGN}}
+
+			{{INDEX}}
 		} );
 	}
 };
