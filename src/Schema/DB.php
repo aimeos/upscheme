@@ -718,16 +718,20 @@ class DB
 		$map = [];
 		$tables = $this->to->getTables();
 
-		foreach( $this->to->getSequences() as $seq ) {
-			$map['sequence'][$seq->getName()] = $this->toArraySequence( $seq, $tables );
+		foreach( $this->to->getSequences() as $seq )
+		{
+			$name = $seq->getShortestName( $seq->getNamespaceName() );
+			$map['sequence'][$name] = $this->toArraySequence( $seq, $tables );
 		}
 
-		foreach( $tables as $table ) {
-			$map['table'][$table->getName()] = $this->toArrayTable( $table );
+		foreach( $tables as $table )
+		{
+			$name = $table->getShortestName( $table->getNamespaceName() );
+			$map['table'][$name] = $this->toArrayTable( $table );
 		}
 
-		foreach( $this->getViews() as $view ) {
-			$map['view'][$view->getName()] = $this->toArrayView( $view );
+		foreach( $this->getViews() as $name => $view ) {
+			$map['view'][$name] = $this->toArrayView( $view );
 		}
 
 		return $map;
@@ -955,7 +959,7 @@ class DB
 	protected function toArraySequence( \Doctrine\DBAL\Schema\Sequence $seq, array $tables ) : array
 	{
 		$entry = [
-			'name' => $seq->getName(),
+			'name' => $seq->getShortestName( $seq->getNamespaceName() ),
 			'cache' => $seq->getCache(),
 			'start' => $seq->getInitialValue(),
 			'step' => $seq->getAllocationSize(),
@@ -982,12 +986,13 @@ class DB
 	{
 		$options = $table->getOptions();
 		unset( $options['create_options'] );
-		$map = ['name' => $table->getName(), 'opt' => $options];
+		$map = ['name' => $table->getShortestName( $table->getNamespaceName() ), 'opt' => $options];
 
 		foreach( $table->getColumns() as $col )
 		{
-			$map['col'][$col->getName()] = [
-				'name' => $col->getName(),
+			$name = $col->getShortestName( $col->getNamespaceName() );
+			$map['col'][$name] = [
+				'name' => $name,
 				'type' => \Doctrine\DBAL\Types\Type::lookupName( $col->getType() ),
 				'length' => $col->getLength(),
 				'precision' => $col->getPrecision(),
@@ -1004,9 +1009,10 @@ class DB
 
 		foreach( $table->getIndexes() as $idx )
 		{
-			$map['index'][$idx->getName()] = [
+			$name = $idx->getShortestName( $idx->getNamespaceName() );
+			$map['index'][$name] = [
 				'columns' => $idx->getUnquotedColumns(),
-				'name' => $idx->getName(),
+				'name' => $name,
 				'flags' => $idx->getFlags(),
 				'options' => $idx->getOptions(),
 				'unique' => $idx->isUnique(),
@@ -1016,11 +1022,12 @@ class DB
 
 		foreach( $table->getForeignKeys() as $fk )
 		{
-			$map['foreign'][$fk->getName()] = [
+			$name = $fk->getShortestName( $fk->getNamespaceName() );
+			$map['foreign'][$name] = [
 				'localcol' => $fk->getUnquotedLocalColumns(),
 				'fktable' => $fk->getForeignTableName(),
 				'fkcol' => $fk->getUnquotedForeignColumns(),
-				'name' => $fk->getName(),
+				'name' => $name,
 				'onDelete' => $fk->onDelete(),
 				'onUpdate' => $fk->onUpdate(),
 			];
@@ -1038,6 +1045,6 @@ class DB
 	 */
 	protected function toArrayView( \Doctrine\DBAL\Schema\View $view ) : array
 	{
-		return ['name' => $view->getName(), 'sql' => $view->getSql()];
+		return ['name' => $view->getShortestName( $view->getNamespaceName() ), 'sql' => $view->getSql()];
 	}
 }
