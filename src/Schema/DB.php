@@ -929,6 +929,8 @@ class DB
 			foreach( $this->getSchemaManager()->listViews() as $view ) {
 				$this->views[$view->getShortestName( $view->getNamespaceName() )] = $view;
 			}
+
+print_r($this->views);
 		}
 
 		return $this->views;
