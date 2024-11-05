@@ -928,10 +928,8 @@ class DB
 
 			foreach( $this->getSchemaManager()->listViews() as $view )
 			{
-				$name = $view->getShortestName( $view->getNamespaceName() );
-
-				if( strncmp( $name, 'pg_', 3 ) || strncmp( $name, '_pg_', 4 ) ) {
-					$this->views[$name] = $view;
+				if( in_array( $view->getNamespaceName(), [null, 'public'] ) ) {
+					$this->views[$view->getShortestName( $view->getNamespaceName() )] = $view;
 				}
 			}
 		}
