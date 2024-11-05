@@ -12,7 +12,7 @@ class Update extends Base
 	{
 		$this->info( 'Change test table', 'v', 1 );
 
-		$this->db( 'test' )->dropIndex( 'test', ['unq_code', 'idx_status_type'] ); // workaround for SQL Server
+		$this->db( 'test' )->dropIndex( 'test', ['idx_status_type'] );
 
 		$this->db( 'test' )->table( 'test', function( Table $t ) {
 
@@ -26,7 +26,7 @@ class Update extends Base
 			// $t->string( 'code', 5 )->fixed( true ); // Yugabyte can't change column types yet
 
 			$t->unique( 'code', 'unq_code' );
-			$t->index( ['status', 'pos'], 'idx_status_type' );
+			$t->index( ['status', 'pos'], 'idx_status_pos' );
 			$t->index( 'uuid' );
 
 		} )->dropColumn( 'test' )->up();
