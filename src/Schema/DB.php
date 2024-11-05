@@ -926,8 +926,13 @@ class DB
 		{
 			$this->views = [];
 
-			foreach( $this->getSchemaManager()->listViews() as $view ) {
-				$this->views[$view->getShortestName( $view->getNamespaceName() )] = $view;
+			foreach( $this->getSchemaManager()->listViews() as $view )
+			{
+				$name = $view->getShortestName( $view->getNamespaceName() );
+
+				if( strncmp( $name, 'pg_', 3 ) || strncmp( $name, '_pg_', 4 ) ) {
+					$this->views[$name] = $view;
+				}
 			}
 
 print_r($this->views);
