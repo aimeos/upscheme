@@ -23,39 +23,39 @@ class CrudTest extends \PHPUnit\Framework\TestCase
 
 	public function testCreate()
 	{
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 
 		// test if schema is unchanged
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/create' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 
 
 	public function testInsert()
 	{
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/insert' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/insert' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 
 
 	public function testUpdate()
 	{
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/update' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/update' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 
 
 	public function testRename()
 	{
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/rename' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/rename' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 
 
 	public function testDelete()
 	{
-		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/delete' )->verbose( 'vvv' )->up();
+		$result = \Aimeos\Upscheme\Up::use( $this->config, __DIR__ . '/delete' )->up();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $result );
 	}
 }

@@ -28,7 +28,7 @@ class UpTest extends \PHPUnit\Framework\TestCase
 	{
 		file_exists( $this->dir ) ?: mkdir( $this->dir );
 
-		$object = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/create' )->up();
+		$object = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/create' )->verbose( 'vvv' )->up();
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object );
 	}
@@ -39,14 +39,14 @@ class UpTest extends \PHPUnit\Framework\TestCase
 		$object = \Aimeos\Upscheme\Up::use( $this->config, $this->dir )->create();
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object );
 
-		\Aimeos\Upscheme\Up::use( $this->config, $this->dir )->up();
+		\Aimeos\Upscheme\Up::use( $this->config, $this->dir )->verbose( 'vvv' )->up();
 	}
 
 
 	public function testCleanup()
 	{
-		$object = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/rename' )->up();
-		$object2 = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/delete' )->up();
+		$object = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/rename' )->verbose( 'vvv' )->up();
+		$object2 = \Aimeos\Upscheme\Up::use( $this->config, dirname( __DIR__ ) . '/Tasks/delete' )->verbose( 'vvv' )->up();
 
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object );
 		$this->assertInstanceOf( \Aimeos\Upscheme\Up::class, $object2 );
