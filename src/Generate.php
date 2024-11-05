@@ -222,7 +222,7 @@ class Generate
 		$fktables = [];
 
 		foreach( $def['foreign'] ?? [] as $e ) {
-			$fktables[] = $e['fktable'] ?? '';
+			$fktables[] = 'table_' . $e['fktable'] ?? '';
 		}
 
 		return str_replace( [
