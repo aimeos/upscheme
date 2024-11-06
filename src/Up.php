@@ -311,11 +311,11 @@ class Up
 	 */
 	protected function macros()
 	{
-		\Aimeos\Upscheme\Schema\Table::macro( 'id', function( string $name = null ) : Schema\Column {
+		\Aimeos\Upscheme\Schema\Table::macro( 'id', function( ?string $name = null ) : Schema\Column {
 			return $this->integer( $name ?: 'id' )->seq( true )->primary();
 		} );
 
-		\Aimeos\Upscheme\Schema\Table::macro( 'bigid', function( string $name = null ) : Schema\Column {
+		\Aimeos\Upscheme\Schema\Table::macro( 'bigid', function( ?string $name = null ) : Schema\Column {
 			return $this->bigint( $name ?: 'id' )->seq( true )->primary();
 		} );
 	}

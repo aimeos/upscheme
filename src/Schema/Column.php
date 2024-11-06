@@ -121,7 +121,7 @@ class Column
 	 * @param bool|null $value New autoincrement flag or NULL to return current value
 	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
-	public function autoincrement( bool $value = null )
+	public function autoincrement( ?bool $value = null )
 	{
 		return $this->seq( $value );
 	}
@@ -133,7 +133,7 @@ class Column
 	 * @param string|null $value New column charset or NULL to return current value
 	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function charset( string $value = null )
+	public function charset( ?string $value = null )
 	{
 		return $this->opt( 'charset', $value );
 	}
@@ -145,7 +145,7 @@ class Column
 	 * @param string|null $value New column collation or NULL to return current value
 	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function collation( string $value = null )
+	public function collation( ?string $value = null )
 	{
 		return $this->opt( 'collation', $value );
 	}
@@ -157,7 +157,7 @@ class Column
 	 * @param string|null $value New column comment or NULL to return current value
 	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function comment( string $value = null )
+	public function comment( ?string $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getComment();
@@ -175,7 +175,7 @@ class Column
 	 * @param array<string>|string|null $for Database type this option should be used for ("mysql", "postgresql", "sqlite", "mssql", "oracle", "db2")
 	 * @return \Aimeos\Upscheme\Schema\Column Column object
 	 */
-	public function custom( string $value = null, $for = null )
+	public function custom( ?string $value = null, $for = null )
 	{
 		if( $value === null ) {
 			return $this->column->getColumnDefinition();
@@ -212,7 +212,7 @@ class Column
 	 * @param bool|null $value New column fixed flag or NULL to return current value
 	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
-	public function fixed( bool $value = null )
+	public function fixed( ?bool $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getFixed();
@@ -229,7 +229,7 @@ class Column
 	 * @param int|null $value New column length or NULL to return current value
 	 * @return self|int Same object for setting the value, current value without parameter
 	 */
-	public function length( int $value = null )
+	public function length( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getLength();
@@ -257,7 +257,7 @@ class Column
 	 * @param bool|null $value New column null flag or NULL to return current value
 	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
-	public function null( bool $value = null )
+	public function null( ?bool $value = null )
 	{
 		if( $value === null ) {
 			return !$this->column->getNotnull();
@@ -274,7 +274,7 @@ class Column
 	 * @param int|null $value New column precision value or NULL to return current value
 	 * @return self|int Same object for setting the value, current value without parameter
 	 */
-	public function precision( int $value = null )
+	public function precision( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getPrecision();
@@ -291,7 +291,7 @@ class Column
 	 * @param int|null $value New column scale value or NULL to return current value
 	 * @return self|int Same object for setting the value, current value without parameter
 	 */
-	public function scale( int $value = null )
+	public function scale( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getScale();
@@ -308,7 +308,7 @@ class Column
 	 * @param bool|null $value New autoincrement flag or NULL to return current value
 	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
-	public function seq( bool $value = null )
+	public function seq( ?bool $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getAutoincrement();
@@ -325,7 +325,7 @@ class Column
 	 * @param string|null $value New column type or NULL to return current value
 	 * @return self|string Same object for setting the value, current value without parameter
 	 */
-	public function type( string $value = null )
+	public function type( ?string $value = null )
 	{
 		if( $value === null )
 		{
@@ -344,7 +344,7 @@ class Column
 	 * @param bool|null $value New column unsigned flag or NULL to return current value
 	 * @return self|bool Same object for setting the value, current value without parameter
 	 */
-	public function unsigned( bool $value = null )
+	public function unsigned( ?bool $value = null )
 	{
 		if( $value === null ) {
 			return $this->column->getUnsigned();
@@ -361,7 +361,7 @@ class Column
 	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
-	public function index( string $name = null ) : self
+	public function index( ?string $name = null ) : self
 	{
 		$this->table->index( [$this->name()], $name );
 		return $this;
@@ -374,7 +374,7 @@ class Column
 	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
-	public function primary( string $name = null ) : self
+	public function primary( ?string $name = null ) : self
 	{
 		$this->table->primary( [$this->name()], $name );
 		return $this;
@@ -387,7 +387,7 @@ class Column
 	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
-	public function spatial( string $name = null ) : self
+	public function spatial( ?string $name = null ) : self
 	{
 		$this->table->spatial( [$this->name()], $name );
 		return $this;
@@ -400,7 +400,7 @@ class Column
 	 * @param string|null $name Name of the index or NULL to generate automatically
 	 * @return self Same object for fluid method calls
 	 */
-	public function unique( string $name = null ) : self
+	public function unique( ?string $name = null ) : self
 	{
 		$this->table->unique( $this->name(), $name );
 		return $this;

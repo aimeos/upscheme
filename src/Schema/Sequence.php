@@ -91,7 +91,7 @@ class Sequence
 	 * @param int $value New number of sequence IDs cached by the client or NULL to return current value
 	 * @return self|int Same object for setting value, current value without parameter
 	 */
-	public function cache( int $value = null )
+	public function cache( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->sequence->getCache();
@@ -119,7 +119,7 @@ class Sequence
 	 * @param int $value New start value of the sequence or NULL to return current value
 	 * @return self|int Same object for setting value, current value without parameter
 	 */
-	public function start( int $value = null )
+	public function start( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->sequence->getInitialValue();
@@ -136,7 +136,7 @@ class Sequence
 	 * @param int $value New step size the sequence is incremented or decremented by or NULL to return current value
 	 * @return self|int Same object for setting value, current value without parameter
 	 */
-	public function step( int $value = null )
+	public function step( ?int $value = null )
 	{
 		if( $value === null ) {
 			return $this->sequence->getAllocationSize();
