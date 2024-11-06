@@ -165,10 +165,15 @@ class Foreign
 	 */
 	public function do( string $action ) : self
 	{
-		$this->opts['onDelete'] = $action;
-		$this->opts['onUpdate'] = $action;
+		if( $this->opts['onDelete'] !== $action || $this->opts['onUpdate'] !== $action )
+		{
+			$this->opts['onDelete'] = $action;
+			$this->opts['onUpdate'] = $action;
 
-		return $this->replace();
+			return $this->replace();
+		}
+
+		return $this;
 	}
 
 
@@ -202,8 +207,13 @@ class Foreign
 			return $this->opts['onDelete'];
 		}
 
-		$this->opts['onDelete'] = $value;
-		return $this->replace();
+		if( $this->opts['onDelete'] !== $value )
+		{
+			$this->opts['onDelete'] = $value;
+			return $this->replace();
+		}
+
+		return $this;
 	}
 
 
@@ -226,8 +236,13 @@ class Foreign
 			return $this->opts['onUpdate'];
 		}
 
-		$this->opts['onUpdate'] = (string) $value;
-		return $this->replace();
+		if( $this->opts['onUpdate'] !== $value )
+		{
+			$this->opts['onUpdate'] = $value;
+			return $this->replace();
+		}
+
+		return $this;
 	}
 
 

@@ -90,9 +90,9 @@ class ForeignTest extends \PHPUnit\Framework\TestCase
 		$this->dbalmock->expects( $this->once() )->method( 'removeForeignKey' );
 		$this->dbalmock->expects( $this->once() )->method( 'addForeignKeyConstraint' );
 
-		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Foreign::class, $this->object->do( 'CASCADE' ) );
-		$this->assertEquals( 'CASCADE', $this->object->onDelete );
-		$this->assertEquals( 'CASCADE', $this->object->onUpdate );
+		$this->assertInstanceOf( \Aimeos\Upscheme\Schema\Foreign::class, $this->object->do( 'SET NULL' ) );
+		$this->assertEquals( 'SET NULL', $this->object->onDelete );
+		$this->assertEquals( 'SET NULL', $this->object->onUpdate );
 	}
 
 
