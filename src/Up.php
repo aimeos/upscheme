@@ -76,7 +76,7 @@ class Up
 		$this->config = $config;
 		$this->paths = (array) $paths;
 
-		$this->macros();
+		$this->call( 'macros' );
 	}
 
 
