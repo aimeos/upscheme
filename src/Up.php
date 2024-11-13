@@ -101,10 +101,11 @@ class Up
 	 */
 	public function create( $name = '' ) : self
 	{
-		$generator = static::macro( 'generate' ) ?: new Generate();
+		$path = current( $this->paths );
+		$generator = ( $fcn = static::macro( 'generate' ) ) ? $fcn( $path ) : new Generate( $path );
 
 		foreach( (array) $name as $dbname ) {
-			$generator( $this->db( $dbname )->toArray(), current( $this->paths ), $dbname );
+			$generator( $this->db( $dbname )->toArray(), $dbname );
 		}
 
 		return $this;

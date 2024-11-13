@@ -14,34 +14,56 @@ namespace Aimeos\Upscheme;
  */
 class Generate
 {
+	private string $path;
+	private string $seqtpl;
+	private string $tabletpl;
+	private string $viewtpl;
+
+
+	/**
+	 * Initializes the object
+	 *
+	 * @param string $path Path where the migration files should be stored
+	 */
+	public function __construct( string $path )
+	{
+		$dir = dirname( __DIR__ );
+		$ds = DIRECTORY_SEPARATOR;
+
+		$this->seqtpl = $this->read( $dir . $ds . 'stubs' . $ds . 'sequence.stub' );
+		$this->tabletpl = $this->read( $dir . $ds . 'stubs' . $ds . 'table.stub' );
+		$this->viewtpl = $this->read( $dir . $ds . 'stubs' . $ds . 'view.stub' );
+
+		$this->path = $path;
+	}
+
+
 	/**
 	 * Generates the migration files
 	 *
 	 * @param array $schema Associative list of schema definitions
-	 * @param string $path Path where the migration files should be stored
 	 * @param string $dbname Name of the database
 	 * @throws \RuntimeException If a file can't be created
 	 */
-	public function __invoke( array $schema, string $path, string $dbname = '' ) : void
+	public function __invoke( array $schema, string $dbname = '' ) : void
 	{
-		$dir = dirname( __DIR__ );
 		$ds = DIRECTORY_SEPARATOR;
 		$prefix = $dbname ? preg_replace( '/[^A-Za-z0-9]/', '', $dbname ) . '_' : '';
 
-		$seqtpl = str_replace( '{{DB}}', $dbname, $this->read( $dir . $ds . 'stubs' . $ds . 'sequence.stub' ) );
-		$tabletpl = str_replace( '{{DB}}', $dbname, $this->read( $dir . $ds . 'stubs' . $ds . 'table.stub' ) );
-		$viewtpl = str_replace( '{{DB}}', $dbname, $this->read( $dir . $ds . 'stubs' . $ds . 'view.stub' ) );
+		$seqtpl = str_replace( '{{DB}}', $dbname, $this->seqtpl );
+		$tabletpl = str_replace( '{{DB}}', $dbname, $this->tabletpl );
+		$viewtpl = str_replace( '{{DB}}', $dbname, $this->viewtpl );
 
 		foreach( $schema['sequence'] ?? [] as $name => $def ) {
-			$this->write( $path . $ds . $prefix . 'seq_' . $name . '.php', $this->sequence( $def, $seqtpl ) );
+			$this->write( $this->path . $ds . $prefix . 'seq_' . $name . '.php', $this->sequence( $def, $seqtpl ) );
 		}
 
 		foreach( $schema['table'] ?? [] as $name => $def ) {
-			$this->write( $path . $ds . $prefix . 'table_' . $name . '.php', $this->table( $def, $tabletpl ) );
+			$this->write( $this->path . $ds . $prefix . 'table_' . $name . '.php', $this->table( $def, $tabletpl ) );
 		}
 
 		foreach( $schema['view'] ?? [] as $name => $def ) {
-			$this->write( $path . $ds . $prefix . 'view_' . $name . '.php', $this->view( $def, $viewtpl ) );
+			$this->write( $this->path . $ds . $prefix . 'view_' . $name . '.php', $this->view( $def, $viewtpl ) );
 		}
 	}
 
@@ -236,7 +258,7 @@ class Generate
 			$this->col( $def['col'] ?? [] ),
 			$this->index( $def['index'] ?? [] ),
 			$this->foreign( $def['foreign'] ?? [] ),
-			"'" . join( "', '", $fktables ) . "'"
+			$fktables ? "'" . join( "', '", $fktables ) . "'" : ''
 		], $template );
 	}
 
