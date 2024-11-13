@@ -17,6 +17,7 @@ composer req aimeos/upscheme
 * [Database support](#database-support)
 * [Integrating Upscheme](#integrating-upscheme)
 * [Writing migrations](#writing-migrations)
+  * [Naming](#naming-migrations)
   * [Dependencies](#dependencies)
   * [Messages](#messages)
   * [Schemas](#schemas)
@@ -330,6 +331,33 @@ namespace Aimeos\Upscheme\Task;
 use Aimeos\Upscheme\Schema\Table;
 
 
+return new class( $this ) extends Base {
+
+	public function up()
+	{
+		$this->db()->table( 'test', function( Table $t ) {
+			$t->id();
+			$t->string( 'label' );
+			$t->bool( 'status' );
+		} );
+	}
+};
+```
+
+In your PHP file, always include the `namespace` statement first. The `use`
+statement is optional and only needed as shortcut for the type hint for the
+closure function argument. Your class also has to extend from the "Base" task
+class or implement the ["Iface" task interface](https://github.com/aimeos/upscheme/blob/master/src/Task/Iface.php).
+
+Alternatively to anonymous classes, you can use named classes for migration tasks:
+
+```php
+<?php
+
+namespace Aimeos\Upscheme\Task;
+use Aimeos\Upscheme\Schema\Table;
+
+
 class TestTable extends Base
 {
 	public function up()
@@ -350,22 +378,20 @@ the class itself and the `.php` suffix, e.g:
 class TestTable -> TestTable.php
 ```
 
-There's no strict convention how to name migration task classes. You can either
-name them by what they do (e.g. "CreateTestTable"), what they operate on (e.g.
-"TestTable") or even use a timestamp (e.g. "20201231_Test"). If the tasks doesn't
-contain dependencies, they are sorted and executed in in alphabethical order and
-the sorting would be:
+### Naming migrations
+
+There's no strict convention how to name migration task files. You can
+either name them by what they do (e.g. "CreateTestTable.php"), what they operate
+on (e.g. "TestTable.php") or even use a timestamp (e.g. "20201231_Test.php").
+
+If the tasks doesn't contain dependencies, they are sorted and executed in
+alphabethical order according to the file name and the sorting would be:
 
 ```
-20201231_Test
-CreateTestTable
-TestTable
+20201231_Test.php
+CreateTestTable.php
+TestTable.php
 ```
-
-In your PHP file, always include the `namespace` statement first. The `use`
-statement is optional and only needed as shortcut for the type hint for the
-closure function argument. Your class also has to extend from the "Base" task
-class or implement the ["Iface" task interface](https://github.com/aimeos/upscheme/blob/master/src/Task/Iface.php).
 
 ### Dependencies
 
@@ -374,8 +400,8 @@ methods. Your task is executed after the tasks returned by `after()` and before
 the tasks returned by `before()`:
 
 ```php
-class TestTable extends Base
-{
+return new class( $this ) extends Base {
+
 	public function after() : array
 	{
 		return ['CreateRefTable'];
@@ -388,10 +414,12 @@ class TestTable extends Base
 }
 ```
 
-Thus, the order of execution would be:
+The task names are the file names of the tasks without the `.php` suffix. If the
+example migration is stored in the file `TestTable.php`, the order of execution
+would be:
 
 ```
-CreateRefTable -> TestTable -> InsertTestData
+CreateRefTable.php -> TestTable.php -> InsertTestData.php
 ```
 
 ### Messages
