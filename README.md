@@ -21,6 +21,7 @@ composer req aimeos/upscheme
   * [Dependencies](#dependencies)
   * [Messages](#messages)
   * [Schemas](#schemas)
+  * [Generate from database](generate-from-database)
 * [Database](#database)
   * [Accessing objects](#accessing-objects)
   * [Checking existence](#checking-existence)
@@ -508,6 +509,45 @@ new connections created by `db( '<name>', true )`:
 $db2->close();
 ```
 
+### Generate from database
+
+Instead of writing migrations for your database objects by hand, you can generate
+the migration files automatically using:
+
+```php
+$config = [
+	'db' => [
+		'driver' => 'pdo_mysql',
+		'host' => '127.0.0.1',
+		'dbname' => '<database>',
+		'user' => '<dbuser>',
+		'password' => '<secret>'
+	]
+];
+
+\Aimeos\Upscheme\Up::use( $config, 'migrations' )->create();
+```
+
+This will generate one file for each sequence, table and view in the passed
+directory (`./migrations/` in this example). If you have several databases and
+want to create migrations for all of them at once, pass the connection keys
+from the configuration to `create()`:
+
+```php
+$config = [
+	'db' => [
+		'driver' => 'pdo_mysql',
+		// ...
+	],
+	'order' => [
+		'driver' => 'pdo_oci',
+		// ...
+	]
+];
+
+\Aimeos\Upscheme\Up::use( $config, 'migrations' )->create( ['db', 'order'] );
+```
+
 
 ## Database
 
@@ -787,6 +827,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
 	<li><a href="#dbtable">table()</a></li>
+	<li><a href="#dbtoarray">toArray()</a></li>
 	<li><a href="#dbtransaction">transaction()</a></li>
 	<li><a href="#dbtype">type()</a></li>
 	<li><a href="#dbup">up()</a></li>
@@ -1526,6 +1567,133 @@ $this->db()->transaction( function( $db ) {
 	// $db->update( ... )
 	// $db->delete( ... )
 } );
+```
+
+
+#### DB::toArray()
+
+Returns the objects as array from the database
+
+```php
+public function toArray() : array
+```
+
+* @return array Associative list of sequences, tables and views
+
+**Examples:**
+
+```php
+$this->db()->toArray();
+```
+
+The structure of the returned array is:
+
+```php
+[
+	'sequence' => [
+		'testseq' => [
+			'name' => 'testseq',
+			'cache' => null,
+			'start' => 1000,
+			'step' => 1
+		]
+	],
+	'table' => [
+		'testtable' => [
+			'name' => 'testtable',
+			'opt' => [
+				'engine' => 'InnoDB',
+				'collation' => 'utf8mb4_unicode_ci',
+				'charset' => 'utf8mb4',
+				'autoincrement' => 1,
+				'comment' => ''
+			],
+			'col' => [
+				'id' => [
+					'name' => 'id',
+					'type' => 'integer',
+					'length' => null,
+					'precision' => null,
+					'scale' => 0,
+					'null' => false,
+					'seq' => 1
+					'default' => null,
+					'fixed' => false,
+					'unsigned' => false,
+					'comment' => '',
+					'opt' => []
+				],
+				'parentid' => [
+					'name' => 'parentid',
+					'type' => 'bigint',
+					'length' => null,
+					'precision' => null,
+					'scale' => 0,
+					'null' => false,
+					'seq' => false,
+					'default' => null,
+					'fixed' => false,
+					'unsigned' => false,
+					'comment' => '',
+					'opt' => []
+				],
+				'label' => [
+					'name' => 'label',
+					'type' => 'string',
+					'length' => 255,
+					'precision' => null,
+					'scale' => 0,
+					'null' => false,
+					'seq' => false,
+					'default' => null,
+					'fixed' => false,
+					'unsigned' => false,
+					'comment' => '',
+					'opt' => [
+						'charset' => 'utf8mb4',
+						'collation' => 'utf8mb4_unicode_ci'
+					]
+				]
+			],
+			'index' => [
+				'PRIMARY' => [
+					'columns' => [
+							0 => 'id'
+						],
+					'name' => 'PRIMARY',
+					'flags' => [],
+					'options' => [
+							'lengths' => [
+									0 => null
+								]
+						],
+					'unique' => 1,
+					'primary' => 1
+				],
+			],
+			'foreign' => [
+				'FK_6C73FFCA343B91AE' => [
+					'localcol' => [
+						0 => 'parentid'
+					],
+					'fktable' => 'test',
+					'fkcol' => [
+						0 => 'id'
+					],
+					'name' => 'FK_6C73FFCA343B91AE',
+					'onDelete' => 'CASCADE',
+					'onUpdate' => 'CASCADE'
+				]
+			]
+		]
+	],
+	'view' => [
+		'testview' => [
+			'name' => 'testview',
+			'sql' => 'select `testtable`.`id` AS `id`,`testtable`.`label` AS `label` from `testtable`'
+		]
+	]
+]
 ```
 
 
