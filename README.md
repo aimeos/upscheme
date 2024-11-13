@@ -21,7 +21,7 @@ composer req aimeos/upscheme
   * [Dependencies](#dependencies)
   * [Messages](#messages)
   * [Schemas](#schemas)
-  * [Generate from database](generate-from-database)
+  * [Generate from database](#generate-from-database)
 * [Database](#database)
   * [Accessing objects](#accessing-objects)
   * [Checking existence](#checking-existence)
