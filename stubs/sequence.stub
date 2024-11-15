@@ -7,13 +7,13 @@ use Aimeos\Upscheme\Schema\Sequence;
 
 return new class( $this ) extends Base
 {
-	public function up()
-	{
-		$this->info( 'Create sequence "{{NAME}}"' );
+    public function up()
+    {
+        $this->info('Create sequence "{{NAME}}"');
 
-		$this->db( '{{DB}}' )->sequence( '{{NAME}}', function( Sequence $s ) {
+        $this->db('{{DB}}')->sequence('{{NAME}}', function(Sequence $s) {
 
-			{{SEQUENCE}}
-		} );
-	}
+            {{SEQUENCE}}
+        });
+    }
 };

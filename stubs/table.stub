@@ -7,23 +7,23 @@ use Aimeos\Upscheme\Schema\Table;
 
 return new class( $this ) extends Base
 {
-	public function after() : array
-	{
-		return [{{AFTER}}];
-	}
+    public function after(): array
+    {
+        return [{{AFTER}}];
+    }
 
 
-	public function up()
-	{
-		$this->info( 'Create table "{{NAME}}"' );
+    public function up()
+    {
+        $this->info('Create table "{{NAME}}"');
 
-		$this->db( '{{DB}}' )->table( '{{NAME}}', function( Table $t ) {
+        $this->db('{{DB}}')->table('{{NAME}}', function(Table $t) {
 
-			{{COLUMN}}
+            {{COLUMN}}
 
-			{{FOREIGN}}
+            {{FOREIGN}}
 
-			{{INDEX}}
-		} );
-	}
+            {{INDEX}}
+        });
+    }
 };
