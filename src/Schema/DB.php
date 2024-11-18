@@ -63,7 +63,7 @@ class DB
 		$this->conn = $conn;
 		$this->up = $up;
 
-		$this->setup();
+		$this->reset();
 	}
 
 
@@ -229,7 +229,7 @@ class DB
 				}
 			}
 
-			return $this->setup();
+			return $this->reset();
 		}
 
 		foreach( (array) $name as $entry )
@@ -535,7 +535,7 @@ class DB
 			}
 		}
 
-		return $setup ? $this->setup() : $this;
+		return $setup ? $this->reset() : $this;
 	}
 
 
@@ -594,7 +594,21 @@ class DB
 			}
 		}
 
-		return $setup ? $this->setup() : $this;
+		return $setup ? $this->reset() : $this;
+	}
+
+
+	/**
+	 * Loads the actual Doctrine schema for the current database
+	 *
+	 * @return self Same object for fluid method calls
+	 */
+	public function reset() : self
+	{
+		$this->to = $this->getSchemaManager()->introspectSchema();
+		$this->from = clone $this->to;
+
+		return $this;
 	}
 
 
@@ -935,20 +949,6 @@ class DB
 		}
 
 		return $this->views;
-	}
-
-
-	/**
-	 * Loads the actual Doctrine schema for the current database
-	 *
-	 * @return self Same object for fluid method calls
-	 */
-	protected function setup() : self
-	{
-		$this->to = $this->getSchemaManager()->introspectSchema();
-		$this->from = clone $this->to;
-
-		return $this;
 	}
 
 

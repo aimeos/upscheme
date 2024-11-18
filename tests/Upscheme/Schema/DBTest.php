@@ -479,6 +479,15 @@ class DBTest extends \PHPUnit\Framework\TestCase
 	}
 
 
+	public function testReset()
+	{
+		$this->smmock->expects( $this->once() )->method( 'introspectSchema' )
+			->willReturn( $this->schemamock );
+
+		$this->object->reset();
+	}
+
+
 	public function testSequence()
 	{
 		$seqmock = $this->getMockBuilder( '\Doctrine\DBAL\Schema\Sequence' )
