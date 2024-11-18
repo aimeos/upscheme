@@ -962,7 +962,7 @@ class DB
 	{
 		$package = \Composer\InstalledVersions::getPrettyVersion( 'doctrine/dbal' );
 
-		if( version_compare( $package, '4.0.0', '<' ) || $this->type() !== 'postgresql' ) {
+		if( $package === null || version_compare( $package, '4.0.0', '<' ) || $this->type() !== 'postgresql' ) {
 			return $this;
 		}
 
