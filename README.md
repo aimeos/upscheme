@@ -823,6 +823,7 @@ of indexes where the syntax differs between the database implementations.
 	<li><a href="#dbrenamecolumn">renameColumn()</a></li>
 	<li><a href="#dbrenameindex">renameIndex()</a></li>
 	<li><a href="#dbrenametable">renameTable()</a></li>
+	<li><a href="#dbreset">reset()</a></li>
 	<li><a href="#dbselect">select()</a></li>
 	<li><a href="#dbsequence">sequence()</a></li>
 	<li><a href="#dbstmt">stmt()</a></li>
@@ -1441,6 +1442,23 @@ $db->renameTable( 'testtable', 'newtable' );
 
 // rename several tables at once
 $db->renameTable( ['testtable' => 'newtable', 'oldtable' => 'testtable2'] );
+```
+
+
+#### DB::reset()
+
+Reloads the actual Doctrine schema for the current database
+
+```php
+public function reset() : self
+```
+
+* @return **self** Same object for fluid method calls
+
+**Examples:**
+
+```php
+$db->reset();
 ```
 
 
