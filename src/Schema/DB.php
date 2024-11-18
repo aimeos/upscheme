@@ -967,7 +967,7 @@ class DB
 		}
 
 		$map = [];
-		$result = $db->query( "
+		$result = $this->query( "
 			SELECT t.oid::regclass AS table_name,
 				a.attname AS column_name,
 				s.relname AS sequence_name
