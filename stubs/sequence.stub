@@ -5,7 +5,7 @@ namespace Aimeos\Upscheme\Task;
 use Aimeos\Upscheme\Schema\Sequence;
 
 
-return new class( $this ) extends Base
+return new class($this) extends Base
 {
     public function up()
     {

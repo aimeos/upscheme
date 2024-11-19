@@ -5,7 +5,7 @@ namespace Aimeos\Upscheme\Task;
 use Aimeos\Upscheme\Schema\Table;
 
 
-return new class( $this ) extends Base
+return new class($this) extends Base
 {
     public function after(): array
     {
