@@ -984,26 +984,21 @@ class DB
 
 		foreach( $result->iterateAssociative() as $row )
 		{
-			$expected = $row['table_name'] . '_' . $row['column_name'] . '_seq';
-
-			if( $row['sequence_name'] === $expected ) {
-				$map[$row['table_name']] = $row['column_name'];
+			if( !substr_compare( $row['sequence_name'], '_seq', -4 ) ) {
+				$map[$row['table_name']][$row['sequence_name']] = $row['column_name'];
 			}
 		}
 
 		if( !empty( $map ) )
 		{
 			$this->exec( "
-				CREATE OR REPLACE FUNCTION upscheme_serial_to_identity(table_name text, column_name text)
+				CREATE OR REPLACE FUNCTION upscheme_serial_to_identity(table_name text, column_name text, sequence_name text)
 				RETURNS void
 				LANGUAGE plpgsql
 				AS $$
 				DECLARE
 					-- maximum ID value in table
 					max_id integer;
-
-					-- name of the sequence
-					sequence_name text := table_name || '_' || column_name || '_seq';
 				BEGIN
 					EXECUTE format('LOCK %I;', quote_ident(table_name));
 
@@ -1031,8 +1026,11 @@ class DB
 				$$;
 			" );
 
-			foreach( $map as $table => $column ) {
-				$this->query( "SELECT upscheme_serial_to_identity('" . $table . "', '" . $column . "')" )->free();
+			foreach( $map as $table => $list )
+			{
+				foreach( $list as $seq => $col ) {
+					$this->query( "SELECT upscheme_serial_to_identity('" . $table . "', '" . $col . "', '" . $seq . "')" )->free();
+				}
 			}
 
 			$this->exec( "DROP FUNCTION upscheme_serial_to_identity" );
