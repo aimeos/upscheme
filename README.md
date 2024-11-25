@@ -716,18 +716,18 @@ $result = $db->stmt()->select( 'id', 'name' )
 	->from( 'users' )
 	->where( 'status != ?' )
 	->setParameter( 0, false )
-	->execute();
+	->executeQuery();
 
 $db->stmt()->delete( 'users' )
 	->where( 'status != ?' )
 	->setParameter( 0, false )
-	->execute();
+	->executeStatement();
 
 $db->stmt()->update( 'users' )
 	->set( 'status', '?' )
 	->where( 'status != ?' )
 	->setParameters( [true, false] )
-	->execute();
+	->executeStatement();
 ```
 
 The [`stmt()`](#dbstmt) method returns a `Doctrine\DBAL\Query\QueryBuilder` object
@@ -743,7 +743,7 @@ security reasons whenever possible!), you have to quote the values using the
 $db = $this->db();
 
 $result = $db->stmt()->select( '*' )->from( 'products' )
-	->where( 'status = ' . $db->q( $_GET['status'] ) )->execute();
+	->where( 'status = ' . $db->q( $_GET['status'] ) )->executeQuery();
 ```
 
 Similarly, if your schema contains reserved keywords, e.g. as column names, you
@@ -752,7 +752,7 @@ have to quote them as well using the [`qi()`](#dbqi) method:
 ```php
 $db = $this->db();
 
-$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->execute();
+$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->executeQuery();
 ```
 
 ### Executing custom SQL
@@ -1315,7 +1315,7 @@ public function q( $value, $type = \Doctrine\DBAL\ParameterType::STRING ) : stri
 
 ```php
 $result = $db->stmt()->select( '*' )->from( 'products' )
-	->where( 'status = ' . $db->q( $_GET['status'] ) )->execute();
+	->where( 'status = ' . $db->q( $_GET['status'] ) )->executeQuery();
 ```
 
 
@@ -1333,7 +1333,7 @@ public function qi( string $identifier ) : string
 **Examples:**
 
 ```php
-$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->execute();
+$result = $db->stmt()->select( $db->qi( 'key' ) )->from( 'products' )->executeQuery();
 ```
 
 
@@ -1524,9 +1524,9 @@ public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
 **Examples:**
 
 ```php
-$db->stmt()->delete( 'test' )->where( 'stat = ?' )->setParameter( 0, false )->execute();
-$db->stmt()->update( 'test' )->set( 'stat', '?' )->setParameter( 0, true )->execute();
-$result = $db->stmt()->select( 'id', 'code' )->from( 'test' )->where( 'stat = 1' )->execute();
+$db->stmt()->delete( 'test' )->where( 'stat = ?' )->setParameter( 0, false )->executeStatement();
+$db->stmt()->update( 'test' )->set( 'stat', '?' )->setParameter( 0, true )->executeStatement();
+$result = $db->stmt()->select( 'id', 'code' )->from( 'test' )->where( 'stat = 1' )->executeQuery();
 
 while( $row = $result->fetchAssociative() ) {
     $id = $row['id'];
