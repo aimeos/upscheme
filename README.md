@@ -1524,14 +1524,25 @@ public function stmt() : \Doctrine\DBAL\Query\QueryBuilder
 **Examples:**
 
 ```php
-$db->stmt()->delete( 'test' )->where( 'stat = ?' )->setParameter( 0, false )->executeStatement();
-$db->stmt()->update( 'test' )->set( 'stat', '?' )->setParameter( 0, true )->executeStatement();
-$result = $db->stmt()->select( 'id', 'code' )->from( 'test' )->where( 'stat = 1' )->executeQuery();
+$db->stmt()->delete( $db->qi( 'test' ) )
+	->where( $db->qi( 'stat' ) . ' = ?' )->setParameter( 0, false )
+	->executeStatement();
+
+$db->stmt()->update( $db->qi( 'test' ) )
+	->where( $db->qi( 'stat' ) . '', '?' )->setParameter( 0, true )
+	->executeStatement();
+
+$result = $db->stmt()->select( $db->qi( 'id' ), $db->qi( 'code' ) )
+	->from( $db->qi( 'test' ) )
+	->where( $db->qi( 'stat' ) . ' = 1' )
+	->executeQuery();
 
 while( $row = $result->fetchAssociative() ) {
     $id = $row['id'];
 }
 ```
+
+**Caution: ** You have to quote all table and column names yourself using `$db->qi()` method!
 
 For more details about the available Doctrine QueryBuilder methods, please have
 a look at the [Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#building-a-query).
