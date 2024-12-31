@@ -878,8 +878,8 @@ Available class properties are:
 `$this->up`
 : Upscheme object
 
-Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Schema.php)
-method directly, e.g.:
+Furthermore, you can call any [Doctrine schema](https://github.com/doctrine/dbal)
+method from *src/Schema/Schema.php* directly, e.g.:
 
 ```php
 $db->hasExplicitForeignKeyIndexes();
@@ -1360,7 +1360,7 @@ foreach( $result->iterateAssociative() as $row ) {
 }
 ```
 
-**Tip:** Check the [DBAL methods for retrieving data](https://github.com/doctrine/dbal/blob/master/src/Result.php) for more information.
+**Tip:** Check the [DBAL methods for retrieving data](https://github.com/doctrine/dbal) from *src/Result.php* for more information.
 
 
 #### DB::renameColumn()
@@ -2118,8 +2118,8 @@ Available class properties are:
 `$this->up`
 : Upscheme object
 
-Furthermore, you can call any [Doctrine table](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Table.php)
-method directly, e.g.:
+Furthermore, you can call any [Doctrine table](https://github.com/doctrine/dbal)
+method from *src/Schema/Table.php* directly, e.g.:
 
 ```php
 $table->addUniqueConstraint( ['col1', 'col2'] );
@@ -3400,8 +3400,8 @@ Available class properties are:
 `$this->column`
 : Doctrine column schema
 
-Furthermore, you can call any [Doctrine column](https://github.com/doctrine/dbal/blob/3.1.x/src/Schema/Column.php)
-method directly, e.g.:
+Furthermore, you can call any [Doctrine column](https://github.com/doctrine/dbal)
+method from *src/Schema/Column.php* directly, e.g.:
 
 ```php
 $column->setPlatformOptions( ['option' => 'value'] );
