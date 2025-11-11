@@ -27,7 +27,7 @@ composer req aimeos/upscheme
   * [Checking existence](#checking-existence)
   * [Renaming objects](#renaming-objects)
   * [Removing objects](#removing-objects)
-  * [Query/modify table rows](#Query-modify-table-rows)
+  * [Query/modify table rows](#querymodify-table-rows)
   * [Executing custom SQL](#executing-custom-sql)
   * [Database methods](#database-methods)
 * [Tables](#tables)
@@ -1542,7 +1542,7 @@ while( $row = $result->fetchAssociative() ) {
 }
 ```
 
-**Caution: ** You have to quote all table and column names yourself using `$db->qi()` method!
+**Caution:** You have to quote all table and column names yourself using `$db->qi()` method!
 
 For more details about the available Doctrine QueryBuilder methods, please have
 a look at the [Doctrine documentation](https://www.doctrine-project.org/projects/doctrine-dbal/en/latest/reference/query-builder.html#building-a-query).
