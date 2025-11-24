@@ -161,19 +161,19 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php71-{{ checksum "composer.json" }}
+            - php83-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php71-{{ checksum "composer.json" }}
+          key: php83-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
       - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
-  "php-8.3 / pgsql-17":
+  "php-8.4 / pgsql-18":
     docker:
-      - image: aimeos/ci-php:8.3
-      - image: cimg/postgres:17.0
+      - image: aimeos/ci-php:8.4
+      - image: cimg/postgres:18.0
         environment:
           POSTGRES_PASSWORD: upscheme
           POSTGRES_USER: upscheme
@@ -182,13 +182,35 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - php73-{{ checksum "composer.json" }}
+            - php84-{{ checksum "composer.json" }}
       - run: composer update -n --prefer-dist
       - save_cache:
-          key: php73-{{ checksum "composer.json" }}
+          key: php84-{{ checksum "composer.json" }}
           paths: [./vendor]
       - run: for i in `seq 1 10`; do nc -z 127.0.0.1 5432 && echo OK && exit 0; echo -n .; sleep 1; done
       - run: echo "<?php return ['driver' => 'pdo_pgsql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
+      - run: ./vendor/bin/phpunit
+
+  "php-8.5 / mysql-9":
+    docker:
+      - image: aimeos/ci-php:8.5
+      - image: cimg/mysql:9.5
+        environment:
+          MYSQL_ROOT_PASSWORD: rootpw
+          MYSQL_DATABASE: upscheme
+          MYSQL_USER: upscheme
+          MYSQL_PASSWORD: upscheme
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - php85-{{ checksum "composer.json" }}
+      - run: composer update -n --prefer-dist
+      - save_cache:
+          key: php85-{{ checksum "composer.json" }}
+          paths: [./vendor]
+      - run: for i in `seq 1 10`; do nc -z 127.0.0.1 3306 && echo OK && exit 0; echo -n .; sleep 1; done
+      - run: echo "<?php return ['driver' => 'pdo_mysql', 'host' => '127.0.0.1', 'dbname' => 'upscheme', 'user' => 'upscheme', 'password' => 'upscheme'];" > tests/config.php
       - run: ./vendor/bin/phpunit
 
 workflows:
@@ -203,4 +225,5 @@ workflows:
       - "php-8.1 / mssql-2019"
       - "php-8.2 / sqlite"
       - "php-8.3 / mariadb-11"
-      - "php-8.3 / pgsql-17"
+      - "php-8.4 / pgsql-18"
+      - "php-8.5 / mysql-9"
