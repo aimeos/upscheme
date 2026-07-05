@@ -1430,7 +1430,7 @@ public function renameTable( $from, string $to = null ) : self
 * @param **array&#60;string,string&#62;&#124;string** `$from` Table name or array of old/new table names
 * @param **string&#124;null** `$to` New table name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
-* @throws \RuntimeException If an error occured
+* @throws \RuntimeException If an error occurred
 
 If the table doesn't exist yet, the method will succeed but nothing will happen. No call to `up()` is required.
 
@@ -2836,7 +2836,7 @@ public function renameColumn( $from, string $to = null ) : self
 * @param **array&#60;string,string&#62;&#124;string** `$from` Column name or array of old/new column names
 * @param **string&#124;null** `$to` New column name ignored if first parameter is an array
 * @return **self** Same object for fluid method calls
-* @throws \RuntimeException If an error occured
+* @throws \RuntimeException If an error occurred
 
 **Examples:**
 
