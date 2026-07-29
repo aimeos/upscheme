@@ -918,6 +918,10 @@ class TableTest extends \PHPUnit\Framework\TestCase
 		$class = new \ReflectionClass( \Aimeos\Upscheme\Schema\Table::class );
 		$method = $class->getMethod( $name );
 
+		if( \PHP_VERSION_ID < 80100 ) {
+			$method->setAccessible( true );
+		}
+
 		return $method;
 	}
 }
