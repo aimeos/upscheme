@@ -102,6 +102,10 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 		$class = new \ReflectionClass( \Aimeos\Upscheme\Task\Base::class );
 		$method = $class->getMethod( $name );
 
+		if( \PHP_VERSION_ID < 80100 ) {
+			$method->setAccessible( true );
+		}
+
 		return $method;
 	}
 }
