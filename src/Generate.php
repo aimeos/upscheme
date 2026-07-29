@@ -99,34 +99,34 @@ class Generate
 		foreach( $def as $name => $e )
 		{
 			if( in_array( $e['type'], $types ) ) {
-				$string = '$t->' . $e['type'] . '( \'' . $name . '\' )';
+				$string = '$t->' . $e['type'] . '(\'' . $name . '\')';
 			} else {
-				$string = '$t->col( \'' . $name . '\', \'' . $e['type'] . '\' )';
+				$string = '$t->col(\'' . $name . '\', \'' . $e['type'] . '\')';
 			}
 
 			foreach( ['seq', 'fixed', 'unsigned', 'null'] as $key )
 			{
 				if( $e[$key] ?? false ) {
-					$string .= '->' . $key . '( true )';
+					$string .= '->' . $key . '(true)';
 				}
 			}
 
 			foreach( ['length', 'precision', 'scale'] as $key )
 			{
 				if( $e[$key] ?? false ) {
-					$string .= '->' . $key . '( ' . $e[$key] . ' )';
+					$string .= '->' . $key . '(' . $e[$key] . ')';
 				}
 			}
 
 			foreach( ['default', 'comment'] as $key )
 			{
 				if( $e[$key] ?? false ) {
-					$string .= '->' . $key . '( \'' . $e[$key] . '\' )';
+					$string .= '->' . $key . '(\'' . $e[$key] . '\')';
 				}
 			}
 
 			foreach( $e['opt'] ?? [] as $key => $value ) {
-				$string .= '->opt( \'' . $key . '\', \'' . $value . '\' )';
+				$string .= '->opt(\'' . $key . '\', \'' . $value . '\')';
 			}
 
 			$lines[] = $string . ';';
@@ -148,12 +148,12 @@ class Generate
 
 		foreach( $def as $name => $e )
 		{
-			$string = '$t->foreign( ' . json_encode( $e['localcol'] ) . ', \'' . ( $e['fktable'] ?? '' ) . '\', ' . json_encode( $e['fkcol'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ' )';
+			$string = '$t->foreign(' . json_encode( $e['localcol'] ) . ', \'' . ( $e['fktable'] ?? '' ) . '\', ' . json_encode( $e['fkcol'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ')';
 
 			foreach( ['onDelete', 'onUpdate'] as $key )
 			{
 				if( $e[$key] ?? false ) {
-					$string .= '->' . $key . '( \'' . $e[$key] . '\' )';
+					$string .= '->' . $key . '(\'' . $e[$key] . '\')';
 				}
 			}
 
@@ -177,11 +177,11 @@ class Generate
 		foreach( $def as $name => $e )
 		{
 			if( $e['primary'] ?? false ) {
-				$lines[] = '$t->primary( ' . json_encode( $e['columns'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ' );';
+				$lines[] = '$t->primary(' . json_encode( $e['columns'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ');';
 			} elseif( $e['unique'] ?? false ) {
-				$lines[] = '$t->unique( ' . json_encode( $e['columns'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ' );';
+				$lines[] = '$t->unique(' . json_encode( $e['columns'] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ');';
 			} else {
-				$lines[] = '$t->index( ' . json_encode( $e['columns'] ?? [] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ', ' . $this->array( $e['flags'] ?? [] ) . ', ' . $this->array( $e['options'] ?? [] ) . ' );';
+				$lines[] = '$t->index(' . json_encode( $e['columns'] ?? [] ) . ', ' . ( $e['name'] ? '\'' . $e['name'] . '\'' : 'null' ) . ', ' . $this->array( $e['flags'] ?? [] ) . ', ' . $this->array( $e['options'] ?? [] ) . ');';
 			}
 		}
 
@@ -220,7 +220,7 @@ class Generate
 		foreach( ['cache', 'start', 'step'] as $key )
 		{
 			if( $def[$key] ?? false ) {
-				$string .= '->' . $key . '( ' . $def[$key] . ' )';
+				$string .= '->' . $key . '(' . $def[$key] . ')';
 			}
 		}
 

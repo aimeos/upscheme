@@ -3,12 +3,12 @@
 namespace Aimeos\Upscheme\Task;
 
 
-return new class( $this ) extends Base
+return new class($this) extends Base
 {
 	public function up()
 	{
-		$this->info( 'Create view "{{NAME}}"' );
+		$this->info('Create view "{{NAME}}"');
 
-		$this->db( '{{DB}}' )->view( '{{NAME}}', '{{SQL}}' );
+		$this->db('{{DB}}')->view('{{NAME}}', '{{SQL}}');
 	}
 };
