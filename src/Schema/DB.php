@@ -758,7 +758,7 @@ class DB
 	 *
 	 * @param \Closure $fcn Anonymous function with (\Aimeos\Upscheme\Schema $db) parameter
 	 * @return self Same object for fluid method calls
-	 * @throws \Exception If an error occurred
+	 * @throws \Throwable If an error occurred
 	 */
 	public function transaction( \Closure $fcn ) : self
 	{
@@ -769,7 +769,7 @@ class DB
 			$fcn( $this );
 			$this->conn->commit();
 		}
-		catch( \Exception $e )
+		catch( \Throwable $e )
 		{
 			$this->conn->rollBack();
 			throw $e;

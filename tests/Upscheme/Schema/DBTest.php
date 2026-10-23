@@ -615,7 +615,26 @@ class DBTest extends \PHPUnit\Framework\TestCase
 			throw new \Exception();
 		};
 
+		$this->connmock->expects( $this->once() )->method( 'rollBack' );
 		$this->expectException( \Exception::class );
+		$object->transaction( $fcn );
+	}
+
+
+	public function testTransactionThrowable()
+	{
+		$object = $this->getMockBuilder( '\Aimeos\Upscheme\Schema\DB' )
+			->setConstructorArgs( [$this->upmock, $this->connmock] )
+			->onlyMethods( ['up'] )
+			->getMock();
+
+		$this->connmock->expects( $this->once() )->method( 'beginTransaction' );
+		$this->connmock->expects( $this->once() )->method( 'rollBack' );
+		$fcn = function( $db ) {
+			throw new \TypeError( 'synthetic failure' );
+		};
+
+		$this->expectException( \TypeError::class );
 		$object->transaction( $fcn );
 	}
 
